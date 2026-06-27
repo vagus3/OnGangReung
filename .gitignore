@@ -1,0 +1,142 @@
+# ─── 환경변수 (절대 커밋 금지) ─────────────────────────────────────────────
+# 화이트리스트 방식: 모든 .env* 파일을 차단 후 값이 없는 템플릿만 허용
+.env*
+!.env.example
+# .env.development / .env.staging / .env.production 은 커밋하지 않음
+# 실제 DB URL 등 민감 정보가 포함될 수 있음
+
+
+# ─── Node.js ────────────────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+
+# ─── Next.js ────────────────────────────────────────────────────────────────
+.next/
+out/
+
+
+# ─── Turborepo ──────────────────────────────────────────────────────────────
+.turbo/
+
+
+# ─── 빌드 결과물 ─────────────────────────────────────────────────────────────
+dist/
+build/
+*.tsbuildinfo
+*.tgz
+
+
+# ─── 테스트 & 커버리지 ────────────────────────────────────────────────────────
+coverage/
+.nyc_output/
+playwright-report/
+playwright/.cache/
+test-results/
+
+
+# ─── Prisma ─────────────────────────────────────────────────────────────────
+# 마이그레이션 파일은 커밋 (스키마 변경 추적)
+# 생성된 클라이언트는 커밋하지 않음 (schema.prisma의 output 경로 대비)
+**/generated/
+
+# 로컬 SQLite DB 파일 (Prisma 로컬 개발용 임시 DB)
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+
+# ─── Docker ─────────────────────────────────────────────────────────────────
+# docker-compose.override.yml은 로컬 오버라이드용 (커밋 안 함)
+docker-compose.override.yml
+
+
+# ─── OS 생성 파일 ─────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+desktop.ini
+
+
+# ─── IDE / 에디터 ─────────────────────────────────────────────────────────────
+# .vscode/extensions.json은 커밋 권장 (팀 확장 프로그램 공유)
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+
+# ─── 로그 ────────────────────────────────────────────────────────────────────
+logs/
+*.log
+
+
+# ─── 린트 & 포맷 캐시 ───────────────────────────────────────────────────────
+.eslintcache
+
+
+# ─── 임시 파일 ───────────────────────────────────────────────────────────────
+tmp/
+temp/
+.cache/
+
+
+# ─── Storybook ───────────────────────────────────────────────────────────────
+storybook-static/
+
+
+# ─── React Native / Expo ─────────────────────────────────────────────────────
+.expo/
+web-build/
+
+android/app/build/
+android/.gradle/
+*.apk
+*.aar
+# Android 서명 키 — 절대 커밋 금지
+*.keystore
+*.jks
+
+ios/build/
+ios/Pods/
+DerivedData/
+
+
+# ─── AI 도구 캐시 (로컬 전용) ───────────────────────────────────────────────
+# .ai/ 규칙 파일은 커밋 (AI 컨텍스트 공유 목적)
+.ai/personal/
+.ai/tmp/
+
+
+# ─── Kubernetes / Helm ────────────────────────────────────────────────────────
+kubeconfig
+*.kubeconfig
+helm/charts/*/secrets.yaml
+
+
+# ─── 인증서 & 키 ──────────────────────────────────────────────────────────────
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+
+
+# ─── 기타 ─────────────────────────────────────────────────────────────────────
+.vercel
+.netlify
+*.local

@@ -1,0 +1,33 @@
+{
+    "default": "claude",
+    "models": {
+        "claude": {
+            "command": "claude",
+            "usage": [
+                "architecture",
+                "refactoring",
+                "complex debugging"
+            ]
+        },
+        "gemini": {
+            "command": "gemini",
+            "usage": [
+                "large context",
+                "document analysis",
+                "cheap generation"
+            ]
+        },
+        "codex": {
+            "command": "codex",
+            "usage": [
+                "tests",
+                "boilerplate",
+                "simple CRUD"
+            ]
+        }
+    },
+    "fallback": [
+        "gemini",
+        "codex"
+    ]
+}

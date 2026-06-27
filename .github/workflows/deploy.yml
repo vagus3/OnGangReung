@@ -1,0 +1,458 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# CI/CD Pipeline — Docker Build & Kubernetes Deploy
+#
+# 트리거:
+#   - PR 오픈/업데이트  → CI 검증 (lint, type-check, test, build)
+#   - main 브랜치 Push  → CI 검증 + dev/staging 자동 배포
+#   - v* 태그 Push      → CI 검증 + production 수동 승인 후 배포
+#
+# 필요한 GitHub Secrets:
+#   REGISTRY              - 컨테이너 레지스트리 (예: ghcr.io)
+#   REGISTRY_USERNAME     - 레지스트리 사용자명
+#   REGISTRY_TOKEN        - 레지스트리 토큰 (GHCR은 GITHUB_TOKEN 사용 가능)
+#   KUBE_CONFIG_DEV       - dev 클러스터 kubeconfig (base64)
+#   KUBE_CONFIG_STAGING   - staging 클러스터 kubeconfig (base64)
+#   KUBE_CONFIG_PROD      - production 클러스터 kubeconfig (base64)
+#   SLACK_WEBHOOK_URL     - Slack 알림 (선택)
+#
+# 필요한 GitHub Variables:
+#   NEXT_PUBLIC_API_URL   - 프론트엔드가 호출할 API 주소
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - "feature/**"
+      - "fix/**"
+    tags:
+      - "v*"
+  pull_request:
+    branches:
+      - main
+
+# 동일 브랜치의 이전 워크플로 취소 (PR 업데이트 시)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository_owner }}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# JOB 1: CI — 코드 품질 검사
+# ─────────────────────────────────────────────────────────────────────────────
+jobs:
+  ci:
+    name: "CI — Lint / Type / Test"
+    runs-on: ubuntu-latest
+    outputs:
+      # 이후 jobs에서 이미지 태그 재사용
+      image-tag: ${{ steps.meta.outputs.tag }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # ── 정적 분석 ────────────────────────────────────────────────────────
+      - name: "Check: TypeScript"
+        run: pnpm type-check
+
+      - name: "Check: ESLint"
+        run: pnpm lint
+
+      # ── 테스트 ───────────────────────────────────────────────────────────
+      - name: "Test: Unit & Integration"
+        run: pnpm test --coverage
+        env:
+          CI: true
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        if: github.event_name == 'push'
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+      # ── 빌드 확인 ────────────────────────────────────────────────────────
+      - name: "Check: Build (web)"
+        run: pnpm --filter web build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+
+      - name: "Check: Build (api)"
+        run: pnpm --filter api build
+
+      # ── 이미지 태그 생성 ─────────────────────────────────────────────────
+      - name: Generate image tag
+        id: meta
+        run: |
+          SHA="${{ github.sha }}"
+          SHORT_SHA="${SHA::7}"
+          BRANCH="${{ github.ref_name }}"
+          BRANCH_CLEAN="${BRANCH//\//-}"
+
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            TAG="${{ github.ref_name }}"
+          else
+            TAG="${BRANCH_CLEAN}-${SHORT_SHA}"
+          fi
+
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "short-sha=${SHORT_SHA}" >> $GITHUB_OUTPUT
+          echo "Generated tag: ${TAG}"
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # JOB 2: Docker — 이미지 빌드 & Push
+  # main 또는 태그 push 시에만 실행
+  # ─────────────────────────────────────────────────────────────────────────
+  docker-build:
+    name: "Docker — Build & Push"
+    needs: ci
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' &&
+      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+
+    strategy:
+      matrix:
+        app: [web, api]
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 이미지 레이블 자동 생성
+      - name: Extract Docker metadata
+        id: docker-meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.app }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix=,suffix=,format=short
+            type=raw,value=${{ needs.ci.outputs.image-tag }}
+
+      # 이미지 빌드 & Push (캐시 활용)
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/${{ matrix.app }}/Dockerfile
+          push: true
+          tags: ${{ steps.docker-meta.outputs.tags }}
+          labels: ${{ steps.docker-meta.outputs.labels }}
+          cache-from: type=gha,scope=${{ matrix.app }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.app }}
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+            GIT_SHA=${{ github.sha }}
+
+      # 보안 취약점 스캔 (HIGH/CRITICAL만)
+      - name: Scan image for vulnerabilities
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.app }}:${{ needs.ci.outputs.image-tag }}
+          format: "table"
+          exit-code: "0"          # 발견돼도 파이프라인은 계속 (경고만)
+          severity: "HIGH,CRITICAL"
+          ignore-unfixed: true
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # JOB 3: Deploy to Development
+  # main 브랜치 push 시 자동 배포
+  # ─────────────────────────────────────────────────────────────────────────
+  deploy-dev:
+    name: "Deploy → dev"
+    needs: [ci, docker-build]
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main'
+    environment:
+      name: development
+      url: https://dev.example.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: "3.13.0"
+
+      - name: Configure kubeconfig (dev)
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG_DEV }}" | base64 -d > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Deploy web to dev
+        run: |
+          helm upgrade --install web ./helm/charts/web \
+            --namespace dev \
+            --create-namespace \
+            -f ./helm/charts/web/values-dev.yaml \
+            --set image.tag=${{ needs.ci.outputs.image-tag }} \
+            --set image.repository=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/web \
+            --atomic \
+            --timeout 5m \
+            --wait
+
+      - name: Deploy api to dev
+        run: |
+          helm upgrade --install api ./helm/charts/api \
+            --namespace dev \
+            --create-namespace \
+            -f ./helm/charts/api/values-dev.yaml \
+            --set image.tag=${{ needs.ci.outputs.image-tag }} \
+            --set image.repository=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api \
+            --atomic \
+            --timeout 5m \
+            --wait
+
+      - name: Verify deployment
+        run: |
+          kubectl rollout status deployment/web -n dev --timeout=3m
+          kubectl rollout status deployment/api -n dev --timeout=3m
+          kubectl get pods -n dev
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # JOB 4: Deploy to Staging
+  # main 브랜치 push 시 dev 이후 자동 배포
+  # ─────────────────────────────────────────────────────────────────────────
+  deploy-staging:
+    name: "Deploy → staging"
+    needs: [ci, docker-build, deploy-dev]
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main'
+    environment:
+      name: staging
+      url: https://staging.example.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl & Helm
+        uses: azure/setup-kubectl@v3
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: "3.13.0"
+
+      - name: Configure kubeconfig (staging)
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG_STAGING }}" | base64 -d > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Deploy to staging
+        run: |
+          for app in web api; do
+            helm upgrade --install $app ./helm/charts/$app \
+              --namespace staging \
+              --create-namespace \
+              -f ./helm/charts/$app/values-staging.yaml \
+              --set image.tag=${{ needs.ci.outputs.image-tag }} \
+              --set image.repository=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/$app \
+              --atomic \
+              --timeout 10m \
+              --wait
+          done
+
+      - name: Run smoke tests
+        run: |
+          # 기본 헬스체크
+          curl -f https://staging.example.com/api/health || exit 1
+          curl -f https://api-staging.example.com/health || exit 1
+          echo "Smoke tests passed"
+
+      - name: Notify Slack (성공)
+        if: success()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "✅ Staging 배포 완료",
+              "attachments": [{
+                "color": "good",
+                "fields": [
+                  { "title": "Tag", "value": "${{ needs.ci.outputs.image-tag }}", "short": true },
+                  { "title": "Commit", "value": "${{ github.event.head_commit.message }}", "short": true }
+                ]
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # JOB 5: Deploy to Production
+  # v* 태그 Push 시 + GitHub Environment 수동 승인 필요
+  # ─────────────────────────────────────────────────────────────────────────
+  deploy-production:
+    name: "Deploy → production 🚀"
+    needs: [ci, docker-build]
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' &&
+      startsWith(github.ref, 'refs/tags/v')
+    # GitHub Environments에서 Reviewers 설정 필요
+    environment:
+      name: production
+      url: https://example.com
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: "3.13.0"
+
+      - name: Configure kubeconfig (production)
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG_PROD }}" | base64 -d > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      # 배포 전 현재 상태 스냅샷 (롤백 참조용)
+      - name: Snapshot current release
+        run: |
+          helm list -n production
+          kubectl get pods -n production -o wide
+
+      - name: Deploy web to production
+        run: |
+          helm upgrade --install web ./helm/charts/web \
+            --namespace production \
+            -f ./helm/charts/web/values-prod.yaml \
+            --set image.tag=${{ github.ref_name }} \
+            --set image.repository=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/web \
+            --atomic \
+            --timeout 15m \
+            --wait \
+            --history-max 5
+
+      - name: Deploy api to production
+        run: |
+          helm upgrade --install api ./helm/charts/api \
+            --namespace production \
+            -f ./helm/charts/api/values-prod.yaml \
+            --set image.tag=${{ github.ref_name }} \
+            --set image.repository=${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api \
+            --atomic \
+            --timeout 15m \
+            --wait \
+            --history-max 5
+
+      - name: Post-deploy verification
+        run: |
+          kubectl rollout status deployment/web -n production --timeout=5m
+          kubectl rollout status deployment/api -n production --timeout=5m
+          # E2E smoke test
+          curl -f https://example.com || exit 1
+          curl -f https://api.example.com/health || exit 1
+          echo "Production deployment verified"
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tag latest image
+        if: success()
+        run: |
+          # 배포 성공 후 latest 태그 업데이트
+          for app in web api; do
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/$app:${{ github.ref_name }}
+            docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/$app:${{ github.ref_name }} \
+                       ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/$app:latest
+            docker push ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/$app:latest
+          done
+
+      - name: Notify Slack (성공)
+        if: success()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "🚀 Production 배포 완료: ${{ github.ref_name }}",
+              "attachments": [{
+                "color": "good",
+                "fields": [
+                  { "title": "Version", "value": "${{ github.ref_name }}", "short": true },
+                  { "title": "Deployed by", "value": "${{ github.actor }}", "short": true }
+                ]
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Slack (실패)
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          custom_payload: |
+            {
+              "text": "❌ Production 배포 실패: ${{ github.ref_name }}",
+              "attachments": [{
+                "color": "danger",
+                "fields": [
+                  { "title": "Version", "value": "${{ github.ref_name }}", "short": true },
+                  { "title": "Run", "value": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}", "short": false }
+                ]
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
