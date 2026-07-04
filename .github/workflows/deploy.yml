@@ -71,35 +71,42 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # ── 정적 분석 ────────────────────────────────────────────────────────
-      - name: "Check: TypeScript"
+      # Python 백엔드 도구 체인 — apps/api의 turbo 태스크(lint/type-check/test)가
+      # uv run을 호출하므로 반드시 pnpm 태스크 실행 전에 준비돼야 함
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install Python dependencies (api)
+        run: uv sync
+        working-directory: apps/api
+
+      # ── 정적 분석 (web: tsc/eslint, api: mypy/ruff — turbo가 병렬 실행) ──
+      - name: "Check: Types (tsc + mypy)"
         run: pnpm type-check
 
-      - name: "Check: ESLint"
+      - name: "Check: Lint (eslint + ruff)"
         run: pnpm lint
 
-      # ── 테스트 ───────────────────────────────────────────────────────────
-      # turbo는 자체 플래그와 구분하기 위해 -- 뒤의 인자만 태스크로 전달함
+      # ── 테스트 (web: vitest, api: pytest) ───────────────────────────────
       - name: "Test: Unit & Integration"
-        run: pnpm test -- --coverage
+        run: pnpm test
         env:
           CI: true
 
-      - name: Upload coverage
-        uses: codecov/codecov-action@v4
-        if: github.event_name == 'push'
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
+      # ── OpenAPI 코드젠 드리프트 검사 ─────────────────────────────────────
+      # 백엔드 스키마 변경 후 pnpm codegen을 실행하지 않은 커밋을 차단
+      - name: "Check: OpenAPI codegen drift"
+        run: |
+          pnpm codegen
+          git diff --exit-code packages/api-client/openapi.json packages/api-client/src/types.ts
 
       # ── 빌드 확인 ────────────────────────────────────────────────────────
       - name: "Check: Build (web)"
         run: pnpm --filter web build
         env:
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
-
-      - name: "Check: Build (api)"
-        run: pnpm --filter api build
 
       # ── 이미지 태그 생성 ─────────────────────────────────────────────────
       - name: Generate image tag
@@ -189,7 +196,7 @@ jobs:
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.app }}:${{ needs.ci.outputs.image-tag }}
           format: "table"
-          exit-code: "0"          # 발견돼도 파이프라인은 계속 (경고만)
+          exit-code: "0" # 발견돼도 파이프라인은 계속 (경고만)
           severity: "HIGH,CRITICAL"
           ignore-unfixed: true
 

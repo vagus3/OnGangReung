@@ -56,12 +56,25 @@ if ! command -v pnpm &> /dev/null; then
 fi
 log_success "pnpm $(pnpm -v)"
 
-# 3. 의존성 설치
-log_info "의존성 설치 중..."
-pnpm install --frozen-lockfile
-log_success "의존성 설치 완료"
+# 3. uv 확인 (Python 백엔드 의존성 관리 — Python 3.12도 uv가 자동 설치)
+log_info "uv 확인..."
+if ! command -v uv &> /dev/null; then
+  log_warn "uv가 없습니다. 설치 중... (https://docs.astral.sh/uv)"
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  export PATH="$HOME/.local/bin:$PATH"
+fi
+log_success "uv $(uv --version | cut -d' ' -f2)"
 
-# 4. 환경변수 파일 설정
+# 4. 의존성 설치
+log_info "Node 의존성 설치 중..."
+pnpm install --frozen-lockfile
+log_success "Node 의존성 설치 완료"
+
+log_info "Python 의존성 설치 중 (apps/api)..."
+(cd apps/api && uv sync)
+log_success "Python 의존성 설치 완료"
+
+# 5. 환경변수 파일 설정
 if [ "$SKIP_ENV" = false ]; then
   log_info "환경변수 파일 설정..."
 
@@ -77,14 +90,14 @@ if [ "$SKIP_ENV" = false ]; then
   fi
 fi
 
-# 5. Git hooks 설치 (husky)
+# 6. Git hooks 설치 (husky)
 log_info "Git hooks 설정 중..."
 if [ -f "package.json" ] && grep -q '"prepare"' package.json; then
   pnpm prepare 2>/dev/null || true
   log_success "Git hooks (husky) 설치 완료"
 fi
 
-# 6. DB 마이그레이션
+# 7. DB 마이그레이션 (Alembic)
 if [ "$SKIP_DB" = false ]; then
   log_info "데이터베이스 마이그레이션 확인..."
 
@@ -94,15 +107,10 @@ if [ "$SKIP_DB" = false ]; then
     export $(grep -v '^#' .env | xargs) 2>/dev/null || true
 
     if [ -n "${DATABASE_URL:-}" ]; then
-      log_info "Prisma 마이그레이션 실행 중..."
-      pnpm --filter database migrate deploy 2>/dev/null && \
+      log_info "Alembic 마이그레이션 실행 중..."
+      (cd apps/api && uv run alembic upgrade head) && \
         log_success "마이그레이션 완료" || \
-        log_warn "마이그레이션 실패 (DB 연결 확인 필요)"
-
-      log_info "시드 데이터 실행 중..."
-      pnpm --filter database seed 2>/dev/null && \
-        log_success "시드 완료" || \
-        log_warn "시드 실패 (선택사항이므로 계속)"
+        log_warn "마이그레이션 실패 (DB 실행 확인: docker compose up -d)"
     else
       log_warn "DATABASE_URL이 설정되지 않아 DB 설정을 건너뜁니다"
     fi
@@ -111,7 +119,7 @@ if [ "$SKIP_DB" = false ]; then
   fi
 fi
 
-# 7. 완료
+# 8. 완료
 echo ""
 echo "==========================================="
 log_success "프로젝트 설정 완료!"
