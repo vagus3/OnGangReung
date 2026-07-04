@@ -21,10 +21,6 @@
     "ai": "bash scripts/ai.sh",
     "ai:switch": "bash scripts/switch_model.sh"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "devDependencies": {
     "@commitlint/cli": "^19.0.0",
     "@commitlint/config-conventional": "^19.0.0",
@@ -42,10 +38,27 @@
       "type-enum": [
         2,
         "always",
-        ["feat", "fix", "refactor", "style", "docs", "test", "chore", "perf", "ci", "revert"]
+        [
+          "feat",
+          "fix",
+          "refactor",
+          "style",
+          "docs",
+          "test",
+          "chore",
+          "perf",
+          "ci",
+          "revert"
+        ]
       ],
-      "subject-max-length": [2, "always", 72],
-      "subject-case": [0]
+      "subject-max-length": [
+        2,
+        "always",
+        72
+      ],
+      "subject-case": [
+        0
+      ]
     }
   },
   "lint-staged": {

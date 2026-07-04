@@ -15,7 +15,7 @@ SEO, Core Web Vitals, 전환율(CRO)을 중심으로 설계됩니다.
 - 애니메이션: Framer Motion 또는 CSS transition
 
 섹션 이름: HeroSection
-위치: widgets/hero/ 또는 pages/landing/ui/
+위치: widgets/hero/ 또는 views/landing/ui/
 
 콘텐츠:
 - 메인 헤드라인: [예: "더 빠른 개발, 더 나은 코드"]
@@ -55,7 +55,7 @@ SEO:
 - [기능명]: [제목] / [설명 1-2줄] / [아이콘명]
 - [예: speed]: "빠른 개발" / "미리 설정된 구조로 즉시 시작" / Zap
 - [예: scale]: "확장 가능한 구조" / "팀이 커져도 유지보수 가능" / TrendingUp
-- [예: ai]: "AI 협업 최적화" / "Claude, Gemini, Codex 역할 분담" / Bot
+- [예: ai]: "AI 협업 최적화" / "Claude, Antigravity, Codex 역할 분담" / Bot
 
 요청:
 1. 카드 hover 시 미세한 elevation 효과

@@ -1,33 +1,34 @@
 {
-    "default": "claude",
-    "models": {
-        "claude": {
-            "command": "claude",
-            "usage": [
-                "architecture",
-                "refactoring",
-                "complex debugging"
-            ]
-        },
-        "gemini": {
-            "command": "gemini",
-            "usage": [
-                "large context",
-                "document analysis",
-                "cheap generation"
-            ]
-        },
-        "codex": {
-            "command": "codex",
-            "usage": [
-                "tests",
-                "boilerplate",
-                "simple CRUD"
-            ]
-        }
+  "default": "claude",
+  "models": {
+    "claude": {
+      "command": "claude",
+      "usage": [
+        "architecture",
+        "refactoring",
+        "complex debugging"
+      ]
     },
-    "fallback": [
-        "gemini",
-        "codex"
-    ]
+    "antigravity": {
+      "command": "agy",
+      "usage": [
+        "large context",
+        "document analysis",
+        "cheap generation"
+      ],
+      "note": "Antigravity CLI (Gemini 3). Replaced Gemini CLI, which was sunset on 2026-06-18."
+    },
+    "codex": {
+      "command": "codex",
+      "usage": [
+        "tests",
+        "boilerplate",
+        "simple CRUD"
+      ]
+    }
+  },
+  "fallback": [
+    "antigravity",
+    "codex"
+  ]
 }

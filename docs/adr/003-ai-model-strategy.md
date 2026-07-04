@@ -1,7 +1,7 @@
 # 003. AI 멀티 모델 협업 전략
 
 날짜: 2026-06-27
-상태: Accepted
+상태: Superseded by [004](./004-gemini-to-antigravity.md)
 
 ## 배경 (Context)
 
@@ -22,9 +22,11 @@ scripts/switch_model.sh로 빠르게 전환합니다.
 ## 결과 (Consequences)
 
 긍정적:
+
 - 작업 유형에 최적화된 모델 사용으로 품질 향상
 - 비용 최적화 (단순 작업은 저비용 모델 활용)
 
 부정적:
+
 - 모델 전환 시 컨텍스트 재설정 필요
 - 팀원이 세 가지 모델 특성을 모두 알아야 함

@@ -32,14 +32,17 @@ pnpm workspaces + Turborepo 기반 모노레포를 채택하고,
 ## 결과 (Consequences)
 
 긍정적:
+
 - 패키지 간 타입 공유가 @project/types로 단순화됨
 - FSD 레이어 규칙으로 의존성 방향이 명확해짐
 - Turborepo의 빌드 캐싱으로 CI 시간 단축
 
 부정적:
+
 - 모노레포 초기 설정 복잡도 증가
 - FSD 개념을 팀 전체가 학습해야 함
 
 향후 고려사항:
+
 - 팀 규모가 커지면 Nx로 마이그레이션 고려
 - eslint-plugin-boundaries로 레이어 규칙 자동 강제 예정

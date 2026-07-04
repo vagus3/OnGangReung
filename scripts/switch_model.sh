@@ -3,11 +3,11 @@
 # switch_model.sh — AI 기본 모델 전환 스크립트
 #
 # 사용법:
-#   bash scripts/switch_model.sh [claude|gemini|codex]
+#   bash scripts/switch_model.sh [claude|antigravity|codex]
 #
 # 예시:
-#   bash scripts/switch_model.sh gemini   # Gemini를 기본 모델로 전환
-#   bash scripts/switch_model.sh          # 현재 설정 확인
+#   bash scripts/switch_model.sh antigravity   # Antigravity를 기본 모델로 전환
+#   bash scripts/switch_model.sh               # 현재 설정 확인
 # =============================================================================
 
 set -euo pipefail
@@ -37,9 +37,9 @@ if [ $# -eq 0 ]; then
   echo -e "${BLUE}현재 기본 AI 모델:${NC} ${GREEN}${CURRENT}${NC}"
   echo ""
   echo "전환 명령어:"
-  echo "  bash scripts/switch_model.sh claude   # 아키텍처/복잡한 작업"
-  echo "  bash scripts/switch_model.sh gemini   # 대용량 컨텍스트/문서화"
-  echo "  bash scripts/switch_model.sh codex    # 보일러플레이트/테스트"
+  echo "  bash scripts/switch_model.sh claude        # 아키텍처/복잡한 작업"
+  echo "  bash scripts/switch_model.sh antigravity   # 대용량 컨텍스트/문서화"
+  echo "  bash scripts/switch_model.sh codex         # 보일러플레이트/테스트"
   echo ""
   exit 0
 fi
@@ -47,7 +47,7 @@ fi
 TARGET_MODEL=$1
 
 # 유효한 모델 확인
-VALID_MODELS=("claude" "gemini" "codex")
+VALID_MODELS=("claude" "antigravity" "codex")
 IS_VALID=false
 for m in "${VALID_MODELS[@]}"; do
   if [ "$TARGET_MODEL" = "$m" ]; then
@@ -58,7 +58,10 @@ done
 
 if [ "$IS_VALID" = false ]; then
   echo -e "\033[0;31m[ERROR]\033[0m 유효하지 않은 모델: $TARGET_MODEL"
-  echo "사용 가능한 모델: claude, gemini, codex"
+  echo "사용 가능한 모델: claude, antigravity, codex"
+  if [ "$TARGET_MODEL" = "gemini" ]; then
+    echo "참고: Gemini CLI는 2026-06-18 서비스 중단됐습니다. antigravity를 사용하세요."
+  fi
   exit 1
 fi
 
@@ -94,11 +97,11 @@ case $TARGET_MODEL in
     echo "  - 복잡한 리팩터링 및 디버깅"
     echo "  - 상세 가이드: .ai/core/CLAUDE.md"
     ;;
-  gemini)
-    echo "Gemini 사용 가이드:"
+  antigravity)
+    echo "Antigravity 사용 가이드:"
     echo "  - 대용량 코드베이스 분석"
     echo "  - 문서 생성 및 API 문서화"
-    echo "  - 상세 가이드: .ai/GEMINI.md"
+    echo "  - 상세 가이드: .ai/ANTIGRAVITY.md"
     ;;
   codex)
     echo "Codex 사용 가이드:"

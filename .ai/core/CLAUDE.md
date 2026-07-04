@@ -1,98 +1,65 @@
-# Claude Usage Guide
+# CLAUDE.md — AI Navigation Index
 
-> Claude는 이 템플릿에서 기본(default) AI 모델로 설정됩니다.
-> 아키텍처 설계, 복잡한 리팩터링, 심층 디버깅에 최적화됩니다.
-
----
-
-## 역할 정의
-
-Claude는 다음 작업에 우선 사용합니다:
-
-| 작업 유형 | 구체적인 예시 |
-|----------|-------------|
-| 아키텍처 설계 | FSD 레이어 구조 결정, 모듈 분리 방식 논의, 의존성 방향 설계 |
-| 복잡한 리팩터링 | 레이어 이동, 상태 관리 구조 변경, 대규모 코드 재구성 |
-| 심층 디버깅 | 레이스 컨디션, 메모리 누수, 복잡한 비동기 버그 추적 |
-| 타입 시스템 설계 | 복잡한 제네릭, 조건부 타입, 타입 추론 문제 |
-| 코드 리뷰 | 아키텍처 관점의 리뷰, 설계 결정 검토 |
-| 기술 결정 | 라이브러리 선택, 패턴 채택 여부 판단 |
+Read only the file mapped to the current task. Do not read all docs upfront.
 
 ---
 
-## 효과적인 프롬프트 작성법
+## Task → File Routing
 
-### 컨텍스트 제공 템플릿
+| Task type | Read this file |
+|-----------|----------------|
+| Folder structure, FSD layer decisions, naming, state management, API layer | `.ai/rules/ARCHITECTURE.md` |
+| DB schema, Prisma models, migrations, repositories, indexing | `.ai/DATABASE.md` |
+| Component design, tokens, typography, dark mode, a11y, breakpoints | `.ai/rules/DESIGN.md` |
+| Writing or reviewing tests, mocking strategy, coverage targets | `.ai/rules/TEST.md` |
+| PR rules, commit messages, branch strategy, review comment conventions | `.ai/rules/REVIEW.md` |
+| Boilerplate scaffolding, CRUD generation, Codex prompt patterns | `.ai/CODEX.md` |
+| Large-context analysis, doc generation, Antigravity prompt patterns | `.ai/ANTIGRAVITY.md` |
+| Which AI model to pick, cost optimization | `.ai/core/MODEL_RULE.md` |
+| Dashboard page layout template | `.ai/templates/DASHBOARD.md` |
+| Landing page layout template | `.ai/templates/LANDING.md` |
+| Mobile screen layout template | `.ai/templates/MOBILE.md` |
+| Docker, Kubernetes, Helm, monitoring, logging, scaling, rollback | `.ai/rules/INFRA.md` |
+| CI pipeline triggers, GitHub Actions jobs, deploy flow | `.github/workflows/deploy.yml` |
 
-```markdown
-# 컨텍스트
-- 현재 레이어: features/auth/model
-- 사용 중인 라이브러리: Zustand v4, React Query v5
-- 관련 파일: [파일 경로 또는 코드 붙여넣기]
-
-# 목표
-[달성하고자 하는 것]
-
-# 제약 조건
-- FSD 레이어 규칙 준수
-- 서버 상태는 React Query로만 처리
-- [기타 프로젝트 규칙]
-
-# 현재 문제
-[구체적인 문제 설명]
-```
-
-### 좋은 프롬프트 예시
-
-```
-✅ "현재 features/auth에서 토큰 갱신 로직을 구현하려 합니다.
-   Zustand store에 token을 저장하고, axios 인터셉터에서
-   401 응답 시 refresh를 하는 구조를 설계해주세요.
-   레이스 컨디션 방지도 포함해주세요."
-
-✅ "기존 UserCard 컴포넌트가 150줄이고 widgets 레이어에 있는데,
-   FSD 관점에서 entities/user와 features 레이어로 분리하려면
-   어떻게 해야 할까요?"
-```
-
-```
-❌ "로그인 만들어줘"
-❌ "왜 안 돼?"
-❌ "코드 봐줘" [코드 없이]
-```
+If the task spans two domains (e.g., "add a DB-backed feature"), read both mapped files.
 
 ---
 
-## 응답 품질 기준
+## Always-Apply Rules (no file read needed)
 
-Claude에게 기대하는 응답 수준:
+### Architecture
 
-1. 이유 설명: 코드만이 아닌 "왜 이 방식인지" 설명 포함
-2. 트레이드오프: 여러 선택지가 있을 때 장단점 비교
-3. FSD 준수: 레이어 규칙 위반 없는 코드
-4. 타입 안전성: `any` 없는 완전한 TypeScript 타입
-5. 엣지 케이스: 예외 상황과 에러 처리 포함
+- FSD import direction: `app → views → widgets → features → entities → shared`
+  (`views` is the FSD `pages` layer, renamed to avoid Next.js Pages Router conflicts)
+- Cross-slice imports within the same layer are forbidden
+- Always import slices through their `index.ts`, never internal paths
+- entities vs features: if 2+ features share the same domain data, put the React Query hook in `entities/[domain]/model/`. One feature only → keep in `features/[feature]/model/`
 
----
+### Code Quality
 
-## Claude를 쓰지 않아야 할 때
+- No `any` type usage
+- Server state goes into React Query — never into Zustand stores
+- All env vars accessed through `shared/config/env.ts`, never `process.env` directly in components
 
-| 상황 | 대신 사용 |
-|------|----------|
-| 단순 CRUD 보일러플레이트 생성 | Codex |
-| 대용량 코드베이스 전체 분석 | Gemini |
-| 반복적인 단위 테스트 작성 | Codex |
-| API 문서 자동 생성 | Gemini |
-| 설정 파일 생성 | Codex |
+### Writing Rules (applies to all `.ai/` docs)
 
----
-
-## 세션 관리 팁
-
-- 복잡한 아키텍처 논의는 하나의 긴 세션보다 단계별 세션 권장
-- 코드 수정 후 새 파일 내용을 붙여넣어 컨텍스트 동기화
-- 결정된 내용은 ARCHITECTURE.md에 기록하여 다음 세션에 참조
+- No `**bold**` markers — use headers (`##`, `###`), inline code, or blockquotes instead
+- Warnings written as `> NOTE:` or `> CAUTION:` blockquotes
+- End each `.ai/` file with `_Last Modified: YYYY-MM-DD_`
 
 ---
 
-*ai_config.json의 claude 설정과 연동됩니다.*
+## Model Selection Quick Reference
+
+| Situation | Model |
+|-----------|-------|
+| Architecture decisions, complex debugging, type design | Claude |
+| Whole-codebase analysis, doc generation, large context | Antigravity (`agy`) |
+| Boilerplate, CRUD scaffolding, unit test generation | Codex |
+
+Full rules: `.ai/core/MODEL_RULE.md`
+
+---
+
+_Last Modified: 2026-07-04_

@@ -1,78 +1,76 @@
 # Model & Writing Rules
 
-AI 모델과 협업할 때 일관된 문서 작성 기준을 정의합니다.
-이 규칙은 .ai/ 하위의 모든 문서와 AI에게 전달하는 모든 컨텍스트에 적용됩니다.
+<!-- 한국어 요약: 이 문서는 AI 협업 문서 작성 시 **(볼드) 강조 기호 사용 금지 규칙과 비용 최적화 원칙을 정의합니다. AI 참고 목적으로 영문으로 작성되었습니다. -->
+
+> This guide defines writing standards for AI-assisted documentation.
+> Applies to all files in the `.ai/` directory and context prompts sent to AI.
 
 ---
 
-## 문서 작성 규칙
+## Documentation Rules
 
-### 강조 표현 금지
+### No Bold Markdown Annotations
 
-마크다운의 ** 강조(bold) 문법을 사용하지 않습니다.
+Do not use `**` (bold) markdown annotations in codes, comments, or documentation files.
 
-이유:
-- AI가 컨텍스트로 읽을 때 ** 기호가 노이즈로 작용한다
-- 주석이나 설명에서 특정 단어를 강조하려는 의도가 구조적 명확성보다 중요하지 않다
-- 테이블 헤더, 섹션 제목(##), 인라인 코드(`)로 충분히 위계를 표현할 수 있다
+Reasons:
+
+- The `**` markers act as syntactic noise when processed by LLMs in raw contexts.
+- Over-highlighting single words degrades the logical hierarchy of the document.
+- Use section headers (##, ###), inline code wrappers (`), or blockquotes (>) instead.
 
 ```markdown
-# 금지
-이 함수는 **반드시** 순수 함수여야 합니다.
-| **컴포넌트** | **역할** |
+# Bad
 
-# 허용
-이 함수는 순수 함수여야 합니다.
-| 컴포넌트 | 역할 |
-## 반드시 지킬 것
-`순수 함수` 조건 참조
+This function **must** be a pure function.
+| **Component** | **Role** |
+
+# Good
+
+This function must be a pure function.
+| Component | Role |
+Refer to `pure function` rules.
 ```
 
-### 강조가 필요한 경우 대안
+### Alternatives for Emphasis
 
-| 목적 | 대신 사용 |
-|------|----------|
-| 중요한 개념 강조 | 섹션(##, ###)으로 분리 |
-| 코드/명령어 강조 | 인라인 코드(`) 사용 |
-| 핵심 규칙 강조 | 블록 인용(>) 사용 |
-| 경고/주의 표시 | > NOTE: / > CAUTION: 접두사 |
-
----
-
-## AI 모델 선택 규칙
-
-ai_config.json에 정의된 역할 외에 아래 원칙을 따릅니다:
-
-### 컨텍스트 크기 기준
-
-| 컨텍스트 크기 | 모델 |
-|-------------|------|
-| 단일 파일 ~ 소수 파일 | Claude (기본) |
-| 코드베이스 전체 분석 | Gemini |
-| 템플릿 기반 반복 작업 | Codex |
-
-### 비용 최적화 원칙
-
-설계 논의는 Claude → 결정 후 반복 구현은 Codex로 위임합니다.
-같은 작업을 Claude에게 반복 요청하지 않습니다.
-문서 생성, 요약은 Gemini를 우선 사용합니다.
-
-### 컨텍스트 제공 원칙
-
-AI에게 요청할 때 아래 정보를 항상 포함합니다:
-- 현재 작업 중인 레이어와 파일 경로
-- 따라야 할 기존 패턴 또는 참조 파일
-- 적용되는 제약 조건 (레이어 규칙, 네이밍 등)
-- 기대하는 출력 형식
+| Goal                        | Alternative                                 |
+| --------------------------- | ------------------------------------------- |
+| Highlight important concept | Separate with header section (##, ###)      |
+| Commands or code tokens     | Use inline code wrapper (`)                 |
+| Strict constraints          | Use blockquotes (>)                         |
+| Warnings or notices         | Use prefix alerts: `> NOTE:` / `> CAUTION:` |
 
 ---
 
-## 문서 유지보수 규칙
+## AI Model Selection Rules
 
-- 모든 .ai/ 문서의 하단에 '최종 수정: YYYY-MM-DD' 를 유지합니다
-- 실제 코드 변경 후 관련 문서를 함께 업데이트합니다
-- 더 이상 유효하지 않은 규칙은 삭제하지 말고 Deprecated 섹션으로 이동합니다
+<!-- 한국어 요약: 컨텍스트 크기별 AI 모델 매핑 및 비용 최적화 전략 -->
+
+Follow these selection guides on top of `ai_config.json`:
+
+### Context Size Limits
+
+| Context Scale                  | Target Model     |
+| ------------------------------ | ---------------- |
+| Single file to few files       | Claude (Default) |
+| Whole codebase analysis        | Antigravity      |
+| Boilerplate / Repetitive tasks | Codex            |
+
+> NOTE: Antigravity CLI (`agy`, Gemini 3) replaced Gemini CLI, which was sunset on 2026-06-18.
+
+### Cost Optimization
+
+- Delegate architecture design to Claude → Hand over boilerplate implementation to Codex.
+- Do not repeat identical complex prompts to Claude. Use Antigravity for documentation and summaries.
 
 ---
 
-*최종 수정: 2026-06-27*
+## Maintenance Rules
+
+- Keep a "Last Modified: YYYY-MM-DD" stamp at the end of each `.ai/` file.
+- Update related documentation side-by-side with source code changes.
+
+---
+
+_Last Modified: 2026-07-04_

@@ -51,10 +51,13 @@ bash scripts/ai.sh --list
 pnpm ai
 
 # 작업 유형에 따른 모델 선택
-bash scripts/switch_model.sh claude   # 아키텍처/복잡한 작업
-bash scripts/switch_model.sh codex    # 보일러플레이트/테스트
-bash scripts/switch_model.sh gemini   # 문서화/전체 분석
+bash scripts/switch_model.sh claude        # 아키텍처/복잡한 작업
+bash scripts/switch_model.sh codex         # 보일러플레이트/테스트
+bash scripts/switch_model.sh antigravity   # 문서화/전체 분석
 ```
+
+> NOTE: Gemini CLI는 2026-06-18 서비스 중단됐습니다. 대체 도구인 Antigravity CLI(`agy`)를
+> antigravity.google/download 에서 설치하세요. 배경: `docs/adr/004-gemini-to-antigravity.md`
 
 ---
 

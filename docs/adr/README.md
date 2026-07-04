@@ -11,6 +11,7 @@ ADR은 프로젝트에서 내린 중요한 기술/설계 결정을 기록하는 
 결정의 배경(Context), 선택지(Options), 결정(Decision), 결과(Consequences)를 포함합니다.
 
 규칙:
+
 - 한 번 기록된 ADR은 수정하지 않습니다
 - 결정을 번복할 경우 새 ADR을 작성하고 이전 ADR을 Superseded로 표시합니다
 - 파일명 형식: `NNN-제목.md` (예: `001-monorepo-structure.md`)
@@ -19,11 +20,12 @@ ADR은 프로젝트에서 내린 중요한 기술/설계 결정을 기록하는 
 
 ## ADR 목록
 
-| 번호 | 제목 | 상태 | 날짜 |
-|------|------|------|------|
-| [001](./001-monorepo-and-fsd.md) | 모노레포 + FSD 아키텍처 채택 | Accepted | 2026-06-27 |
-| [002](./002-state-management.md) | 상태 관리 전략 (Zustand + React Query) | Accepted | 2026-06-27 |
-| [003](./003-ai-model-strategy.md) | AI 멀티 모델 협업 전략 | Accepted | 2026-06-27 |
+| 번호                                    | 제목                                   | 상태              | 날짜       |
+| --------------------------------------- | -------------------------------------- | ----------------- | ---------- |
+| [001](./001-monorepo-and-fsd.md)        | 모노레포 + FSD 아키텍처 채택           | Accepted          | 2026-06-27 |
+| [002](./002-state-management.md)        | 상태 관리 전략 (Zustand + React Query) | Accepted          | 2026-06-27 |
+| [003](./003-ai-model-strategy.md)       | AI 멀티 모델 협업 전략                 | Superseded by 004 | 2026-06-27 |
+| [004](./004-gemini-to-antigravity.md)   | Gemini CLI → Antigravity CLI 전환      | Accepted          | 2026-07-04 |
 
 ---
 
@@ -62,6 +64,7 @@ ADR은 프로젝트에서 내린 중요한 기술/설계 결정을 기록하는 
 ## 결과 (Consequences)
 
 이 결정으로 인한 영향:
+
 - 긍정적: ...
 - 부정적: ...
 - 향후 고려사항: ...

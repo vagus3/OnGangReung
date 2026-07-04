@@ -98,10 +98,7 @@ temp/
 storybook-static/
 
 
-# ─── React Native / Expo ─────────────────────────────────────────────────────
-.expo/
-web-build/
-
+# ─── React Native (bare) ─────────────────────────────────────────────────────
 android/app/build/
 android/.gradle/
 *.apk

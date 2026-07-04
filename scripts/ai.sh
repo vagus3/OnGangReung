@@ -1,37 +1,27 @@
 #!/usr/bin/env bash
 # =============================================================================
-# ai.sh — AI 모델 실행 래퍼 스크립트
+# ai.sh — AI CLI 실행 스크립트
 #
 # 사용법:
-#   bash scripts/ai.sh [모델명] [옵션]
-#   bash scripts/ai.sh              # 기본 모델로 실행 (ai_config.json 참조)
-#   bash scripts/ai.sh claude       # Claude 지정 실행
-#   bash scripts/ai.sh gemini       # Gemini 지정 실행
-#   bash scripts/ai.sh codex        # Codex 지정 실행
-#   bash scripts/ai.sh --list       # 설치된 모델 확인
+#   bash scripts/ai.sh                     # ai_config.json의 default 모델 실행
+#   bash scripts/ai.sh claude              # 특정 모델 지정 실행
+#   bash scripts/ai.sh antigravity
+#   bash scripts/ai.sh codex
+#   bash scripts/ai.sh --list              # 설정된 모델 목록/현재 기본값 출력
 #
-# 요구사항:
-#   - claude: 'claude' CLI 설치 (claude.ai/cli)
-#   - gemini: 'gemini' CLI 설치
-#   - codex:  'codex' CLI 설치 (openai/codex)
+# 모델 뒤의 인자는 해당 CLI로 그대로 전달됩니다:
+#   bash scripts/ai.sh claude --resume
 # =============================================================================
 
 set -euo pipefail
 
-CONFIG_FILE=".ai/ai_config.json"
+CONFIG_FILE="$(dirname "$0")/../.ai/ai_config.json"
 
-# 색상
 GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-log_info()  { echo -e "${BLUE}[AI]${NC} $1"; }
-log_warn()  { echo -e "${YELLOW}[WARN]${NC} $1"; }
-log_error() { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
-
-# ai_config.json에서 기본 모델 읽기
 get_default_model() {
   if command -v jq &> /dev/null; then
     jq -r '.default' "$CONFIG_FILE"
@@ -40,79 +30,60 @@ get_default_model() {
   fi
 }
 
-# 모델의 CLI 커맨드 읽기
-get_model_command() {
+get_command_for() {
   local model=$1
   if command -v jq &> /dev/null; then
-    jq -r ".models.${model}.command // empty" "$CONFIG_FILE"
+    jq -r --arg m "$model" '.models[$m].command // empty' "$CONFIG_FILE"
   else
-    echo "$model"
+    # jq 없을 때: 모델 블록 다음에 나오는 첫 "command" 값을 추출
+    awk -v m="\"$model\"" '$0 ~ m {found=1} found && /"command"/ {gsub(/.*: *"|".*/, ""); print; exit}' "$CONFIG_FILE"
   fi
 }
 
-# 설치된 모델 목록 확인
 list_models() {
+  local default_model
+  default_model=$(get_default_model)
   echo ""
-  echo "AI 모델 설치 상태:"
-  echo "------------------"
-  for model in claude gemini codex; do
-    CMD=$(get_model_command "$model")
-    if command -v "$CMD" &> /dev/null; then
-      echo -e "  ${GREEN}✓${NC} ${model} ($(command -v "$CMD"))"
-    else
-      echo -e "  ${RED}✗${NC} ${model} — '${CMD}' 명령어를 찾을 수 없음"
-    fi
-  done
-
-  CURRENT=$(get_default_model)
+  echo -e "${BLUE}현재 기본 모델:${NC} ${GREEN}${default_model}${NC}"
   echo ""
-  echo -e "기본 모델: ${GREEN}${CURRENT}${NC}"
+  echo "설정된 모델 (.ai/ai_config.json):"
+  if command -v jq &> /dev/null; then
+    jq -r '.models | to_entries[] | "  \(.key)\t→ \(.value.command)\t(\(.value.usage | join(", ")))"' "$CONFIG_FILE"
+  else
+    grep -o '"[a-z]*": *{' "$CONFIG_FILE" | sed 's/[":{ ]//g' | sed 's/^/  /'
+  fi
   echo ""
-  echo "전환: bash scripts/switch_model.sh [claude|gemini|codex]"
+  echo "기본 모델 전환: bash scripts/switch_model.sh [claude|antigravity|codex]"
   echo ""
 }
 
-# --list 플래그 처리
-if [ "${1:-}" = "--list" ]; then
+# --list / -l 처리
+if [ "${1:-}" = "--list" ] || [ "${1:-}" = "-l" ]; then
   list_models
   exit 0
 fi
 
-# 모델 결정
-if [ $# -gt 0 ] && [[ "$1" =~ ^(claude|gemini|codex)$ ]]; then
-  TARGET_MODEL=$1
-  shift  # 첫 번째 인자(모델명) 제거, 나머지는 CLI에 전달
-else
-  TARGET_MODEL=$(get_default_model)
+# 모델 결정: 인자 없으면 config의 default 사용
+MODEL="${1:-$(get_default_model)}"
+[ $# -gt 0 ] && shift
+
+# gemini 하위 호환: Gemini CLI는 2026-06-18 서비스 중단 → antigravity로 안내
+if [ "$MODEL" = "gemini" ]; then
+  echo -e "${RED}[NOTE]${NC} Gemini CLI는 2026-06-18 서비스 중단됐습니다. antigravity(agy)로 실행합니다."
+  MODEL="antigravity"
 fi
 
-CMD=$(get_model_command "$TARGET_MODEL")
+CMD=$(get_command_for "$MODEL")
 
-# CLI 명령어 존재 확인
+if [ -z "$CMD" ]; then
+  echo -e "${RED}[ERROR]${NC} 알 수 없는 모델: $MODEL"
+  echo "사용 가능한 모델: claude, antigravity, codex (bash scripts/ai.sh --list)"
+  exit 1
+fi
+
 if ! command -v "$CMD" &> /dev/null; then
-  log_error "'${CMD}' CLI를 찾을 수 없습니다.
-
-설치 방법:
-  claude: https://claude.ai/cli
-  gemini: npm install -g @google/gemini-cli
-  codex:  npm install -g @openai/codex"
+  echo -e "${RED}[ERROR]${NC} '$CMD' 명령을 찾을 수 없습니다. ($MODEL CLI가 설치되어 있는지 확인하세요)"
+  exit 1
 fi
 
-# 실행
-log_info "모델: ${TARGET_MODEL} (${CMD})"
-
-# 프로젝트 컨텍스트 파일 목록 (자동 포함)
-CONTEXT_FILES=(
-  ".ai/rules/ARCHITECTURE.md"
-  ".ai/core/MODEL_RULE.md"
-)
-
-# 모델별 추가 컨텍스트
-case $TARGET_MODEL in
-  claude) CONTEXT_FILES+=(".ai/core/CLAUDE.md") ;;
-  gemini) CONTEXT_FILES+=(".ai/GEMINI.md") ;;
-  codex)  CONTEXT_FILES+=(".ai/CODEX.md") ;;
-esac
-
-# CLI 실행 (추가 인자 전달)
 exec "$CMD" "$@"
