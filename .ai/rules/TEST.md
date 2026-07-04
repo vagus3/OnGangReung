@@ -20,6 +20,7 @@
 7. [Test Directory Layout](#7-test-directory-layout)
 8. [Mocking Strategy](#8-mocking-strategy)
 9. [Target Coverage Goals](#9-target-coverage-goals)
+10. [Backend Testing — pytest](#10-backend-testing--pytest)
 
 ---
 
@@ -55,10 +56,11 @@ expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
 
 <!-- 한국어 요약: Vitest, React Testing Library, MSW 등 테스트 도구 구성 -->
 
-- Test Runner: Vitest.
+- Test Runner (web): Vitest.
 - DOM Testing: `@testing-library/react`.
 - API Mocking: MSW (Mock Service Worker).
 - E2E: Playwright.
+- Test Runner (api): pytest + pytest-asyncio + httpx (see Section 10).
 
 ---
 
@@ -159,7 +161,43 @@ features/auth/
 - shared/lib: 90%+
 - features/\*/model: 80%+
 - features/\*/ui: 60%+
+- app/services (api): 80%+
 
 ---
 
-_Last Modified: 2026-07-04_
+## 10. Backend Testing — pytest
+
+<!-- 한국어 요약: FastAPI 라우터 테스트 패턴 — httpx AsyncClient + SQLite 인메모리 -->
+
+Test through the HTTP boundary (router level), not by calling services
+directly — same philosophy as Testing Library: verify behavior, not
+implementation.
+
+### Fixture Pattern
+
+The `client` fixture (tests/conftest.py) boots the real FastAPI app with the
+DB dependency overridden to in-memory SQLite. Tests need no external services:
+
+```python
+async def test_create_and_list_posts(client: AsyncClient) -> None:
+    res = await client.post("/api/v1/posts", json={"title": "hello", "content": "world"})
+    assert res.status_code == 201
+
+    res = await client.get("/api/v1/posts")
+    assert res.status_code == 200
+    assert len(res.json()) == 1
+```
+
+### Rules
+
+- Async mode is automatic (`asyncio_mode = "auto"` in pyproject.toml) —
+  plain `async def test_*` functions, no decorators needed.
+- Assert on status codes and response bodies, including error shapes
+  (`{"detail": ..., "code": ...}`).
+- Validation failures are covered by schema tests (422 assertions), not by
+  re-testing Pydantic itself.
+- Run: `pnpm --filter api test` or `cd apps/api && uv run pytest`.
+
+---
+
+_Last Modified: 2026-07-05_

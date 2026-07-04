@@ -18,7 +18,7 @@
 5. [Layer Dependency Rules](#5-layer-dependency-rules)
 6. [Naming Conventions](#6-naming-conventions)
 7. [State Management Strategy](#7-state-management-strategy)
-8. [API Client Layer Design](#8-api-client-layer-design)
+8. [API Client Layer & Type Sharing](#8-api-client-layer--type-sharing)
 9. [Environment Variables](#9-environment-variables)
 10. [AI Model Task Distribution](#10-ai-model-task-distribution)
 11. [Code Review & PR Standards](#11-code-review--pr-standards)
@@ -100,18 +100,18 @@ features/auth/
 
 The key to reducing FSD boilerplate is using the `entities/` layer not just for type definitions, but as a central supplier of shared domain logic.
 
-| Situation | Location |
-|-----------|----------|
-| 2+ features query the same domain data | `entities/[domain]/model/` |
-| Only one feature uses the data | `features/[feature]/model/` |
-| Pure types or constants with no logic | `entities/[domain]/` |
+| Situation                              | Location                    |
+| -------------------------------------- | --------------------------- |
+| 2+ features query the same domain data | `entities/[domain]/model/`  |
+| Only one feature uses the data         | `features/[feature]/model/` |
+| Pure types or constants with no logic  | `entities/[domain]/`        |
 
 ```typescript
 // ✅ Shared hook in entities — reused across features
 // entities/user/model/useUser.ts
 export function useUser(userId: string) {
   return useQuery({
-    queryKey: ['user', userId],
+    queryKey: ["user", userId],
     queryFn: () => userApi.getUser(userId),
   });
 }
@@ -136,16 +136,12 @@ export function useUser(userId: string) {
 ```
 /
 ├── apps/
-│   ├── web/          # Next.js web application
-│   ├── mobile/       # React Native (bare) application (Optional)
-│   └── api/          # Node.js backend (Express / NestJS)
+│   ├── web/          # Next.js web application (TypeScript)
+│   └── api/          # FastAPI backend (Python 3.12, managed by uv)
 │
 ├── packages/
-│   ├── ui/           # Shared UI component library
-│   ├── types/        # Shared TypeScript type definitions
-│   ├── utils/        # Shared utility functions
-│   ├── config/       # Shared configs (ESLint, TSConfig)
-│   └── database/     # Prisma schema and migrations
+│   ├── api-client/   # Generated TS types + client from FastAPI OpenAPI schema
+│   └── config/       # Shared TSConfig bases
 │
 ├── .ai/              # AI config and rules
 ├── .github/          # CI/CD workflows
@@ -154,11 +150,18 @@ export function useUser(userId: string) {
 └── package.json      # Workspace root package.json
 ```
 
+> NOTE: There is no hand-written shared types package. All API types are
+> generated into `packages/api-client` from the backend OpenAPI schema
+> (see Section 8). DB schema lives in `apps/api` as SQLAlchemy models.
+
 ### Workspace Configuration
 
 - Package Manager: `pnpm workspaces` (defined in `pnpm-workspace.yaml`, not `package.json`)
 - Build Orchestration: `Turborepo`
-- Internal Imports: Reference packages via `@project/ui`, `@project/types`.
+- Internal Imports: Reference packages via `@shg/api-client`, `@shg/config`
+- Python side: `apps/api` is a `uv` project (`pyproject.toml` + `uv.lock`).
+  Its `package.json` is a thin shim exposing `dev`/`lint`/`type-check`/`test`
+  scripts so Turborepo can orchestrate it with one command set.
 
 ### apps/web Structure (FSD Applied)
 
@@ -180,27 +183,29 @@ apps/web/
 └── next.config.ts
 ```
 
-### apps/api Structure (Clean Architecture Applied)
+### apps/api Structure (FastAPI Standard Layout)
 
 ```
 apps/api/
-├── src/
-│   ├── presentation/     # Controllers, routers, DTOs
-│   │   ├── routes/
-│   │   ├── controllers/
-│   │   └── middlewares/
-│   ├── application/      # Use cases and services
-│   │   └── use-cases/
-│   ├── domain/           # Entities, domain services, repository interfaces
-│   │   ├── entities/
-│   │   └── repositories/
-│   └── infrastructure/   # Database, external services, cache
-│       ├── database/
-│       ├── repositories/
-│       └── external/
-├── tests/
-└── tsconfig.json
+├── pyproject.toml        # Dependencies and tool config (uv, ruff, mypy, pytest)
+├── package.json          # Turbo shim — real dependency management is uv
+├── alembic/              # DB migrations (alembic/versions/)
+├── scripts/
+│   └── export_openapi.py # Extracts OpenAPI schema without running the server
+├── app/
+│   ├── main.py           # FastAPI entrypoint, router registration, CORS
+│   ├── core/             # Settings (pydantic-settings), exception handlers
+│   ├── api/v1/           # Routers                (presentation layer)
+│   ├── schemas/          # Pydantic request/response DTOs
+│   ├── services/         # Business logic         (application layer)
+│   ├── models/           # SQLAlchemy models      (domain layer)
+│   └── db/               # Session factory        (infrastructure layer)
+└── tests/                # pytest (httpx AsyncClient + in-memory SQLite)
 ```
+
+> NOTE: This follows the FastAPI community-standard layout instead of a
+> heavyweight 4-folder Clean Architecture tree, while keeping the same
+> dependency direction rules (see Section 5).
 
 ---
 
@@ -275,18 +280,23 @@ entities/user → entities/product  (Invalid)
 
 > NOTE: If code needs sharing in the same layer, extract it to a lower layer (e.g., `shared` or `entities`).
 
-### Clean Architecture Import Restrictions (Back-end)
+### Backend Import Restrictions (FastAPI, Python)
 
 ```
 Allowed Direction
-presentation  → application
-application   → domain
-infrastructure → domain
+api (routers)  → services, schemas, db
+services       → models, schemas, core
+db             → models, core
 
 Disallowed Direction
-domain        → application, presentation, infrastructure
-application   → presentation, infrastructure
+models         → services, api, schemas
+services       → api
+schemas        → services, api
 ```
+
+> NOTE: Routers convert ORM objects to Pydantic DTOs at the boundary
+> (`PostRead.model_validate(post)`). Services return ORM models and never
+> import from `app.api`.
 
 ### ESLint Rules to Enforce Limits
 
@@ -462,14 +472,31 @@ export const queryClient = new QueryClient({
 
 ---
 
-## 8. API Client Layer Design
+## 8. API Client Layer & Type Sharing
 
-<!-- 한국어 요약: API 호출 계층 구조, Axios 클라이언트 설정 및 인터셉터, API 함수 양식 -->
+<!-- 한국어 요약: OpenAPI 코드젠 기반 타입 공유 파이프라인과 API 호출 계층 구조 -->
+
+### Type Sharing Pipeline (Python ↔ TypeScript)
+
+The backend is Python, so types cannot be shared as a TS package. Instead,
+types flow through the OpenAPI schema:
+
+```
+FastAPI (Pydantic schemas)
+  → openapi.json          (pnpm --filter api export-openapi)
+  → packages/api-client/src/types.ts   (openapi-typescript)
+  → apps/web imports from @shg/api-client (openapi-fetch)
+```
+
+- Run `pnpm codegen` at the repo root after any backend schema change.
+- Never edit `packages/api-client/src/types.ts` or `openapi.json` by hand.
+- CI re-runs codegen and fails on diff, so schema changes and regenerated
+  types always land in the same commit.
 
 ### API Structure
 
 ```
-UI Component → React Query Hook → API Call Function → Axios Instance
+UI Component → React Query Hook → API Call Function → Generated Client (openapi-fetch)
 ```
 
 ### Token Storage (framework-agnostic module in shared)
@@ -511,57 +538,62 @@ export const useAuthStore = create<AuthStore>((set) => ({
 }));
 ```
 
-### Axios client with Token injection
+### Generated client with Token injection (openapi-fetch middleware)
 
 ```typescript
 // shared/api/client.ts
-import axios from "axios";
+import { createApiClient } from "@shg/api-client";
 import { env } from "@/shared/config/env";
 import { tokenStorage } from "./token";
 
-export const apiClient = axios.create({
-  baseURL: env.NEXT_PUBLIC_API_URL,
-  timeout: 10000,
-  headers: { "Content-Type": "application/json" },
-});
+export const apiClient = createApiClient(env.NEXT_PUBLIC_API_URL);
 
-// Request interceptor: Inject bearer token automatically
-apiClient.interceptors.request.use((config) => {
-  const token = tokenStorage.get();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-// Response interceptor: Redirect on 401 Unauthorized
-apiClient.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    if (error.response?.status === 401) {
-      tokenStorage.clear();
-      window.location.href = "/login";
-    }
-    return Promise.reject(error);
-  },
-);
+// Auth를 도입할 때는 openapi-fetch 미들웨어로 토큰을 주입한다:
+// apiClient.use({
+//   onRequest({ request }) {
+//     const token = tokenStorage.get();
+//     if (token) request.headers.set("Authorization", `Bearer ${token}`);
+//     return request;
+//   },
+//   onResponse({ response }) {
+//     if (response.status === 401) {
+//       tokenStorage.clear();
+//       window.location.href = "/login";
+//     }
+//     return response;
+//   },
+// });
 ```
+
+> NOTE: The template ships without auth. The `tokenStorage` module and the
+> middleware above are the reference pattern to follow when adding it.
 
 ### API Function Patterns
 
+Request/response types come from the generated schema — never write them
+by hand:
+
 ```typescript
-// features/user/api/user.api.ts
+// entities/post/api/post.api.ts
+import type { components } from "@shg/api-client";
 import { apiClient } from "@/shared/api";
-import type { UserProfile, UpdateUserBody } from "@/entities/user";
 
-export const userApi = {
-  getProfile: (userId: string) =>
-    apiClient.get<UserProfile>(`/users/${userId}`).then((r) => r.data),
+export type Post = components["schemas"]["PostRead"];
+export type PostCreate = components["schemas"]["PostCreate"];
 
-  updateProfile: (userId: string, body: UpdateUserBody) =>
-    apiClient.patch<UserProfile>(`/users/${userId}`, body).then((r) => r.data),
+export const postApi = {
+  list: async (): Promise<Post[]> => {
+    const { data, error } = await apiClient.GET("/api/v1/posts");
+    if (error !== undefined)
+      throw new Error("게시글 목록을 불러오지 못했습니다");
+    return data;
+  },
 
-  deleteAccount: (userId: string) => apiClient.delete(`/users/${userId}`),
+  create: async (body: PostCreate): Promise<Post> => {
+    const { data, error } = await apiClient.POST("/api/v1/posts", { body });
+    if (error !== undefined) throw new Error("게시글을 작성하지 못했습니다");
+    return data;
+  },
 };
 ```
 
@@ -585,12 +617,16 @@ export const userApi = {
 
 ```bash
 # Public browser environment (Next.js)
-NEXT_PUBLIC_API_URL=https://api.example.com
+NEXT_PUBLIC_API_URL=http://localhost:8000
 
 # Server environment only (No NEXT_PUBLIC prefix)
-DATABASE_URL=postgresql://...
-JWT_SECRET=your-secret-key
+DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/app_dev
+CORS_ORIGINS=http://localhost:3000
 ```
+
+> NOTE: Both apps read the single root `.env`. Next.js loads it via
+> `next.config.ts` (dotenv), FastAPI via `pydantic-settings`
+> (`env_file=(".env", "../../.env")`).
 
 ### Zod Validation Schema for Safety
 
@@ -610,6 +646,26 @@ export const env = envSchema.parse({
   NODE_ENV: process.env.NODE_ENV,
 });
 ```
+
+### Backend Validation (pydantic-settings, symmetric to zod)
+
+```python
+# app/core/config.py
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=(".env", "../../.env"), extra="ignore")
+
+    database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/app_dev"
+    cors_origins: str = "http://localhost:3000"
+
+
+settings = Settings()
+```
+
+> CAUTION: Never read `os.environ` directly in application code — always go
+> through `settings`, the same way the front-end always goes through `env`.
 
 ---
 
@@ -644,14 +700,17 @@ export const env = envSchema.parse({
 
 <!-- 한국어 요약: 아키텍처 점검 및 새 기능 추가 시 프로세스 -->
 
-### Add Feature Process
+### Add Feature Process (Full-stack)
 
-1. Define layer: Find correct location in FSD
-2. Create slice: Add directory with `index.ts`
-3. Declare types: Define types inside `entities/`
-4. Create API: Define api endpoints in `features/*/api/`
-5. Declare model: Setup queries or store values in `features/*/model/`
-6. Implement UI: Build component inside `features/*/ui/`
+1. Backend model: Add SQLAlchemy model in `app/models/`, generate migration
+   (`uv run alembic revision --autogenerate`, then `upgrade head`)
+2. Backend API: Add Pydantic schemas (`app/schemas/`), service
+   (`app/services/`), router (`app/api/v1/`) — with pytest coverage
+3. Regenerate types: `pnpm codegen` (updates `@shg/api-client`)
+4. Frontend entity: Re-export generated types + React Query hook in
+   `entities/[domain]/`
+5. Frontend feature: Mutations and UI in `features/[feature]/`
+6. Frontend view: Compose in `views/`, connect route in `app/`
 
 ---
 
@@ -669,5 +728,5 @@ Details: `.ai/rules/INFRA.md`
 
 ---
 
-_Last Modified: 2026-07-04_
+_Last Modified: 2026-07-05_
 _Owner: shg-template architecture guide_

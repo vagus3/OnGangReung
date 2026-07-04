@@ -1,9 +1,10 @@
 # Database Guide
 
-<!-- 한국어 요약: 이 문서는 Prisma ORM 및 PostgreSQL 스키마 설계, 마이그레이션 규칙을 정의합니다. AI 참고 목적으로 영문으로 작성되었습니다. -->
+<!-- 한국어 요약: 이 문서는 SQLAlchemy 2.0 + Alembic 기반 PostgreSQL 스키마 설계와 마이그레이션 규칙을 정의합니다. AI 참고 목적으로 영문으로 작성되었습니다. -->
 
-> This guide defines schema design, migration processes, and query patterns using Prisma ORM.
-> We use PostgreSQL as the primary database, adhering to the 12-Factor App methodology.
+> This guide defines schema design, migration processes, and query patterns
+> using SQLAlchemy 2.0 (async) and Alembic. We use PostgreSQL as the primary
+> database, adhering to the 12-Factor App methodology.
 
 ---
 
@@ -12,98 +13,113 @@
 <!-- 한국어 요약: 목차 -->
 
 1. [Directory Layout](#1-directory-layout)
-2. [Schema Design Rules](#2-schema-design-rules)
+2. [Model Design Rules](#2-model-design-rules)
 3. [Naming Conventions](#3-naming-conventions)
 4. [Migration Strategy](#4-migration-strategy)
-5. [Query Patterns](#5-query-patterns)
-6. [Performance Optimization](#6-performance-optimization)
-7. [Seeding Strategy](#7-seeding-strategy)
+5. [Session & Query Patterns](#5-session--query-patterns)
+6. [Testing Against the DB](#6-testing-against-the-db)
+7. [Performance Optimization](#7-performance-optimization)
 8. [Configuration by Environment](#8-configuration-by-environment)
 
 ---
 
 ## 1. Directory Layout
 
-<!-- 한국어 요약: Prisma DB 패키지의 구조 -->
+<!-- 한국어 요약: apps/api 내 DB 관련 파일 배치 -->
 
 ```
-packages/database/
-├── prisma/
-│   ├── schema.prisma          # Main Prisma schema
-│   ├── migrations/            # Auto-generated SQL migration files
-│   └── seed.ts                # Database seed script
-├── src/
-│   ├── client.ts              # Prisma Client singleton
-│   ├── repositories/          # Repository queries
-│   └── index.ts
+apps/api/
+├── alembic.ini                # Alembic 설정 (URL은 env.py가 주입)
+├── alembic/
+│   ├── env.py                 # settings.database_url + Base.metadata 연결
+│   └── versions/              # 마이그레이션 파일 (커밋 대상)
+└── app/
+    ├── models/                # SQLAlchemy 모델 — 스키마의 단일 진실 공급원
+    │   ├── base.py            # DeclarativeBase
+    │   └── post.py
+    └── db/
+        └── session.py         # async 엔진/세션 팩토리 + get_session 의존성
 ```
+
+> NOTE: New models must be imported in `app/models/__init__.py`, otherwise
+> Alembic autogenerate cannot see them.
 
 ---
 
-## 2. Schema Design Rules
+## 2. Model Design Rules
 
-<!-- 한국어 요약: Prisma 스키마 모델 기본 설계 및 소프트삭제, 외래키 규칙 -->
+<!-- 한국어 요약: SQLAlchemy 2.0 Mapped 스타일 모델 설계 규칙 -->
 
-### Basic Model Layout
+Use SQLAlchemy 2.0 `Mapped` / `mapped_column` typing style only. The legacy
+`Column = Column(...)` style fails mypy strict.
 
-All tables must contain timestamps (`createdAt`, `updatedAt`) and a nullable `deletedAt` for soft deletes.
+```python
+from datetime import datetime
 
-```prisma
-model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
-  name      String?
-  role      UserRole  @default(MEMBER)
-  posts     Post[]
+from sqlalchemy import DateTime, String, Text, func
+from sqlalchemy.orm import Mapped, mapped_column
 
-  // Timestamps
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime  @updatedAt @map("updated_at")
-  deletedAt DateTime? @map("deleted_at") // Soft delete
+from app.models.base import Base
 
-  @@map("users") // Explicit snake_case plural table name
-}
 
-enum UserRole {
-  ADMIN
-  MEMBER
-}
+class Post(Base):
+    __tablename__ = "posts"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(200))
+    content: Mapped[str] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
 ```
 
-### Core Architecture Rules
+Core rules:
 
-- Primary Keys: Use `cuid()` as default string IDs. Avoid auto-increment integer IDs for public APIs to prevent security scans.
-- Relations: Foreign keys should be placed on the N-side of 1:N relations. Use explicit junction tables for M:N relations.
+- Timestamps: use `DateTime(timezone=True)` with `server_default=func.now()`.
+  Add `updated_at` (`onupdate=func.now()`) when rows are mutable.
+- Nullability comes from the type: `Mapped[str | None]` is nullable,
+  `Mapped[str]` is `NOT NULL`.
+- Relations: put the FK on the N-side of 1:N. Use explicit association
+  tables for M:N.
+- Do not put business logic in models — that belongs to `app/services/`.
 
 ---
 
 ## 3. Naming Conventions
 
-<!-- 한국어 요약: 테이블/필드/Enum 명명 규칙 -->
+<!-- 한국어 요약: 테이블/컬럼/모델 명명 규칙 -->
 
 | Scope       | Casing                | Example                   |
 | ----------- | --------------------- | ------------------------- |
-| Model       | PascalCase (Singular) | `User`, `Post`            |
-| Field       | camelCase             | `createdAt`, `authorId`   |
+| Model class | PascalCase (Singular) | `User`, `Post`            |
 | Table       | snake_case (Plural)   | `users`, `blog_posts`     |
-| Columns     | snake_case            | `created_at`, `author_id` |
+| Column      | snake_case            | `created_at`, `author_id` |
 | Enum values | UPPER_SNAKE_CASE      | `ADMIN`, `SUPER_USER`     |
 
 ---
 
 ## 4. Migration Strategy
 
-<!-- 한국어 요약: CLI 마이그레이션 적용 흐름과 무중단 마이그레이션 규칙 -->
+<!-- 한국어 요약: Alembic 마이그레이션 생성/적용 흐름과 무중단 변경 규칙 -->
 
 ### Command Lifecycle
 
 ```bash
-# 1. Generate migrations during development
-pnpm --filter database migrate dev --name init_schema
+cd apps/api
 
-# 2. Deploy migrations to staging or production
-pnpm --filter database migrate deploy
+# 1. 모델 수정 후 마이그레이션 자동 생성 (로컬 Postgres 실행 상태에서)
+uv run alembic revision --autogenerate -m "add posts table"
+
+# 2. 생성된 파일을 반드시 눈으로 검토한 뒤 적용
+uv run alembic upgrade head
+
+# 3. 롤백 (직전 버전으로)
+uv run alembic downgrade -1
 ```
+
+> CAUTION: Always review autogenerated migrations before applying. Alembic
+> misses renames (it sees drop+add) and does not detect server_default
+> changes reliably.
 
 ### Destructive Changes (Non-breaking updates)
 
@@ -117,90 +133,92 @@ Never rename or drop columns containing active production data. Follow these ste
 
 ---
 
-## 5. Query Patterns
+## 5. Session & Query Patterns
 
-<!-- 한국어 요약: Prisma Client 싱글턴 및 리포지토리 패턴 작성 코드 예제 -->
+<!-- 한국어 요약: async 세션 주입 및 서비스 레이어 쿼리 패턴 -->
 
-### Prisma Client Singleton
+### Session Dependency
 
-```typescript
-import { PrismaClient } from "@prisma/client";
+Routers receive a per-request session via FastAPI DI — never create sessions
+inside services:
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
-};
+```python
+# app/db/session.py
+engine = create_async_engine(settings.database_url)
+SessionFactory = async_sessionmaker(engine, expire_on_commit=False)
 
-// Prevent multiple prisma clients in dev hot-reloads
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log:
-      process.env.NODE_ENV === "development" ? ["query", "error"] : ["error"],
-  });
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+async def get_session() -> AsyncIterator[AsyncSession]:
+    async with SessionFactory() as session:
+        yield session
 ```
 
-### Repository Example
+### Service Query Example
 
-```typescript
-import { prisma } from "../client";
-import type { Prisma } from "@prisma/client";
+```python
+# app/services/post.py
+async def list_posts(session: AsyncSession) -> list[Post]:
+    result = await session.execute(
+        select(Post).order_by(Post.created_at.desc(), Post.id.desc())
+    )
+    return list(result.scalars())
 
-export const userRepository = {
-  // Find single record, filtering out soft-deleted users
-  findById: (id: string) =>
-    prisma.user.findFirst({
-      where: { id, deletedAt: null },
-    }),
 
-  // Paginated query with transactions
-  findMany: async (page = 1, size = 20) => {
-    const where: Prisma.UserWhereInput = { deletedAt: null };
-
-    const [total, items] = await prisma.$transaction([
-      prisma.user.count({ where }),
-      prisma.user.findMany({
-        where,
-        skip: (page - 1) * size,
-        take: size,
-        orderBy: { createdAt: "desc" },
-      }),
-    ]);
-
-    return { items, total, page, totalPages: Math.ceil(total / size) };
-  },
-};
+async def create_post(session: AsyncSession, data: PostCreate) -> Post:
+    post = Post(title=data.title, content=data.content)
+    session.add(post)
+    await session.commit()
+    await session.refresh(post)
+    return post
 ```
+
+> NOTE: Services own commits. Routers never call `session.commit()`.
 
 ---
 
-## 6. Performance Optimization
+## 6. Testing Against the DB
+
+<!-- 한국어 요약: SQLite 인메모리 기반 테스트 DB 구성 -->
+
+Tests use in-memory SQLite (aiosqlite) with `Base.metadata.create_all`, and
+override the `get_session` dependency — no external DB required:
+
+```python
+# tests/conftest.py 핵심 패턴
+engine = create_async_engine("sqlite+aiosqlite://")
+async with engine.begin() as conn:
+    await conn.run_sync(Base.metadata.create_all)
+
+app.dependency_overrides[get_session] = override_session
+```
+
+> CAUTION: SQLite does not enforce every Postgres behavior (e.g. some
+> constraint types). Features relying on Postgres-only semantics need
+> integration tests against a real Postgres container.
+
+---
+
+## 7. Performance Optimization
 
 <!-- 한국어 요약: 인덱싱 가이드 및 슬로우 쿼리 감지 규칙 -->
 
-- Create index models for fields frequently queried inside `where` or sorted via `orderBy`.
+- Add `index=True` to `mapped_column` for fields frequently used in `WHERE`
+  or `ORDER BY`.
 - Set slow query logs to trigger alerts if queries exceed 500ms in duration.
-
----
-
-## 7. Seeding Strategy
-
-<!-- 한국어 요약: DB 초기 세팅을 위한 시드 코드 예제 -->
-
-Define a `prisma/seed.ts` script using `prisma.user.upsert` to guarantee idempotency on deployments.
+- Avoid N+1: use `selectinload` for collections accessed after list queries.
 
 ---
 
 ## 8. Configuration by Environment
 
-<!-- 한국어 요약: pgBouncer 및 커넥션 풀링 규칙 -->
+<!-- 한국어 요약: 드라이버 및 커넥션 풀링 규칙 -->
 
-- Dev: Direct TCP connection.
-- Staging / Prod: Connect using PgBouncer with connection limit tuning. Append `?pgbouncer=true` parameter to connection strings.
+- URL format: `postgresql+asyncpg://user:pass@host:5432/dbname`
+  (the `+asyncpg` driver suffix is required for the async engine).
+- Dev: Direct TCP connection. Docker 없이 개발할 때는
+  `sqlite+aiosqlite:///./dev.db`로 대체 가능.
+- Staging / Prod: Connect through PgBouncer with connection limit tuning.
 
 ---
 
-_Last Modified: 2026-07-04_
+_Last Modified: 2026-07-05_

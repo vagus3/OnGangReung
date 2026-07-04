@@ -64,55 +64,31 @@
 
 Always separate build and runtime stages to minimize production image sizes and security footprints.
 
-### apps/web Dockerfile (Next.js)
+The actual Dockerfiles live at `apps/web/Dockerfile` and `apps/api/Dockerfile`
+(build context is always the monorepo root). Key structure:
 
-```dockerfile
-# apps/web/Dockerfile
+### apps/web Dockerfile (Next.js standalone, 3 stages)
 
-# --- Stage 1: Install dependencies ---
-FROM node:20-alpine AS deps
-WORKDIR /app
-
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/web/package.json ./apps/web/
-COPY packages/ui/package.json ./packages/ui/
-COPY packages/types/package.json ./packages/types/
-
-RUN pnpm install --frozen-lockfile
-
-# --- Stage 2: Build source ---
-FROM node:20-alpine AS builder
-WORKDIR /app
-
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-
-ARG NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
-
-RUN pnpm --filter web build
-
-# --- Stage 3: Production runner ---
-FROM node:20-alpine AS runner
-WORKDIR /app
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder /app/apps/web/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./.next/static
-
-USER nextjs
-
-EXPOSE 3000
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
-
-CMD ["node", "server.js"]
 ```
+deps    node:22-alpine — corepack pnpm@9, workspace manifest만 복사 후
+        pnpm install --frozen-lockfile --filter "web..."
+builder 소스 전체 복사, ARG NEXT_PUBLIC_API_URL 주입, pnpm --filter web build
+runner  non-root(nextjs) 사용자, standalone 출력만 복사
+        CMD ["node", "apps/web/server.js"]   # 모노레포 경로 구조 유지
+```
+
+> NOTE: `next.config.ts`의 `output: "standalone"`이 전제 조건이다.
+
+### apps/api Dockerfile (FastAPI + uv, single stage)
+
+```
+python:3.12-slim 베이스에 uv 바이너리만 복사
+pyproject.toml + uv.lock 먼저 복사 → uv sync --frozen --no-dev (레이어 캐시)
+소스 복사 후 CMD uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+> NOTE: DB 마이그레이션은 컨테이너 시작과 분리해 배포 파이프라인에서 명시적으로
+> 실행한다: `uv run --no-sync alembic upgrade head`
 
 ### Docker Image Tagging
 
@@ -158,7 +134,7 @@ spec:
           image: ghcr.io/org/api:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 4000
+            - containerPort: 8000
           resources:
             requests:
               cpu: "100m"
@@ -168,14 +144,14 @@ spec:
               memory: "512Mi"
           readinessProbe:
             httpGet:
-              path: /health/ready
-              port: 4000
+              path: /health
+              port: 8000
             initialDelaySeconds: 10
             periodSeconds: 5
           livenessProbe:
             httpGet:
-              path: /health/live
-              port: 4000
+              path: /health
+              port: 8000
             initialDelaySeconds: 30
             periodSeconds: 10
 ```
@@ -248,13 +224,17 @@ helm rollback api 1 -n production
 
 <!-- 한국어 요약: Loki 연동을 위한 JSON 형식 로깅 가이드 -->
 
-- Format logs as JSON using `pino` logger. Do not use raw text outputs.
+- Format logs as JSON. Do not use raw text outputs.
+- web (Node.js): `pino`
 
 ```typescript
 import pino from "pino";
 export const logger = pino({ level: "info" });
 logger.info({ userId: "123", action: "login" }, "User logged in successfully");
 ```
+
+- api (Python): 표준 `logging` + JSON formatter 또는 `structlog`.
+  uvicorn 액세스 로그도 프로덕션에서는 JSON 포맷으로 통일한다.
 
 ---
 
@@ -287,5 +267,5 @@ helm rollback api 2 -n production
 
 ---
 
-_Last Modified: 2026-07-04_
+_Last Modified: 2026-07-05_
 _Refer to: ARCHITECTURE.md Section 13_
