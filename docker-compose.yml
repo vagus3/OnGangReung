@@ -1,12 +1,15 @@
 # =============================================================================
 # docker-compose.yml — 로컬 개발용 인프라
 #
-# 사용법:
+# 기본 흐름 (개발): DB만 컨테이너, 앱은 pnpm dev로 호스트 실행
 #   docker compose up -d        # Postgres 시작
 #   docker compose down         # 중지 (데이터 유지)
 #   docker compose down -v      # 중지 + 데이터 삭제
 #
-# 앱(web/api)은 pnpm dev로 호스트에서 실행하고, DB만 컨테이너로 띄웁니다.
+# full 프로파일 (프로덕션 유사 실행): web + api + db 전부 컨테이너
+#   docker compose --profile full up --build
+#   docker compose --profile full run --rm api uv run --no-sync alembic upgrade head
+#
 # 로컬 전용 오버라이드는 docker-compose.override.yml 사용 (gitignore됨).
 # =============================================================================
 
@@ -28,6 +31,34 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: shg-api
+    profiles: ["full"]
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/app_dev
+      CORS_ORIGINS: http://localhost:3000
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000
+    container_name: shg-web
+    profiles: ["full"]
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
 
 volumes:
   postgres-data:
