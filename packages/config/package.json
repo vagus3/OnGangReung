@@ -1,0 +1,9 @@
+{
+  "name": "@shg/config",
+  "version": "0.1.0",
+  "private": true,
+  "description": "공유 TSConfig 베이스 — 각 앱/패키지의 tsconfig.json이 extends로 상속",
+  "files": [
+    "tsconfig"
+  ]
+}
