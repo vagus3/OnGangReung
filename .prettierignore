@@ -1,0 +1,6 @@
+# 자동 생성 파일 — 포맷하면 codegen drift 검사(CI)와 어긋난다. pnpm codegen으로만 갱신
+packages/api-client/src/types.ts
+packages/api-client/openapi.json
+
+# Python 백엔드 (ruff가 포맷 담당)
+apps/api/

@@ -8,6 +8,7 @@
     "lint": "uv run ruff check .",
     "format": "uv run ruff format .",
     "type-check": "uv run mypy",
-    "test": "uv run pytest"
+    "test": "uv run pytest",
+    "export-openapi": "uv run python -m scripts.export_openapi ../../packages/api-client/openapi.json"
   }
 }
