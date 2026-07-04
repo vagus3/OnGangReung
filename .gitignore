@@ -39,12 +39,16 @@ playwright/.cache/
 test-results/
 
 
-# ─── Prisma ─────────────────────────────────────────────────────────────────
-# 마이그레이션 파일은 커밋 (스키마 변경 추적)
-# 생성된 클라이언트는 커밋하지 않음 (schema.prisma의 output 경로 대비)
-**/generated/
+# ─── Python (FastAPI 백엔드) ─────────────────────────────────────────────────
+# 의존성/캐시는 커밋하지 않음. pyproject.toml + uv.lock은 커밋 (재현 가능한 설치)
+.venv/
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
 
-# 로컬 SQLite DB 파일 (Prisma 로컬 개발용 임시 DB)
+# 로컬 SQLite DB 파일 (Docker 없이 개발할 때 임시 DB)
 *.db
 *.db-journal
 *.sqlite
@@ -96,20 +100,6 @@ temp/
 
 # ─── Storybook ───────────────────────────────────────────────────────────────
 storybook-static/
-
-
-# ─── React Native (bare) ─────────────────────────────────────────────────────
-android/app/build/
-android/.gradle/
-*.apk
-*.aar
-# Android 서명 키 — 절대 커밋 금지
-*.keystore
-*.jks
-
-ios/build/
-ios/Pods/
-DerivedData/
 
 
 # ─── AI 도구 캐시 (로컬 전용) ───────────────────────────────────────────────

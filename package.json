@@ -2,7 +2,7 @@
   "name": "shg-template",
   "version": "0.1.0",
   "private": true,
-  "description": "풀스택 모노레포 템플릿 — Next.js + Node.js + React Native, AI 협업 최적화",
+  "description": "풀스택 모노레포 템플릿 — Next.js + FastAPI(Python), AI 협업 최적화",
   "scripts": {
     "dev": "turbo run dev --parallel",
     "dev:web": "turbo run dev --filter=web",
