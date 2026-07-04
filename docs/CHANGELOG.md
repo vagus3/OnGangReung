@@ -10,6 +10,15 @@
 
 ### Added
 
+- FastAPI 백엔드 스캐폴드 (apps/api): posts CRUD, SQLAlchemy 2.0 async,
+  Alembic 마이그레이션, pytest 테스트, uv 기반 의존성 관리
+- Next.js 15 웹 스캐폴드 (apps/web): FSD 구조, posts 예시 도메인,
+  React Query + zod 환경변수 검증, Vitest 테스트
+- OpenAPI 타입 공유 파이프라인 (packages/api-client): pnpm codegen +
+  CI drift 검사
+- packages/config: 공유 TSConfig 베이스
+- Dockerfile(web/api) + docker-compose full 프로파일
+- ADR 005: 백엔드 Node.js → Python(FastAPI) 전환 및 웹 전용 템플릿화
 - 초기 템플릿 구조 설정
 - FSD 기반 아키텍처 가이드 (.ai/rules/ARCHITECTURE.md)
 - Docker/Kubernetes 배포 가이드 (.ai/rules/INFRA.md)
@@ -23,11 +32,18 @@
 
 ### Changed
 
+- 백엔드 스택: Node.js + Prisma → FastAPI + SQLAlchemy/Alembic
+- 범위 축소: React Native 모바일 제거 (웹 전용), packages/ui·types·utils·
+  database 제거
+- .ai 문서(ARCHITECTURE/DATABASE/TEST/INFRA/core CLAUDE.md)를 Python 백엔드
+  기준으로 재작성
+- setup.sh: uv 설치 확인 + uv sync + Alembic 마이그레이션으로 전환
+- CI: uv 셋업 추가, turbo 태스크가 ruff/mypy/pytest 커버, codegen drift 검사
 - AI 도구 전환: Gemini CLI(2026-06-18 서비스 중단) → Antigravity CLI(`agy`)
   — ai_config.json, ai.sh, switch_model.sh, .ai/GEMINI.md → .ai/ANTIGRAVITY.md
 - scripts/ai.sh 재작성: ai_config.json의 default 모델 연동, `--list` 구현
 - FSD `pages` 레이어를 `views`로 개명 (Next.js Pages Router 충돌 방지)
-- 모바일 환경을 Expo에서 bare React Native로 전환 (네이티브 모듈 개발 가능)
+- 모바일 환경을 Expo에서 bare React Native로 전환 후 웹 전용화로 제거
 - REVIEW.md에 커밋 메시지(commitlint)/브랜치 전략 문서화, DESIGN.md 표 중심 압축
 - .ai/ 문서 전반의 bold 마커 제거 (MODEL_RULE.md 작성 규칙 준수)
 

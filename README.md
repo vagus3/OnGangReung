@@ -1,6 +1,7 @@
 # SHG Template
 
-풀스택 모노레포 템플릿입니다. Next.js 프론트엔드, Node.js 백엔드, AI 협업 구조를 사전 구성합니다.
+풀스택 모노레포 템플릿입니다. Next.js 프론트엔드와 FastAPI(Python) 백엔드,
+OpenAPI 기반 타입 자동 공유, AI 협업 구조를 사전 구성합니다.
 
 ---
 
@@ -9,9 +10,9 @@
 | 레이어       | 기술                                                   |
 | ------------ | ------------------------------------------------------ |
 | 프론트엔드   | Next.js (App Router), TypeScript, React Query, Zustand |
-| 모바일       | React Native (bare, 네이티브 모듈 개발 가능)           |
-| 백엔드       | Node.js (Express / Fastify / NestJS), TypeScript       |
-| 데이터베이스 | PostgreSQL + Prisma ORM                                |
+| 백엔드       | FastAPI, Python 3.12, uv, SQLAlchemy 2.0 (async)       |
+| 타입 공유    | OpenAPI → openapi-typescript → `@shg/api-client`       |
+| 데이터베이스 | PostgreSQL + Alembic 마이그레이션                      |
 | 인프라       | Docker, Kubernetes, Helm, GitHub Actions               |
 | AI 협업      | Claude (기본), Antigravity, Codex                      |
 
@@ -24,12 +25,21 @@
 git clone https://github.com/your-org/shg-template.git my-project
 cd my-project
 
-# 2. 초기 설정 (의존성 설치 + 환경변수 + DB 설정)
+# 2. 초기 설정 (pnpm + uv 의존성 설치, 환경변수, DB 마이그레이션)
 bash scripts/setup.sh
 
-# 3. 개발 서버 시작
+# 3. 로컬 Postgres 시작
+docker compose up -d
+
+# 4. 개발 서버 시작 — Next.js(3000) + FastAPI(8000) 동시 실행
 pnpm dev
 ```
+
+http://localhost:3000/posts 에서 예시 도메인(게시글 CRUD)의 풀스택 흐름을
+확인할 수 있습니다. API 문서는 http://localhost:8000/docs (Swagger UI).
+
+> Docker 없이 시작하려면 `.env`의 DATABASE_URL을
+> `sqlite+aiosqlite:///./dev.db`로 바꾸면 됩니다.
 
 ---
 
@@ -38,19 +48,27 @@ pnpm dev
 ```
 /
 ├── apps/
-│   ├── web/          # Next.js 프론트엔드
-│   ├── api/          # Node.js 백엔드
-│   └── mobile/       # React Native bare (선택)
+│   ├── web/          # Next.js 프론트엔드 (FSD 구조)
+│   └── api/          # FastAPI 백엔드 (uv 관리, Turbo shim 연결)
 ├── packages/
-│   ├── ui/           # 공유 UI 컴포넌트
-│   ├── types/        # 공유 TypeScript 타입
-│   ├── utils/        # 공유 유틸리티
-│   ├── config/       # ESLint, TSConfig 공유 설정
-│   └── database/     # Prisma 스키마 및 마이그레이션
+│   ├── api-client/   # OpenAPI에서 자동 생성된 TS 타입 + 클라이언트
+│   └── config/       # 공유 TSConfig
 ├── .ai/              # AI 협업 설정 및 규칙
 ├── .github/          # CI/CD 워크플로
 └── scripts/          # 유틸리티 스크립트
 ```
+
+## 타입 공유 흐름 (Python ↔ TypeScript)
+
+```
+FastAPI (Pydantic 스키마)
+  → openapi.json 추출          pnpm --filter api export-openapi
+  → TS 타입 자동 생성           packages/api-client/src/types.ts
+  → 프론트에서 import          @shg/api-client (openapi-fetch)
+```
+
+백엔드 스키마를 바꾸면 `pnpm codegen` 한 번으로 프론트 타입이 갱신됩니다.
+재생성을 잊으면 CI의 codegen drift 검사가 커밋을 차단합니다.
 
 ---
 
@@ -96,12 +114,18 @@ bash scripts/ai.sh --list
 ## 주요 명령어
 
 ```bash
-pnpm dev              # 전체 개발 서버 시작
+pnpm dev              # 전체 개발 서버 (web + api)
 pnpm build            # 전체 빌드
-pnpm test             # 전체 테스트
-pnpm lint             # 전체 린트
-pnpm type-check       # TypeScript 타입 검사
-pnpm format           # 코드 포맷팅
+pnpm test             # 전체 테스트 (vitest + pytest)
+pnpm lint             # 전체 린트 (eslint + ruff)
+pnpm type-check       # 타입 검사 (tsc + mypy)
+pnpm codegen          # OpenAPI → TS 타입 재생성
+pnpm format           # 코드 포맷팅 (prettier)
+
+# 백엔드 단독 작업 (apps/api에서)
+uv run pytest                                      # 테스트
+uv run alembic revision --autogenerate -m "..."    # 마이그레이션 생성
+uv run alembic upgrade head                        # 마이그레이션 적용
 
 bash scripts/setup.sh            # 초기 프로젝트 설정
 bash scripts/switch_model.sh     # AI 모델 전환
