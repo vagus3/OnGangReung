@@ -3,8 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
 from app.core.config import settings
+from app.core.exceptions import NotFoundError, not_found_handler
 
 app = FastAPI(title="SHG API", version="0.1.0")
+app.add_exception_handler(NotFoundError, not_found_handler)  # type: ignore[arg-type]
 
 app.add_middleware(
     CORSMiddleware,
