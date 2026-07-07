@@ -1,3 +1,17 @@
 {
-  "effortLevel": "medium"
+  "effortLevel": "medium",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cmd=$(jq -r \".tool_input.command // empty\"); case \"$cmd\" in *\"git commit\"*) ;; *) exit 0;; esac; root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0; hash=$(git -C \"$root\" log -1 --format=%h 2>/dev/null) || exit 0; log=\"$root/docs/WORKLOG.md\"; grep -q \"($hash)\" \"$log\" 2>/dev/null && exit 0; mkdir -p \"$root/docs\"; echo \"- $(date '+%Y-%m-%d %H:%M') — $(git -C \"$root\" log -1 --format=%s) ($hash)\" >> \"$log\" || true",
+            "statusMessage": "작업 로그 기록 중 (docs/WORKLOG.md)"
+          }
+        ]
+      }
+    ]
+  }
 }
