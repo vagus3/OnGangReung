@@ -64,6 +64,26 @@ Follow these selection guides on top of `ai_config.json`:
 - Delegate architecture design to Claude → Hand over boilerplate implementation to Codex.
 - Do not repeat identical complex prompts to Claude. Use Antigravity for documentation and summaries.
 
+### Claude Code Effort Routing (Subagents)
+
+Inside Claude Code, reasoning effort is routed per task type via custom
+subagents in `.claude/agents/`. Claude auto-delegates based on each agent's
+`description` field; the frontmatter `model` + `effort` override the session
+defaults for that agent only.
+
+| Agent          | Model  | Effort | Use For                                        |
+| -------------- | ------ | ------ | ---------------------------------------------- |
+| `architect`    | opus   | xhigh  | Architecture decisions, complex debugging      |
+| `docs-analyst` | sonnet | medium | Documentation, codebase analysis and summaries |
+| `scaffolder`   | haiku  | low    | Boilerplate, CRUD scaffolding, repetition      |
+
+- Session default: `effortLevel: medium` in `.claude/settings.json`.
+- One-off deep reasoning without switching agents: include the `ultrathink`
+  keyword in the prompt.
+
+> NOTE: `MAX_THINKING_TOKENS` is deprecated on current models — effort level
+> is the only thinking-budget control.
+
 ---
 
 ## Maintenance Rules
@@ -73,4 +93,4 @@ Follow these selection guides on top of `ai_config.json`:
 
 ---
 
-_Last Modified: 2026-07-04_
+_Last Modified: 2026-07-07_
