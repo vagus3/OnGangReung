@@ -19,6 +19,9 @@
 - QueryClient 생성 로직을 shared/api/queryClient.ts 팩토리로 분리 (모듈
   싱글턴 대신 팩토리로 두어 테스트/스토리북 재사용성 확보, 서버 컴포넌트
   렌더링 시 요청 간 캐시 공유 위험도 예방)
+- postApi 에러 처리를 shared/api/errors.ts의 ApiError로 개선 (기존에는
+  openapi-fetch의 error body를 버리고 고정 문자열만 던졌음, 이제 백엔드가
+  내려주는 detail/code를 그대로 노출)
 
 ### Added
 
