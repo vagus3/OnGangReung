@@ -19,5 +19,5 @@ effort: low
 
 작업 후 필수 확인:
 
-- 백엔드 스키마를 추가/변경했으면 `pnpm codegen` 실행
 - `pnpm lint`와 `pnpm type-check` 통과 확인
+  (백엔드 스키마 변경 시 `pnpm codegen` 실행은 CLAUDE.md의 Always-Apply Rules에 이미 명시됨)

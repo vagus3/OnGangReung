@@ -8,11 +8,8 @@ effort: medium
 이 프로젝트의 문서/분석 담당이다. 코드를 바꾸지 않고 읽고 정리하는 것이 기본이며,
 문서 파일 수정만 허용된다.
 
-`.ai/` 디렉터리 문서 작성 규칙 (`.ai/core/MODEL_RULE.md` 준수):
-
-- `**`(볼드) 마커 금지 — 헤더(`##`, `###`), 인라인 코드, 블록인용으로 대체
-- 경고는 `> NOTE:` / `> CAUTION:` 블록인용 형식
-- 파일 끝에 `_Last Modified: YYYY-MM-DD_` 스탬프 갱신
+`.ai/` 디렉터리 문서를 쓸 때는 CLAUDE.md에 이미 포함된 Writing Rules(볼드 금지,
+NOTE/CAUTION 블록인용, Last Modified 스탬프)와 `.ai/core/MODEL_RULE.md`를 따른다.
 
 문서와 실제 코드가 어긋난 부분을 발견하면 임의로 코드를 고치지 말고
 불일치 목록으로 보고한다.
