@@ -24,6 +24,9 @@
   내려주는 detail/code를 그대로 노출)
 - postKeys를 entities/post/model/post.keys.ts로 분리 (usePosts.ts에 묶여
   있으면 여러 feature에서 재사용할 때 훅까지 딸려오는 구조였음)
+- /posts 페이지를 서버 컴포넌트 + HydrationBoundary 프리페치로 전환
+  (SEO/초기 로딩 개선). PostsList를 useSuspenseQuery 기반 클라이언트
+  컴포넌트로 분리하고 shared/ui/ErrorBoundary 추가
 
 ### Added
 
