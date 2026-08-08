@@ -7,14 +7,14 @@ OpenAPI 기반 타입 자동 공유, AI 협업 구조를 사전 구성합니다.
 
 ## 기술 스택
 
-| 레이어       | 기술                                                   |
-| ------------ | ------------------------------------------------------ |
-| 프론트엔드   | Next.js (App Router), TypeScript, React Query, Zustand |
-| 백엔드       | FastAPI, Python 3.12, uv, SQLAlchemy 2.0 (async)       |
-| 타입 공유    | OpenAPI → openapi-typescript → `@shg/api-client`       |
-| 데이터베이스 | PostgreSQL + Alembic 마이그레이션                      |
-| 인프라       | Docker, Kubernetes, Helm, GitHub Actions               |
-| AI 협업      | Claude (기본), Antigravity, Codex                      |
+| 레이어       | 기술                                                                                      |
+| ------------ | ----------------------------------------------------------------------------------------- |
+| 프론트엔드   | Next.js (App Router), TypeScript, React Query (클라이언트 상태 필요 시 Zustand 도입 예정) |
+| 백엔드       | FastAPI, Python 3.12, uv, SQLAlchemy 2.0 (async)                                          |
+| 타입 공유    | OpenAPI → openapi-typescript → `@shg/api-client`                                          |
+| 데이터베이스 | PostgreSQL + Alembic 마이그레이션                                                         |
+| 인프라       | Docker, Kubernetes, Helm, GitHub Actions                                                  |
+| AI 협업      | Claude (기본), Antigravity, Codex                                                         |
 
 ---
 
