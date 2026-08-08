@@ -11,6 +11,7 @@
 ### Fixed
 
 - 코드 리뷰 반영: 중복 생성 파일(` 2.` 접미사) 4개 제거
+- env.ts에 NODE_ENV zod 스키마 추가 (컴포넌트의 process.env 직접 접근 방지)
 
 ### Added
 
