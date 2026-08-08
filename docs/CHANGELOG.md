@@ -12,6 +12,8 @@
 
 - 코드 리뷰 반영: 중복 생성 파일(` 2.` 접미사) 4개 제거
 - env.ts에 NODE_ENV zod 스키마 추가 (컴포넌트의 process.env 직접 접근 방지)
+- turbo.json test 태스크의 불필요한 build 의존성 제거 (단위 테스트는 빌드
+  결과물에 의존하지 않아 pnpm test가 항상 느려지는 문제)
 
 ### Added
 
