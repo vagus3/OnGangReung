@@ -8,6 +8,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- 코드 리뷰 반영: 중복 생성 파일(` 2.` 접미사) 4개 제거
+
 ### Added
 
 - FastAPI 백엔드 스캐폴드 (apps/api): posts CRUD, SQLAlchemy 2.0 async,
