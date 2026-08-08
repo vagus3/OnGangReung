@@ -22,6 +22,8 @@
 - postApi 에러 처리를 shared/api/errors.ts의 ApiError로 개선 (기존에는
   openapi-fetch의 error body를 버리고 고정 문자열만 던졌음, 이제 백엔드가
   내려주는 detail/code를 그대로 노출)
+- postKeys를 entities/post/model/post.keys.ts로 분리 (usePosts.ts에 묶여
+  있으면 여러 feature에서 재사용할 때 훅까지 딸려오는 구조였음)
 
 ### Added
 
