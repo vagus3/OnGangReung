@@ -25,6 +25,18 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/stop-verify.sh\"",
+            "timeout": 180,
+            "statusMessage": "미검증 소스 변경 확인 중"
+          }
+        ]
+      }
     ]
   }
 }
