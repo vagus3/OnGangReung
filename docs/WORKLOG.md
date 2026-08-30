@@ -53,3 +53,4 @@
 - 2026-08-30 21:12 — docs: README와 TEST.md를 현재 검증 구성에 맞게 갱신 (37cecf5)
 - 2026-08-30 21:13 — docs: E2E/STACK/evals와 빌드 실패 수정 CHANGELOG 반영 (13eba0e)
 - 2026-08-30 21:27 — chore: 밀린 작업 로그 커밋 (581c30c)
+- 2026-08-30 21:30 — chore: origin의 effort 라우팅 커밋(9a3ef1a) 흡수 (45bd23c)
