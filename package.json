@@ -13,6 +13,7 @@
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint -- --fix",
     "type-check": "turbo run type-check",
+    "verify": "turbo run type-check lint test",
     "codegen": "pnpm --filter api export-openapi && pnpm --filter @shg/api-client codegen",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\"",
