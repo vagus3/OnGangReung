@@ -8,6 +8,7 @@ Read only the file mapped to the current task. Do not read all docs upfront.
 
 | Task type                                                                                                                   | Read this file                 |
 | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------ |
+| 스택 버전, 라이브러리 교체 검토, 업그레이드 체크리스트                                                                      | `.ai/STACK.md`                 |
 | Folder structure, FSD layer decisions, naming, state management, API layer, FastAPI backend structure, OpenAPI type sharing | `.ai/rules/ARCHITECTURE.md`    |
 | DB schema, SQLAlchemy models, Alembic migrations, session patterns, indexing                                                | `.ai/DATABASE.md`              |
 | Component design, tokens, typography, dark mode, a11y, breakpoints                                                          | `.ai/rules/DESIGN.md`          |
