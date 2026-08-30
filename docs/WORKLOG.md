@@ -35,3 +35,4 @@
 - 2026-08-30 20:45 — chore: 밀린 작업 로그 커밋 (9beb906)
 - 2026-08-30 20:46 — chore: pnpm verify 단일 검증 진입점 추가 (2c2a92e)
 - 2026-08-30 20:46 — fix: husky v10에서 실패할 deprecated 부트스트랩 라인 제거 (63bc28c)
+- 2026-08-30 20:47 — refactor: Claude Code 훅 명령을 .claude/hooks/ 스크립트로 분리 (5cfeeed)
