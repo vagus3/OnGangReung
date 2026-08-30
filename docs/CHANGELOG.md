@@ -30,6 +30,15 @@
 
 ### Added
 
+- 검증 루프: pnpm verify 단일 진입점, pre-commit type-check,
+  git push 전 검증을 강제하는 PreToolUse 훅, 미검증 소스 변경을 잡는
+  Stop 훅 (.claude/hooks/)
+- 커버리지 하한선 래칫: web 15%(vitest v8), api 85%(pytest-cov).
+  현재 수치를 바닥으로 고정해 하락만 막고 점진 상향한다
+- .claude/skills/add-domain: 도메인 추가 절차(백엔드 → codegen → 프론트)
+- .claude/commands/verify, ship: CI 동등 검증과 기능 단위 커밋 분할 절차
+- 서브에이전트 tools 화이트리스트, architect → scaffolder 인계 계약
+- context7 플러그인을 프로젝트 설정에 선언 (라이브러리 최신 문서 조회)
 - FastAPI 백엔드 스캐폴드 (apps/api): posts CRUD, SQLAlchemy 2.0 async,
   Alembic 마이그레이션, pytest 테스트, uv 기반 의존성 관리
 - Next.js 15 웹 스캐폴드 (apps/web): FSD 구조, posts 예시 도메인,
