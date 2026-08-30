@@ -128,12 +128,61 @@ jobs:
           echo "Generated tag: ${TAG}"
 
   # ─────────────────────────────────────────────────────────────────────────
-  # JOB 2: Docker — 이미지 빌드 & Push
+  # JOB 2: E2E — 프로덕션 빌드 기준 브라우저 테스트
+  # ci 통과 후 실행하며, 실패하면 이미지 빌드/배포로 넘어가지 않는다
+  # ─────────────────────────────────────────────────────────────────────────
+  e2e:
+    name: "E2E — Playwright"
+    needs: ci
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm --filter web exec playwright install --with-deps chromium
+
+      # webServer가 next start로 띄우므로 빌드가 먼저 있어야 한다
+      - name: Build web
+        run: pnpm --filter web build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+
+      - name: "Test: E2E"
+        run: pnpm --filter web test:e2e
+        env:
+          CI: true
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report/
+          retention-days: 7
+
+  # ─────────────────────────────────────────────────────────────────────────
+  # JOB 3: Docker — 이미지 빌드 & Push
   # main 또는 태그 push 시에만 실행
   # ─────────────────────────────────────────────────────────────────────────
   docker-build:
     name: "Docker — Build & Push"
-    needs: ci
+    needs: [ci, e2e]
     runs-on: ubuntu-latest
     if: |
       github.event_name == 'push' &&
@@ -201,7 +250,7 @@ jobs:
           ignore-unfixed: true
 
   # ─────────────────────────────────────────────────────────────────────────
-  # JOB 3: Deploy to Development
+  # JOB 4: Deploy to Development
   # main 브랜치 push 시 자동 배포
   # ─────────────────────────────────────────────────────────────────────────
   deploy-dev:
@@ -264,7 +313,7 @@ jobs:
           kubectl get pods -n dev
 
   # ─────────────────────────────────────────────────────────────────────────
-  # JOB 4: Deploy to Staging
+  # JOB 5: Deploy to Staging
   # main 브랜치 push 시 dev 이후 자동 배포
   # ─────────────────────────────────────────────────────────────────────────
   deploy-staging:
@@ -337,7 +386,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   # ─────────────────────────────────────────────────────────────────────────
-  # JOB 5: Deploy to Production
+  # JOB 6: Deploy to Production
   # v* 태그 Push 시 + GitHub Environment 수동 승인 필요
   # ─────────────────────────────────────────────────────────────────────────
   deploy-production:
