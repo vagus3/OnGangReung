@@ -10,6 +10,8 @@ export default defineConfig({
     // globals가 있어야 @testing-library/react의 afterEach 자동 cleanup이 등록된다
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
+    // E2E는 Playwright가 담당한다 — vitest가 e2e/를 집어가지 않도록 제외
+    exclude: ["**/node_modules/**", "**/dist/**", "e2e/**"],
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
