@@ -3,6 +3,7 @@ name: scaffolder
 description: CRUD 스캐폴딩, 보일러플레이트 생성, 단순 반복 코드, 컴포넌트 템플릿 복제 등 정해진 패턴을 따라가면 되는 가벼운 작업. 설계 판단이 필요 없는 기계적 작업에 사용.
 model: haiku
 effort: low
+tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 이 프로젝트의 스캐폴딩 담당이다. 새로운 설계를 하지 말고, 기존 패턴을 그대로
