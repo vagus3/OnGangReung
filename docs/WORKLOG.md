@@ -38,3 +38,4 @@
 - 2026-08-30 20:47 — refactor: Claude Code 훅 명령을 .claude/hooks/ 스크립트로 분리 (5cfeeed)
 - 2026-08-30 20:48 — feat: git push 전 pnpm verify를 강제하는 PreToolUse 훅 추가 (ac1f8f7)
 - 2026-08-30 20:49 — feat: 미검증 소스 변경을 잡는 Stop 훅 추가 (be45558)
+- 2026-08-30 20:50 — feat: pre-commit에 type-check 추가 (91c02f6)

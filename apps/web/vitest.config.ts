@@ -10,6 +10,25 @@ export default defineConfig({
     // globals가 있어야 @testing-library/react의 afterEach 자동 cleanup이 등록된다
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "lcov"],
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: [
+        // 재export만 하는 슬라이스 공개 API — 단위 테스트 대상이 아니다
+        "src/**/index.ts",
+        // Next.js App Router 진입점 — 단위 테스트가 아니라 E2E가 담당
+        "src/app/**",
+      ],
+      // 현재 수준을 바닥으로 고정해 하락을 막는 래칫.
+      // 테스트가 늘면 이 숫자를 올린다. 목표는 TEST.md의 Integration 60%.
+      thresholds: {
+        lines: 15,
+        functions: 7,
+        branches: 24,
+        statements: 15,
+      },
+    },
   },
   resolve: {
     alias: {

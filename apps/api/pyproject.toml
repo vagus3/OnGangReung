@@ -20,6 +20,7 @@ dev = [
     "aiosqlite>=0.21",
     "ruff>=0.11",
     "mypy>=1.15",
+    "pytest-cov>=7.1.0",
 ]
 
 [tool.ruff]
@@ -35,5 +36,7 @@ packages = ["app"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# 커버리지 하한선 래칫 — 현재 89%, 하락만 막고 테스트가 늘면 올린다
+addopts = "--cov=app --cov-report=term-missing --cov-report=xml:coverage/coverage.xml --cov-fail-under=85"
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"

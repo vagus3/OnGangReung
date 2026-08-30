@@ -33,6 +33,8 @@ build/
 
 # ─── 테스트 & 커버리지 ────────────────────────────────────────────────────────
 coverage/
+.coverage
+.coverage.*
 .nyc_output/
 playwright-report/
 playwright/.cache/

@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run --coverage"
   },
   "dependencies": {
     "@shg/api-client": "workspace:*",
@@ -30,11 +30,12 @@
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^4.5.0",
+    "@vitest/coverage-v8": "^3.2.7",
     "dotenv": "^16.5.0",
     "eslint": "^9.28.0",
     "eslint-config-next": "^15.3.0",
     "jsdom": "^26.1.0",
     "typescript": "^5.4.0",
-    "vitest": "^3.2.0"
+    "vitest": "^3.2.7"
   }
 }
