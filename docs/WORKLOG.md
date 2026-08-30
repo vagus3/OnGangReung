@@ -32,3 +32,6 @@
 - 2026-08-08 15:57 — refactor: postKeys를 entities/post/model/post.keys.ts로 분리 (f91009c)
 - 2026-08-08 15:58 — refactor: /posts 페이지를 서버 컴포넌트 + HydrationBoundary 프리페치로 전환 (6c24695)
 - 2026-08-08 16:07 — chore: 서브에이전트 파일에서 CLAUDE.md와 중복된 규칙 나열 제거 (f81d297)
+- 2026-08-30 20:45 — chore: 밀린 작업 로그 커밋 (9beb906)
+- 2026-08-30 20:46 — chore: pnpm verify 단일 검증 진입점 추가 (2c2a92e)
+- 2026-08-30 20:46 — fix: husky v10에서 실패할 deprecated 부트스트랩 라인 제거 (63bc28c)
