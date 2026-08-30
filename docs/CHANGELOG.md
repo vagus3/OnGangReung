@@ -10,6 +10,9 @@
 
 ### Fixed
 
+- /posts 정적 프리렌더로 인한 웹 빌드 실패 (API 없이 빌드하면 ECONNREFUSED로
+  죽어 CI build 단계도 실패 상태였음). force-dynamic으로 전환
+- husky v10에서 실패할 deprecated 부트스트랩 라인 제거
 - 코드 리뷰 반영: 중복 생성 파일(` 2.` 접미사) 4개 제거
 - env.ts에 NODE_ENV zod 스키마 추가 (컴포넌트의 process.env 직접 접근 방지)
 - turbo.json test 태스크의 불필요한 build 의존성 제거 (단위 테스트는 빌드
@@ -39,6 +42,10 @@
 - .claude/commands/verify, ship: CI 동등 검증과 기능 단위 커밋 분할 절차
 - 서브에이전트 tools 화이트리스트, architect → scaffolder 인계 계약
 - context7 플러그인을 프로젝트 설정에 선언 (라이브러리 최신 문서 조회)
+- Playwright E2E (apps/web/e2e): 프로덕션 빌드를 3100 포트로 띄워 검증.
+  CI에 별도 job으로 추가하고 docker-build가 이를 기다리게 연결
+- .ai/STACK.md: 채택 버전, 교체 검토 주기, 업그레이드 체크리스트의 단일 소스
+- docs/evals: 규칙 변경이 개선인지 확인하는 골든 태스크 4개와 체크리스트
 - FastAPI 백엔드 스캐폴드 (apps/api): posts CRUD, SQLAlchemy 2.0 async,
   Alembic 마이그레이션, pytest 테스트, uv 기반 의존성 관리
 - Next.js 15 웹 스캐폴드 (apps/web): FSD 구조, posts 예시 도메인,
