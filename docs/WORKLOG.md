@@ -52,3 +52,4 @@
 - 2026-08-30 21:12 — docs: .ai/STACK.md 추가 — 스택 버전의 단일 소스 (9cdf25f)
 - 2026-08-30 21:12 — docs: README와 TEST.md를 현재 검증 구성에 맞게 갱신 (37cecf5)
 - 2026-08-30 21:13 — docs: E2E/STACK/evals와 빌드 실패 수정 CHANGELOG 반영 (13eba0e)
+- 2026-08-30 21:27 — chore: 밀린 작업 로그 커밋 (581c30c)

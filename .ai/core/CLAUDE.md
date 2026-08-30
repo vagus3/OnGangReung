@@ -70,4 +70,4 @@ Full rules: `.ai/core/MODEL_RULE.md`
 
 ---
 
-_Last Modified: 2026-07-05_
+_Last Modified: 2026-08-30_
