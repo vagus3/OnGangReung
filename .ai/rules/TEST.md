@@ -114,7 +114,22 @@ describe('LoginForm', () => {
 
 ## 6. E2E Tests
 
-<!-- 한국어 요약: Playwright E2E 테스트 예제 -->
+<!-- 한국어 요약: Playwright E2E 테스트 위치와 실행 방법 -->
+
+Specs live in `apps/web/e2e/`. Config: `apps/web/playwright.config.ts`.
+
+```bash
+pnpm --filter web exec playwright install chromium   # 최초 1회
+pnpm test:e2e
+```
+
+The config builds and serves the production bundle on port 3100, so it does
+not collide with `pnpm dev` on 3000. CI runs this as a separate job that
+gates the Docker build.
+
+> NOTE: Current specs must pass whether or not the API is running. Specs that
+> need real data belong in a separate suite launched with
+> `docker compose --profile full`.
 
 Target major user journeys.
 
@@ -158,10 +173,22 @@ features/auth/
 
 <!-- 한국어 요약: 레이어별 권장 테스트 커버리지 목표 -->
 
+Aspirational per-layer targets:
+
 - shared/lib: 90%+
 - features/\*/model: 80%+
 - features/\*/ui: 60%+
 - app/services (api): 80%+
+
+Enforced floors (build fails below these):
+
+| Scope                  | Floor | Configured in               |
+| ---------------------- | ----- | --------------------------- |
+| web (lines/statements) | 15%   | `apps/web/vitest.config.ts` |
+| api (statements)       | 85%   | `apps/api/pyproject.toml`   |
+
+> NOTE: The floors are a ratchet, not a goal. They sit just below the
+> measured value so coverage cannot drop. Raise them as tests are added.
 
 ---
 
@@ -200,4 +227,4 @@ async def test_create_and_list_posts(client: AsyncClient) -> None:
 
 ---
 
-_Last Modified: 2026-07-05_
+_Last Modified: 2026-08-30_

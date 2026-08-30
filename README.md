@@ -13,6 +13,7 @@ OpenAPI 기반 타입 자동 공유, AI 협업 구조를 사전 구성합니다.
 | 백엔드       | FastAPI, Python 3.12, uv, SQLAlchemy 2.0 (async)                                          |
 | 타입 공유    | OpenAPI → openapi-typescript → `@shg/api-client`                                          |
 | 데이터베이스 | PostgreSQL + Alembic 마이그레이션                                                         |
+| 테스트       | Vitest + Testing Library, pytest, Playwright (E2E)                                        |
 | 인프라       | Docker, Kubernetes, Helm, GitHub Actions                                                  |
 | AI 협업      | Claude (기본), Antigravity, Codex                                                         |
 
@@ -116,7 +117,10 @@ bash scripts/ai.sh --list
 ```bash
 pnpm dev              # 전체 개발 서버 (web + api)
 pnpm build            # 전체 빌드
-pnpm test             # 전체 테스트 (vitest + pytest)
+pnpm verify           # 검증 한 번에 (type-check + lint + test) — 커밋/푸시 훅이 쓰는 것과 동일
+pnpm test             # 전체 테스트 (vitest + pytest, 커버리지 임계치 포함)
+pnpm test:e2e         # E2E (Playwright). 최초 1회 브라우저 설치 필요:
+                      #   pnpm --filter web exec playwright install chromium
 pnpm lint             # 전체 린트 (eslint + ruff)
 pnpm type-check       # 타입 검사 (tsc + mypy)
 pnpm codegen          # OpenAPI → TS 타입 재생성
@@ -144,7 +148,9 @@ bash scripts/switch_model.sh     # AI 모델 전환
 | 코드 리뷰 기준      | `.ai/rules/REVIEW.md`       |
 | 데이터베이스 가이드 | `.ai/DATABASE.md`           |
 | AI 모델 규칙        | `.ai/core/MODEL_RULE.md`    |
+| 스택 버전/교체 기준 | `.ai/STACK.md`              |
 | 기술 결정 기록(ADR) | `docs/adr/`                 |
+| 규칙 회귀 확인      | `docs/evals/`               |
 
 ---
 
