@@ -1,1 +1,6 @@
 pnpm lint-staged
+
+# 포맷/린트 이후 타입 검사까지 통과해야 커밋 성립.
+# tsc와 mypy는 lint-staged가 커버하지 않아 지금까지 CI에서만 걸렸다.
+# turbo 캐시로 변경 없으면 즉시 끝나고, 급할 땐 git commit --no-verify.
+pnpm type-check

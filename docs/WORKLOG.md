@@ -37,3 +37,4 @@
 - 2026-08-30 20:46 — fix: husky v10에서 실패할 deprecated 부트스트랩 라인 제거 (63bc28c)
 - 2026-08-30 20:47 — refactor: Claude Code 훅 명령을 .claude/hooks/ 스크립트로 분리 (5cfeeed)
 - 2026-08-30 20:48 — feat: git push 전 pnpm verify를 강제하는 PreToolUse 훅 추가 (ac1f8f7)
+- 2026-08-30 20:49 — feat: 미검증 소스 변경을 잡는 Stop 훅 추가 (be45558)
