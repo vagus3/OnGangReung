@@ -1,0 +1,53 @@
+{
+  "response": {
+    "header": { "resultCode": "0000", "resultMsg": "OK" },
+    "body": {
+      "items": {
+        "item": [
+          {
+            "contentid": "126508",
+            "contenttypeid": "12",
+            "title": "경포대",
+            "addr1": "강원특별자치도 강릉시 경포로 365",
+            "addr2": "(저동)",
+            "zipcode": "25460",
+            "areacode": "32",
+            "sigungucode": "1",
+            "cat1": "A02",
+            "cat2": "A0201",
+            "cat3": "A02010100",
+            "mapx": "128.8963040108",
+            "mapy": "37.8055604169",
+            "mlevel": "6",
+            "tel": "033-640-4471",
+            "firstimage": "http://tong.visitkorea.or.kr/cms/resource/gyeongpo.jpg",
+            "firstimage2": "http://tong.visitkorea.or.kr/cms/resource/gyeongpo_thumb.jpg",
+            "createdtime": "20030902090000",
+            "modifiedtime": "20250310143000"
+          },
+          {
+            "contentid": "126509",
+            "contenttypeid": "12",
+            "title": "오죽헌",
+            "addr1": "강원특별자치도 강릉시 율곡로3139번길 24",
+            "addr2": "",
+            "areacode": "32",
+            "sigungucode": "1",
+            "cat1": "A02",
+            "cat2": "A0201",
+            "cat3": "A02010700",
+            "mapx": "128.8783040108",
+            "mapy": "37.7844604169",
+            "tel": "",
+            "firstimage": "",
+            "createdtime": "20030902090000",
+            "modifiedtime": "20250115120000"
+          }
+        ]
+      },
+      "numOfRows": 100,
+      "pageNo": 1,
+      "totalCount": 2
+    }
+  }
+}

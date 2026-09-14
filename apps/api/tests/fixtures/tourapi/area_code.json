@@ -1,0 +1,17 @@
+{
+  "response": {
+    "header": { "resultCode": "0000", "resultMsg": "OK" },
+    "body": {
+      "items": {
+        "item": [
+          { "rnum": 1, "code": "1", "name": "강릉시" },
+          { "rnum": 2, "code": "2", "name": "고성군" },
+          { "rnum": 3, "code": "3", "name": "동해시" }
+        ]
+      },
+      "numOfRows": 100,
+      "pageNo": 1,
+      "totalCount": 3
+    }
+  }
+}
