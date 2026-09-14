@@ -10,13 +10,15 @@ dependencies = [
     "asyncpg>=0.30",
     "alembic>=1.16",
     "pydantic-settings>=2.9",
+    # 공공데이터 API 호출에 런타임으로 필요하다. dev 그룹에 두면 프로덕션
+    # 이미지의 uv sync에서 빠져 동기화가 죽는다.
+    "httpx>=0.28",
 ]
 
 [dependency-groups]
 dev = [
     "pytest>=8.3",
     "pytest-asyncio>=0.26",
-    "httpx>=0.28",
     "aiosqlite>=0.21",
     "ruff>=0.11",
     "mypy>=1.15",
