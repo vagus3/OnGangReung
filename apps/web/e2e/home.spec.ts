@@ -1,18 +1,86 @@
 import { expect, test } from "@playwright/test";
 
+// API가 떠 있든 아니든 통과해야 한다 (TEST.md). 관광지 데이터는 단정하지 않고
+// 정적 셸 — 헤더, 히어로, 탭 이동 — 만 확인한다. 실데이터가 필요한 검증은
+// docker compose --profile full로 띄우는 별도 스위트가 맡는다.
 test.describe("홈", () => {
-  test("제목이 렌더링되고 posts로 이동한다", async ({ page }) => {
+  test("히어로와 네비게이션이 렌더링된다", async ({ page }) => {
     await page.goto("/");
 
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      "SHG Template",
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "바다와 커피",
     );
-
-    await page.getByRole("link", { name: /Posts/ }).click();
-
-    await expect(page).toHaveURL(/\/posts$/);
     await expect(
-      page.getByRole("heading", { name: "Posts", level: 1 }),
+      page.getByRole("link", { name: "온강릉 GANGNEUNG" }),
     ).toBeVisible();
+  });
+
+  test("화면 모드를 바꾸면 루트 속성이 따라 바뀐다", async ({ page }) => {
+    await page.goto("/");
+
+    await page.getByRole("radio", { name: "어둡게" }).click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+
+    await page.getByRole("radio", { name: "시스템" }).click();
+    await expect(page.locator("html")).not.toHaveAttribute(
+      "data-theme",
+      "dark",
+    );
+  });
+
+  test("데스크톱 네비게이션이 모든 탭을 올바른 경로로 잇는다", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto("/");
+
+    const nav = page.getByRole("navigation", { name: "주요 메뉴" });
+    for (const [label, href] of [
+      ["홈", "/"],
+      ["안내", "/info"],
+      ["AI 코스", "/ai"],
+      ["테마", "/theme"],
+      ["마이페이지", "/my"],
+    ] as const) {
+      await expect(nav.getByRole("link", { name: label })).toHaveAttribute(
+        "href",
+        href,
+      );
+    }
+  });
+
+  test("모바일에서는 하단 탭바가 대신 보인다", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+
+    await expect(
+      page.getByRole("navigation", { name: "하단 메뉴" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("navigation", { name: "주요 메뉴" }),
+    ).toBeHidden();
+  });
+
+  test("탭을 눌러 이동한다", async ({ page }) => {
+    // 데이터를 가져오지 않는 탭으로 확인한다. API가 떠 있어야 통과하는
+    // 검증은 docker compose --profile full로 띄우는 별도 스위트가 맡는다
+    // (TEST.md).
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto("/");
+
+    await page
+      .getByRole("navigation", { name: "주요 메뉴" })
+      .getByRole("link", { name: "테마" })
+      .click();
+
+    await expect(page).toHaveURL(/\/theme$/);
+  });
+
+  test("안내 탭이 API 없이도 렌더링된다", async ({ page }) => {
+    await page.goto("/info");
+
+    await expect(page.getByRole("heading", { level: 2 }).first()).toContainText(
+      "어느 권역부터",
+    );
   });
 });
