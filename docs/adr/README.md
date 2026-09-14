@@ -20,12 +20,15 @@ ADR은 프로젝트에서 내린 중요한 기술/설계 결정을 기록하는 
 
 ## ADR 목록
 
-| 번호                                    | 제목                                   | 상태              | 날짜       |
-| --------------------------------------- | -------------------------------------- | ----------------- | ---------- |
-| [001](./001-monorepo-and-fsd.md)        | 모노레포 + FSD 아키텍처 채택           | Accepted          | 2026-06-27 |
-| [002](./002-state-management.md)        | 상태 관리 전략 (Zustand + React Query) | Accepted          | 2026-06-27 |
-| [003](./003-ai-model-strategy.md)       | AI 멀티 모델 협업 전략                 | Superseded by 004 | 2026-06-27 |
-| [004](./004-gemini-to-antigravity.md)   | Gemini CLI → Antigravity CLI 전환      | Accepted          | 2026-07-04 |
+| 번호                                          | 제목                                   | 상태              | 날짜       |
+| --------------------------------------------- | -------------------------------------- | ----------------- | ---------- |
+| [001](./001-monorepo-and-fsd.md)              | 모노레포 + FSD 아키텍처 채택           | Accepted          | 2026-06-27 |
+| [002](./002-state-management.md)              | 상태 관리 전략 (Zustand + React Query) | Accepted          | 2026-06-27 |
+| [003](./003-ai-model-strategy.md)             | AI 멀티 모델 협업 전략                 | Superseded by 004 | 2026-06-27 |
+| [004](./004-gemini-to-antigravity.md)         | Gemini CLI → Antigravity CLI 전환      | Accepted          | 2026-07-04 |
+| [005](./005-python-backend.md)                | 백엔드 Node.js → Python(FastAPI) 전환  | Accepted          | 2026-07-05 |
+| [006](./006-tailwind-and-design-tokens.md)    | Tailwind CSS v4 + oklch 디자인 토큰    | Accepted          | 2026-09-14 |
+| [007](./007-public-data-integration-layer.md) | 공공데이터 연동 계층 도입              | Accepted          | 2026-09-14 |
 
 ---
 
