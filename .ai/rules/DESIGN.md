@@ -1,224 +1,282 @@
-# Design System
+# Design System — 온강릉
 
-<!-- 한국어 요약: 이 문서는 모든 프로젝트에 적용되는 기본 디자인 규칙(컬러, 타이포그래피, 레이아웃, 컴포넌트, 접근성)을 정의합니다. AI 참고 목적으로 영문으로 작성되었습니다. -->
+<!-- 한국어 요약: 온강릉 관광 앱의 디자인 규칙(컬러, 타이포그래피, 레이아웃, 컴포넌트, 접근성)을 정의합니다. 값은 디자인 캔버스(Gangneung Tourism v3)에서 추출했습니다. -->
 
-> Default design rules for every project.
-> All UI implementations must follow these guidelines unless project-specific design files override them.
-
----
-
-## 1. Design Identity
-
-| Aspect          | Direction                                            |
-| --------------- | ---------------------------------------------------- |
-| Feel            | Premium, minimal, modern, fast, intuitive            |
-| Inspired by     | Apple, Toss, Linear, Vercel                          |
-| Core philosophy | "Less, but better."                                  |
-| Focus           | Content first, smooth experience, clear hierarchy    |
-| Avoid           | Over-designed UI, complex visual effects, trend-only design |
+> 이 문서가 UI 구현의 기준이다. 값의 원본은 디자인 캔버스이고, 실제 토큰은
+> `apps/web/src/app/globals.css`에 있다. 문서와 CSS가 어긋나면 CSS가 맞다 —
+> 이 문서를 고친다.
+>
+> 스타일링 스택 선택 근거는 `docs/adr/006-tailwind-and-design-tokens.md`.
 
 ---
 
-## 2. UI Principles
+## 1. 디자인 정체성
 
-### Simplicity First
+| 항목    | 방향                                                           |
+| ------- | -------------------------------------------------------------- |
+| 인상    | 편집디자인. 여행 잡지의 지면에 가깝다                          |
+| 기조    | 라이트 우선, 다크 지원                                         |
+| 핵심    | 사진과 문장이 주인공. UI는 뒤로 물러난다                       |
+| 목소리  | 담백한 서술체. "다섯 개의 달", "파도 소리를 기준으로 골라봐요" |
+| 피할 것 | SaaS 대시보드 문법, 무거운 그림자, 장식용 그라데이션           |
 
-Every screen must have one clear primary action and answer: "What should the user do here?"
-
-Remove: unnecessary buttons, duplicated information, meaningless decoration.
-
-### Mobile First
-
-Design priority: Mobile → Tablet → Desktop.
-Mobile is not a smaller desktop; desktop is an expansion of mobile.
-
-### Consistency
-
-Never create new styles without checking existing components first.
-Reuse: `Button`, `Card`, `Modal`, `Input`, `Navigation`.
+> NOTE: 이전 버전의 이 문서는 Apple·Toss·Linear·Vercel을 지향하는 다크 우선
+> SaaS 스타일이었다. 온강릉의 디자인은 그 방향이 아니다. 참조를 바꿔 적용한다.
 
 ---
 
-## 3. Color System
+## 2. UI 원칙
 
-Default theme: Dark Mode First.
+### 콘텐츠 우선
 
-| Token          | Value             |
-| -------------- | ----------------- |
-| bg/primary     | `#050505`         |
-| bg/secondary   | `#111111`         |
-| bg/surface     | `#181818`         |
-| bg/elevated    | `#202020`         |
-| text/primary   | `#FFFFFF`         |
-| text/secondary | `#A1A1AA`         |
-| text/muted     | `#71717A`         |
-| brand/primary  | `#8B5CF6`         |
-| brand/hover    | Slightly brighter |
-| brand/active   | Slightly darker   |
-| status/success | Green             |
-| status/warning | Yellow            |
-| status/error   | Red               |
+한 화면에 하나의 주된 행동만 둔다. 관광지 카드에서 사진과 이름, 한 줄 설명이
+먼저 읽혀야 하고 버튼·아이콘은 그 다음이다.
 
-> CAUTION: Never use status colors for decoration.
+### 모바일 우선
 
----
+모바일 → 태블릿 → 데스크톱 순으로 설계한다. 데스크톱은 모바일의 확장이지,
+모바일이 데스크톱의 축소가 아니다.
 
-## 4. Typography
+> CAUTION: 디자인 캔버스는 데스크톱과 모바일을 완전히 별개의 마크업 트리로
+> 갖고 있다. 이는 두 프레임을 나란히 보여주려는 캔버스 도구의 산출물 특성이며
+> 요구사항이 아니다. 구현은 단일 반응형 트리로 하고, 구조가 실제로 다른
+> 부분(데스크톱 사이드바 ↔ 모바일 하단 탭바)만 분기한다.
 
-Default fonts — English: `Inter`, Korean: `Pretendard`.
+### 일관성
 
-| Role          | Size | Weight |
-| ------------- | ---- | ------ |
-| Page Title    | 32px | 700    |
-| Section Title | 20px | 600    |
-| Body          | 16px | 400    |
-| Caption       | 14px | 400    |
-
-Avoid: too many font sizes, decorative fonts, random weights.
+새 스타일을 만들기 전에 `shared/ui`에 있는 것을 먼저 확인한다.
 
 ---
 
-## 5. Layout System
+## 3. 색
 
-8px spacing system. Allowed spacing values: `4 / 8 / 16 / 24 / 32 / 48 / 64` px.
+라이트를 기본으로 정의하고 다크에서 같은 토큰을 덮어쓴다. 값은 전부 `oklch`다.
 
-> CAUTION: Never use random spacing values.
+| 토큰                                          | 유틸리티            | 역할                             |
+| --------------------------------------------- | ------------------- | -------------------------------- |
+| `--color-ink`                                 | `text-ink`          | 본문 텍스트                      |
+| `--color-muted`                               | `text-muted`        | 보조 텍스트, 메타 정보           |
+| `--color-sea`                                 | `text-sea` `bg-sea` | 브랜드 주색. 링크, 주요 행동     |
+| `--color-sun`                                 | `text-sun`          | 강조. 지금 열리는 축제, NOW 배지 |
+| `--color-coffee`                              | `text-coffee`       | 보조 강조. 커피·먹거리 맥락      |
+| `--color-paper`                               | `bg-paper`          | 기본 배경                        |
+| `--color-sand`                                | `bg-sand`           | 교대 섹션 배경                   |
+| `--color-line`                                | `border-line`       | 테두리, 구분선                   |
+| `--color-nav`                                 | —                   | 네비게이션 표면 (반투명)         |
+| `--color-chip`                                | —                   | 칩 표면                          |
+| `--color-tint` `--color-glow` `--color-solid` | —                   | 효과 표면                        |
 
-| Container | Rule                            |
-| --------- | ------------------------------- |
-| Mobile    | padding 16px                    |
-| Desktop   | max-width 1200px, center aligned |
+### 표면 알파 스케일
 
----
-
-## 6. Components
-
-### Button
-
-| Property   | Value                        |
-| ---------- | ---------------------------- |
-| Height     | 48px                         |
-| Radius     | 12px                         |
-| Padding    | horizontal 16px              |
-| Hover      | brightness increase          |
-| Click      | scale 0.98                   |
-| Transition | 150-200ms                    |
-
-- Primary (important actions): brand background, white text
-- Secondary (optional actions): surface background, subtle border
-
-### Card
-
-| Property   | Value        |
-| ---------- | ------------ |
-| Background | surface      |
-| Radius     | 20px         |
-| Padding    | 24px         |
-| Shadow     | minimal only |
-
-Use to group related information. Avoid heavy shadows.
-
-### Input
-
-Height 48px, radius 12px. Always provide: label, error state, focus state.
-
-### Modal
-
-Use only for confirmation or a focused task. Avoid nested modals.
-
-### Navigation
-
-| Platform | Pattern                                        |
-| -------- | ---------------------------------------------- |
-| Mobile   | Bottom navigation, max 5 tabs (Home, Search, Content, My Page) |
-| Desktop  | Sidebar or top navigation                      |
-
----
-
-## 7. Animation
-
-Prefer `Framer Motion`.
-
-| Interaction       | Duration |
-| ----------------- | -------- |
-| Small interaction | 150ms    |
-| Page transition   | 300ms    |
-
-Allowed: opacity, translate, scale.
-Avoid: bounce, rotation, unnecessary motion.
-
----
-
-## 8. Responsive Rules
-
-| Breakpoint | Range      | Layout        |
-| ---------- | ---------- | ------------- |
-| Mobile     | 0-640px    | single column |
-| Tablet     | 640-1024px | 2 columns     |
-| Desktop    | 1024px+    | multi-column  |
-
----
-
-## 9. Accessibility
-
-Required: semantic HTML, keyboard navigation, `aria-label` when needed.
-
-- Contrast: WCAG AA minimum
-- Never rely only on color to convey meaning
-
----
-
-## 10. Tailwind Rules
-
-Prefer: `flex`, `grid`, `gap`, `space`.
+`--surface-13` … `--surface-94`는 색이 아니라 "현재 배경 위에 얹는 반투명 표면"이다.
+라이트에서 흰색 알파, 다크에서 어두운 남색 알파로 의미가 반전한다.
 
 ```tsx
-// Bad — inline style
+// 사진 위에 얹는 반투명 칩
+<span className="bg-[var(--surface-80)]">경포권</span>
+```
+
+> CAUTION: 이 값들은 `@theme` 밖에 있다. Tailwind 유틸리티가 생성되지 않으므로
+> 임의값 문법(`bg-[var(--surface-80)]`)으로 쓴다.
+
+### 다크 모드
+
+`<html data-theme="dark">` 하나로 전환된다. 속성이 없으면 시스템 설정을 따른다.
+
+```
+없음            → prefers-color-scheme 따름
+data-theme=dark  → 강제 다크
+data-theme=light → 강제 라이트
+```
+
+토큰 값만 바뀌므로 컴포넌트에 `dark:` 분기를 다는 경우는 드물다. 유틸리티는
+그대로 두고 변수가 바뀐다.
+
+> CAUTION: 상태 색(성공·경고·오류)을 장식에 쓰지 않는다.
+
+---
+
+## 4. 타이포그래피
+
+| 역할                           | 폰트                | 유틸리티           |
+| ------------------------------ | ------------------- | ------------------ |
+| 디스플레이 (히어로, 섹션 제목) | Song Myung (세리프) | `font-display`     |
+| 본문·UI                        | IBM Plex Sans KR    | `font-body` (기본) |
+
+디자인은 잡지 지면에 가까운 조밀한 스케일을 쓴다. 일반적인 웹 본문(16px)보다
+작다. 임의로 키우지 않는다.
+
+| 역할        | 크기    | 굵기         |
+| ----------- | ------- | ------------ |
+| 히어로 제목 | 36px    | 400 (세리프) |
+| 섹션 제목   | 20–22px | 400 (세리프) |
+| 소제목      | 17px    | 700          |
+| 본문        | 13.5px  | 400          |
+| 본문 (조밀) | 12.5px  | 400          |
+| 캡션·메타   | 11.5px  | 500          |
+| 라벨·배지   | 10.5px  | 700          |
+
+한글은 어절 단위로 끊는다 (`word-break: keep-all`). `globals.css`에 전역 적용돼 있다.
+
+---
+
+## 5. 레이아웃
+
+8px 간격 체계를 유지한다. 허용 값: `4 / 8 / 16 / 24 / 32 / 48 / 64` px.
+
+| 컨테이너 | 규칙                                        |
+| -------- | ------------------------------------------- |
+| 모바일   | 좌우 패딩 16px                              |
+| 데스크톱 | 최대 너비 1360px, 중앙 정렬, 좌우 패딩 48px |
+
+> CAUTION: 임의 간격 값을 쓰지 않는다.
+
+### 브레이크포인트
+
+| 구간     | 범위       | 레이아웃 |
+| -------- | ---------- | -------- |
+| 모바일   | 0–640px    | 1단      |
+| 태블릿   | 640–1024px | 2단      |
+| 데스크톱 | 1024px+    | 다단     |
+
+---
+
+## 6. 컴포넌트
+
+### 반경
+
+디자인에서 압도적으로 많은 것은 `999px`(칩)이다. 그 외에는 16 / 18 / 20 / 24를 쓴다.
+
+| 대상              | 반경    |
+| ----------------- | ------- |
+| 칩, 태그, 필터    | `999px` |
+| 카드              | 20px    |
+| 큰 카드, 히어로   | 24px    |
+| 작은 카드, 썸네일 | 16px    |
+| 입력, 버튼        | 14px    |
+
+### 버튼
+
+| 속성      | 값                 |
+| --------- | ------------------ |
+| 높이      | 44px (모바일 48px) |
+| 반경      | 14px               |
+| 좌우 패딩 | 16px               |
+| 전이      | 150–200ms          |
+| 클릭      | `scale(0.98)`      |
+
+주요 행동은 `bg-sea` + 흰 텍스트, 보조 행동은 표면 배경 + `border-line`.
+
+### 칩
+
+높이 32–36px, 반경 `999px`. 선택 상태는 채움(`bg-ink` 또는 `bg-sea`), 비선택은
+`border-line` 테두리만.
+
+필터·관심사·기간 선택에 쓴다. 이 앱에서 가장 자주 등장하는 컨트롤이다.
+
+### 카드
+
+배경 `bg-paper` 또는 사진, 반경 20px, 패딩 16–24px. 그림자는 최소로만.
+
+관광지 카드는 `span`(`wide` / `tall` / `std`)에 따라 그리드 점유가 달라진다.
+이 값은 편집자가 정하는 레이아웃 지시이며 데이터에 들어 있다.
+
+### 레일
+
+가로 스크롤 + 스냅. 홈의 해변·먹거리·인기·야경 섹션이 전부 이 형태다.
+스크롤바는 `.scrollbar-none`(모바일) 또는 `.scrollbar-thin`(데스크톱).
+
+### 네비게이션
+
+| 플랫폼   | 패턴                                         |
+| -------- | -------------------------------------------- |
+| 모바일   | 하단 탭바, 최대 5개 (홈·안내·AI코스·테마·MY) |
+| 데스크톱 | 상단 고정 네비게이션                         |
+
+---
+
+## 7. 모션
+
+| 상호작용      | 지속      |
+| ------------- | --------- |
+| 작은 상호작용 | 150ms     |
+| 섹션 진입     | 450–500ms |
+| 페이지 전환   | 300ms     |
+
+허용: `opacity`, `translate`, `scale`. 피할 것: 바운스, 회전, 과한 모션.
+
+`globals.css`에 `.animate-fade-up`과 `.animate-stagger-in`이 있고
+`prefers-reduced-motion`이 걸려 있다. 새 애니메이션을 추가할 때도 같이 건다.
+
+> NOTE: 디자인 캔버스에는 keyframes가 40개 가까이 있다. 전부 옮기지 않는다.
+> 실제로 화면에 쓰이는 것만 가져온다.
+
+---
+
+## 8. 접근성
+
+필수: 시맨틱 HTML, 키보드 내비게이션, 필요한 곳에 `aria-label`.
+
+- 대비: WCAG AA 이상
+- 색만으로 의미를 전달하지 않는다
+- 조밀한 타입 스케일을 쓰므로 대비를 특히 확인한다. `text-muted`를 작은 크기에
+  쓸 때 배경과의 대비가 4.5:1 아래로 떨어지지 않는지 본다
+- 가로 레일은 키보드로도 이동할 수 있어야 한다
+
+이 앱은 무장애 관광 정보를 다룬다. 접근성이 기능이면서 동시에 주제다.
+
+---
+
+## 9. Tailwind 사용 규칙
+
+레이아웃은 `flex`, `grid`, `gap`으로 짠다.
+
+```tsx
+// Bad — 인라인 스타일
 <div style={{ marginTop: "17px" }} />
 
-// Good — spacing token via className
+// Good — 토큰 기반 유틸리티
 <div className="mt-4" />
 ```
 
----
-
-## 11. Component Architecture
-
-Components must be reusable, small, single-responsibility. Maximum 300 lines.
-
-If larger, split into: component + hook + util.
+토큰이 없는 값이 필요하면 먼저 토큰이어야 하는 값인지 의심한다. 일회성이
+확실할 때만 임의값 문법을 쓴다.
 
 ---
 
-## 12. Forbidden Design Patterns
+## 10. 컴포넌트 구조
 
-Never:
+재사용 가능하고 작고 단일 책임이어야 한다. 최대 300줄.
 
-- Random colors
-- Random spacing
-- Multiple design styles in one product
-- Heavy shadows
-- Too many animations
-- Business logic inside UI
-- Large components
-- Inline CSS
-- Duplicate components
+넘으면 컴포넌트 + 훅 + 유틸로 나눈다. 이 앱은 섹션이 길어지기 쉬우므로
+섹션 단위로 쪼개는 것을 기본으로 한다.
 
 ---
 
-## 13. AI Implementation Rules
+## 11. 금지
 
-Before creating UI:
-
-1. Check existing components
-2. Follow this DESIGN.md
-3. Create reusable components
-4. Mobile first
-5. Dark mode support
-6. Test responsive behavior
-
-> CAUTION: Never ignore this document.
+- 임의 색, 임의 간격
+- 한 제품 안의 여러 디자인 스타일
+- 무거운 그림자
+- 과한 애니메이션
+- UI 안의 비즈니스 로직
+- 거대 컴포넌트
+- 인라인 CSS
+- 중복 컴포넌트
 
 ---
 
-_Last Modified: 2026-07-04_
+## 12. 구현 전 확인
+
+1. `shared/ui`에 이미 있는지 본다
+2. 이 문서를 따른다
+3. 재사용 가능하게 만든다
+4. 모바일 먼저
+5. 다크 모드에서 확인한다
+6. 반응형을 확인한다
+
+> CAUTION: 이 문서를 무시하지 않는다.
+
+---
+
+_Last Modified: 2026-09-14_
