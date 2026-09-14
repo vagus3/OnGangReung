@@ -8,6 +8,36 @@
 
 ## [Unreleased]
 
+### Added
+
+- Tailwind CSS v4 스타일링 레이어. 디자인 캔버스의 oklch 토큰을 `@theme`으로
+  옮기고, 다크 모드는 `data-theme` 속성 변형으로 처리 (ADR 006)
+- 공공데이터 연동 계층 설계와 기능별 API 지도 `docs/api/public-data-apis.md`.
+  TourAPI 외에 기상청·TAGO가 별도 연동으로 필요하다는 점을 명시 (ADR 007)
+- `shared/ui` 공통 컴포넌트 (Button/Chip/Card/Rail/SectionHeading)
+- `tour_contents`(외부 미러) · `spots`(편집 엔티티) 테이블과 마이그레이션 0002
+- 공공데이터 공통 클라이언트 `app/integrations/publicdata`와 TourAPI 레이어.
+  인증·페이징·봉투 파싱을 한 곳에서 처리해 기관 추가가 스키마 정의로 끝난다
+- TourAPI 동기화 서비스와 CLI (`uv run python -m scripts.sync_tourapi`).
+  API 키 없이도 픽스처로 적재 경로 전체를 검증한다
+- 관광지 조회 API `GET /api/v1/spots`, `GET /api/v1/spots/{slug}`.
+  편집 필드와 TourAPI 사실 필드를 합쳐 내려주므로 클라이언트는 두 테이블로
+  나뉜 것을 알 필요가 없다
+- 홈 탭 — 히어로와 레일 4종(해변·먹거리·인기·야경)
+- 안내 탭 — 권역 5개 선택과 권역별 관광지 목록
+- 상단 네비게이션과 모바일 하단 탭바, 라이트/다크/시스템 화면 모드 전환
+- 미구현 탭(AI 코스·테마·마이페이지) 자리 페이지 — 탭 구성이 디자인의
+  정보구조이므로 링크를 지우는 대신 자리를 둔다
+- 관광지 큐레이션 시드 `uv run python -m scripts.seed_spots`.
+  TourAPI 키 없이도 화면을 확인할 수 있다
+
+### Known Issues
+
+- API가 내려간 상태에서 홈/안내 탭 사이를 클릭으로 전환하면 이동이 일어나지
+  않는다. `useSuspenseQuery`가 전환 중 던진 오류를 React가 전환 폐기로
+  처리하기 때문이다. 직접 접근(새로고침)은 정상이며 오류 화면이 뜬다.
+  API가 살아 있으면 발생하지 않는다
+
 ### Fixed
 
 - /posts 정적 프리렌더로 인한 웹 빌드 실패 (API 없이 빌드하면 ECONNREFUSED로
