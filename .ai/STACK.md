@@ -32,7 +32,7 @@
 | react-hook-form | 7.57              | 폼                                       |
 | zod             | 3.25              | 환경변수/입력 검증                       |
 | Tailwind CSS    | 4.3 (CSS-first)   | 스타일링. 토큰은 `@theme`. ADR 006 참조  |
-| 클라이언트 상태 | 미도입            | 필요해지면 Zustand. ADR 002 참조         |
+| Zustand         | 5.0               | 클라이언트 상태(화면 모드). ADR 002 참조 |
 
 ---
 
