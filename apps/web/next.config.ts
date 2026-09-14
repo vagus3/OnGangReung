@@ -9,6 +9,14 @@ loadEnv({ path: path.resolve(process.cwd(), "../../.env") });
 const nextConfig: NextConfig = {
   // Docker 배포용 최소 번들 (apps/web/Dockerfile에서 사용)
   output: "standalone",
+  images: {
+    // TourAPI 대표 사진은 한국관광공사 이미지 서버에서 온다.
+    // next/image가 외부 호스트를 쓰려면 여기 명시해야 한다 (REVIEW.md).
+    remotePatterns: [
+      { protocol: "http", hostname: "tong.visitkorea.or.kr" },
+      { protocol: "https", hostname: "tong.visitkorea.or.kr" },
+    ],
+  },
 };
 
 export default nextConfig;
