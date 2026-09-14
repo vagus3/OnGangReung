@@ -31,6 +31,7 @@
 | TanStack Query  | 5.80              | 서버 상태 전담                           |
 | react-hook-form | 7.57              | 폼                                       |
 | zod             | 3.25              | 환경변수/입력 검증                       |
+| Tailwind CSS    | 4.3 (CSS-first)   | 스타일링. 토큰은 `@theme`. ADR 006 참조  |
 | 클라이언트 상태 | 미도입            | 필요해지면 Zustand. ADR 002 참조         |
 
 ---
@@ -109,4 +110,4 @@
 
 ---
 
-_Last Modified: 2026-08-30_
+_Last Modified: 2026-09-14_
