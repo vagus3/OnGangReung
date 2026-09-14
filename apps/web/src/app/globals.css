@@ -1,0 +1,232 @@
+@import "tailwindcss";
+
+/* 디자인의 :root[data-theme="dark"] 구조와 1:1로 맞춘다.
+   시스템 설정을 따르는 상태는 루트에 속성을 붙이지 않고, 명시 선택 시에만
+   data-theme을 박는다 (shared/theme). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ---------------------------------------------------------------------------
+   색·폰트 토큰 — 유틸리티 클래스로 생성된다 (bg-paper, text-ink, font-display ...)
+   값은 디자인 캔버스의 :root에서 그대로 가져왔다. oklch를 변환 없이 쓴다.
+   --------------------------------------------------------------------------- */
+@theme {
+  --color-ink: oklch(23% 0.055 250);
+  --color-sea: oklch(52% 0.115 232);
+  --color-sun: oklch(70% 0.175 45);
+  --color-coffee: oklch(44% 0.07 55);
+  --color-paper: oklch(97.5% 0.008 90);
+  --color-sand: oklch(94% 0.014 85);
+  --color-line: oklch(89% 0.012 85);
+  --color-muted: oklch(52% 0.02 250);
+  --color-nav: oklch(97.5% 0.008 90 / 0.82);
+  --color-tint: oklch(93% 0.03 226 / 0.5);
+  --color-chip: oklch(98% 0.005 90 / 0.92);
+  --color-glow: oklch(78% 0.09 226 / 0.5);
+  --color-solid: oklch(98% 0.005 90);
+
+  /* 실제 폰트 패밀리는 next/font가 layout.tsx에서 주입한다 (--font-song-myung,
+     --font-plex-kr). 여기서는 그 변수를 폴백과 함께 묶기만 한다. */
+  --font-display: var(--font-song-myung), "Song Myung", serif;
+  --font-body: var(--font-plex-kr), system-ui, sans-serif;
+}
+
+/* 다크 팔레트. @theme은 정적 선언이라 테마 분기를 담지 못하므로,
+   생성된 --color-* 변수를 런타임에 덮어쓴다. 유틸리티 클래스는 그대로 두고
+   변수만 바뀌므로 컴포넌트에 dark: 분기를 쓸 필요가 없다. */
+:root {
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-ink: oklch(94% 0.012 90);
+    --color-sea: oklch(74% 0.1 225);
+    --color-sun: oklch(76% 0.15 50);
+    --color-coffee: oklch(72% 0.06 60);
+    --color-paper: oklch(19% 0.028 258);
+    --color-sand: oklch(25% 0.028 256);
+    --color-line: oklch(35% 0.024 256);
+    --color-muted: oklch(73% 0.018 250);
+    --color-nav: oklch(19% 0.028 258 / 0.88);
+    --color-tint: oklch(34% 0.05 232 / 0.6);
+    --color-chip: oklch(30% 0.03 256 / 0.92);
+    --color-glow: oklch(84% 0.085 68 / 0.45);
+    --color-solid: oklch(32% 0.03 256);
+  }
+}
+
+:root[data-theme="dark"] {
+  --color-ink: oklch(94% 0.012 90);
+  --color-sea: oklch(74% 0.1 225);
+  --color-sun: oklch(76% 0.15 50);
+  --color-coffee: oklch(72% 0.06 60);
+  --color-paper: oklch(19% 0.028 258);
+  --color-sand: oklch(25% 0.028 256);
+  --color-line: oklch(35% 0.024 256);
+  --color-muted: oklch(73% 0.018 250);
+  --color-nav: oklch(19% 0.028 258 / 0.88);
+  --color-tint: oklch(34% 0.05 232 / 0.6);
+  --color-chip: oklch(30% 0.03 256 / 0.92);
+  --color-glow: oklch(84% 0.085 68 / 0.45);
+  --color-solid: oklch(32% 0.03 256);
+}
+
+/* ---------------------------------------------------------------------------
+   표면 알파 스케일 (--surface-*)
+   @theme 밖에 두는 이유: 이 값들은 "색"이 아니라 "현재 배경 위에 얹는 반투명
+   표면"이다. 라이트에서는 흰색 알파, 다크에서는 어두운 남색 알파로 의미가
+   반전하므로 정적 토큰 선언인 @theme의 모델에 맞지 않는다.
+   사용: style={{ background: "var(--surface-80)" }} 또는 bg-[var(--surface-80)]
+   --------------------------------------------------------------------------- */
+:root {
+  --surface-13: oklch(100% 0 0 / 0.13);
+  --surface-30: oklch(100% 0 0 / 0.3);
+  --surface-40: oklch(100% 0 0 / 0.4);
+  --surface-50: oklch(100% 0 0 / 0.5);
+  --surface-60: oklch(100% 0 0 / 0.6);
+  --surface-70: oklch(100% 0 0 / 0.7);
+  --surface-80: oklch(100% 0 0 / 0.8);
+  --surface-90: oklch(100% 0 0 / 0.9);
+  --surface-94: oklch(100% 0 0 / 0.94);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface-13: oklch(100% 0 0 / 0.13);
+    --surface-30: oklch(100% 0 0 / 0.3);
+    --surface-40: oklch(31% 0.022 258 / 0.4);
+    --surface-50: oklch(31% 0.022 258 / 0.5);
+    --surface-60: oklch(31% 0.022 258 / 0.6);
+    --surface-70: oklch(31% 0.022 258 / 0.7);
+    --surface-80: oklch(31% 0.022 258 / 0.8);
+    --surface-90: oklch(31% 0.022 258 / 0.9);
+    --surface-94: oklch(31% 0.022 258 / 0.94);
+  }
+}
+
+:root[data-theme="dark"] {
+  --surface-13: oklch(100% 0 0 / 0.13);
+  --surface-30: oklch(100% 0 0 / 0.3);
+  --surface-40: oklch(31% 0.022 258 / 0.4);
+  --surface-50: oklch(31% 0.022 258 / 0.5);
+  --surface-60: oklch(31% 0.022 258 / 0.6);
+  --surface-70: oklch(31% 0.022 258 / 0.7);
+  --surface-80: oklch(31% 0.022 258 / 0.8);
+  --surface-90: oklch(31% 0.022 258 / 0.9);
+  --surface-94: oklch(31% 0.022 258 / 0.94);
+}
+
+/* ---------------------------------------------------------------------------
+   기본 스타일
+   --------------------------------------------------------------------------- */
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 한글은 어절 단위로 끊는다. 디자인의 word-break: keep-all과 같다. */
+body,
+h1,
+h2,
+h3 {
+  word-break: keep-all;
+}
+
+a {
+  color: var(--color-sea);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-ink);
+}
+
+/* 다크에서 사진이 그대로 튀지 않도록 낮춘다 (디자인 동일) */
+:root[data-theme="dark"] img {
+  filter: brightness(0.88) saturate(0.94);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) img {
+    filter: brightness(0.88) saturate(0.94);
+  }
+}
+
+/* 가로 레일용 얇은 스크롤바 */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 999px;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* 실제로 쓰는 모션만 옮긴다. 디자인에는 40개 가까이 있지만 전부 가져오지
+   않는다 — DESIGN.md의 "불필요한 모션 지양"과 같은 방향이다. */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes stagger-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.5s ease-out both;
+}
+
+.animate-stagger-in {
+  animation: stagger-in 0.45s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-stagger-in {
+    animation: none;
+  }
+}
