@@ -25,10 +25,10 @@ export default defineConfig({
       // 현재 수준을 바닥으로 고정해 하락을 막는 래칫.
       // 테스트가 늘면 이 숫자를 올린다. 목표는 TEST.md의 Integration 60%.
       thresholds: {
-        lines: 15,
-        functions: 7,
-        branches: 24,
-        statements: 15,
+        lines: 30,
+        functions: 45,
+        branches: 55,
+        statements: 30,
       },
     },
   },
