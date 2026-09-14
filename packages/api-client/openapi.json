@@ -144,6 +144,151 @@
         }
       }
     },
+    "/api/v1/spots": {
+      "get": {
+        "tags": [
+          "spots"
+        ],
+        "summary": "List Spots",
+        "operationId": "list_spots_api_v1_spots_get",
+        "parameters": [
+          {
+            "name": "rail",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/HomeRail"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "홈 레일 소속",
+              "title": "Rail"
+            },
+            "description": "홈 레일 소속"
+          },
+          {
+            "name": "zone",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Zone"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "권역",
+              "title": "Zone"
+            },
+            "description": "권역"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/SpotCategory"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "카테고리",
+              "title": "Category"
+            },
+            "description": "카테고리"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpotRead"
+                  },
+                  "title": "Response List Spots Api V1 Spots Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/spots/{slug}": {
+      "get": {
+        "tags": [
+          "spots"
+        ],
+        "summary": "Get Spot",
+        "operationId": "get_spot_api_v1_spots__slug__get",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpotDetailRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "tags": [
@@ -184,6 +329,17 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "HomeRail": {
+        "type": "string",
+        "enum": [
+          "beach",
+          "food",
+          "hot",
+          "night"
+        ],
+        "title": "HomeRail",
+        "description": "홈 화면의 가로 레일 소속. 어디에도 안 실리면 NULL이다."
       },
       "PostCreate": {
         "properties": {
@@ -235,6 +391,328 @@
         ],
         "title": "PostRead"
       },
+      "SpotCategory": {
+        "type": "string",
+        "enum": [
+          "nature",
+          "cafe",
+          "history",
+          "food",
+          "downtown"
+        ],
+        "title": "SpotCategory",
+        "description": "필터 칩의 택소노미. TourAPI contentTypeId와 1:1이 아니다."
+      },
+      "SpotDetailRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "zone": {
+            "$ref": "#/components/schemas/Zone"
+          },
+          "category": {
+            "$ref": "#/components/schemas/SpotCategory"
+          },
+          "span": {
+            "$ref": "#/components/schemas/SpotSpan"
+          },
+          "rail": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HomeRail"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sticker": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sticker"
+          },
+          "editorial_desc": {
+            "type": "string",
+            "title": "Editorial Desc"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "lng": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lng"
+          },
+          "image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Url"
+          },
+          "thumbnail_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thumbnail Url"
+          },
+          "address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address"
+          },
+          "tel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tel"
+          },
+          "homepage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Homepage"
+          },
+          "overview": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overview"
+          },
+          "tour_content_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tour Content Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "zone",
+          "category",
+          "span",
+          "rail",
+          "sticker",
+          "editorial_desc",
+          "tags",
+          "lat",
+          "lng",
+          "image_url",
+          "thumbnail_url",
+          "address",
+          "tel",
+          "homepage",
+          "overview",
+          "tour_content_id"
+        ],
+        "title": "SpotDetailRead",
+        "description": "상세용. TourAPI가 갖고 있는 사실 정보를 덧붙인다."
+      },
+      "SpotRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "zone": {
+            "$ref": "#/components/schemas/Zone"
+          },
+          "category": {
+            "$ref": "#/components/schemas/SpotCategory"
+          },
+          "span": {
+            "$ref": "#/components/schemas/SpotSpan"
+          },
+          "rail": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HomeRail"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sticker": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sticker"
+          },
+          "editorial_desc": {
+            "type": "string",
+            "title": "Editorial Desc"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "lng": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lng"
+          },
+          "image_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Url"
+          },
+          "thumbnail_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thumbnail Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "zone",
+          "category",
+          "span",
+          "rail",
+          "sticker",
+          "editorial_desc",
+          "tags",
+          "lat",
+          "lng",
+          "image_url",
+          "thumbnail_url"
+        ],
+        "title": "SpotRead",
+        "description": "목록용. 레일 카드와 권역 목록이 그리는 데 필요한 만큼만 담는다."
+      },
+      "SpotSpan": {
+        "type": "string",
+        "enum": [
+          "std",
+          "wide",
+          "tall"
+        ],
+        "title": "SpotSpan",
+        "description": "카드가 그리드에서 차지하는 폭. 편집자가 정하는 레이아웃 지시다."
+      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -274,6 +752,18 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "Zone": {
+        "type": "string",
+        "enum": [
+          "gyeongpo",
+          "city",
+          "daegwallyeong",
+          "jumunjin",
+          "jeongdongjin"
+        ],
+        "title": "Zone",
+        "description": "강릉 권역. TourAPI의 sigungu는 강릉시 하나로 끝나므로 우리가 나눈 분류다."
       }
     }
   }

@@ -40,6 +40,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/spots": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Spots */
+        get: operations["list_spots_api_v1_spots_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/spots/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Spot */
+        get: operations["get_spot_api_v1_spots__slug__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -66,6 +100,12 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /**
+         * HomeRail
+         * @description 홈 화면의 가로 레일 소속. 어디에도 안 실리면 NULL이다.
+         * @enum {string}
+         */
+        HomeRail: "beach" | "food" | "hot" | "night";
         /** PostCreate */
         PostCreate: {
             /** Title */
@@ -87,6 +127,88 @@ export interface components {
              */
             created_at: string;
         };
+        /**
+         * SpotCategory
+         * @description 필터 칩의 택소노미. TourAPI contentTypeId와 1:1이 아니다.
+         * @enum {string}
+         */
+        SpotCategory: "nature" | "cafe" | "history" | "food" | "downtown";
+        /**
+         * SpotDetailRead
+         * @description 상세용. TourAPI가 갖고 있는 사실 정보를 덧붙인다.
+         */
+        SpotDetailRead: {
+            /** Id */
+            id: number;
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            zone: components["schemas"]["Zone"];
+            category: components["schemas"]["SpotCategory"];
+            span: components["schemas"]["SpotSpan"];
+            rail: components["schemas"]["HomeRail"] | null;
+            /** Sticker */
+            sticker: string | null;
+            /** Editorial Desc */
+            editorial_desc: string;
+            /** Tags */
+            tags: string[];
+            /** Lat */
+            lat: number | null;
+            /** Lng */
+            lng: number | null;
+            /** Image Url */
+            image_url: string | null;
+            /** Thumbnail Url */
+            thumbnail_url: string | null;
+            /** Address */
+            address: string | null;
+            /** Tel */
+            tel: string | null;
+            /** Homepage */
+            homepage: string | null;
+            /** Overview */
+            overview: string | null;
+            /** Tour Content Id */
+            tour_content_id: string | null;
+        };
+        /**
+         * SpotRead
+         * @description 목록용. 레일 카드와 권역 목록이 그리는 데 필요한 만큼만 담는다.
+         */
+        SpotRead: {
+            /** Id */
+            id: number;
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            zone: components["schemas"]["Zone"];
+            category: components["schemas"]["SpotCategory"];
+            span: components["schemas"]["SpotSpan"];
+            rail: components["schemas"]["HomeRail"] | null;
+            /** Sticker */
+            sticker: string | null;
+            /** Editorial Desc */
+            editorial_desc: string;
+            /** Tags */
+            tags: string[];
+            /** Lat */
+            lat: number | null;
+            /** Lng */
+            lng: number | null;
+            /** Image Url */
+            image_url: string | null;
+            /** Thumbnail Url */
+            thumbnail_url: string | null;
+        };
+        /**
+         * SpotSpan
+         * @description 카드가 그리드에서 차지하는 폭. 편집자가 정하는 레이아웃 지시다.
+         * @enum {string}
+         */
+        SpotSpan: "std" | "wide" | "tall";
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -100,6 +222,12 @@ export interface components {
             /** Context */
             ctx?: Record<string, never>;
         };
+        /**
+         * Zone
+         * @description 강릉 권역. TourAPI의 sigungu는 강릉시 하나로 끝나므로 우리가 나눈 분류다.
+         * @enum {string}
+         */
+        Zone: "gyeongpo" | "city" | "daegwallyeong" | "jumunjin" | "jeongdongjin";
     };
     responses: never;
     parameters: never;
@@ -210,6 +338,74 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_spots_api_v1_spots_get: {
+        parameters: {
+            query?: {
+                /** @description 홈 레일 소속 */
+                rail?: components["schemas"]["HomeRail"] | null;
+                /** @description 권역 */
+                zone?: components["schemas"]["Zone"] | null;
+                /** @description 카테고리 */
+                category?: components["schemas"]["SpotCategory"] | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SpotRead"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_spot_api_v1_spots__slug__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SpotDetailRead"];
+                };
             };
             /** @description Validation Error */
             422: {
