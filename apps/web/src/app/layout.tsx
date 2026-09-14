@@ -2,6 +2,8 @@ import { IBM_Plex_Sans_KR, Song_Myung } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+import { BottomTabBar, SiteHeader } from "@/widgets/site-nav";
+
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -32,7 +34,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ko" className={`${songMyung.variable} ${plexSansKr.variable}`}>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <SiteHeader />
+          {children}
+          <BottomTabBar />
+        </Providers>
       </body>
     </html>
   );
