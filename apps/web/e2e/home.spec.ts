@@ -62,18 +62,23 @@ test.describe("홈", () => {
   });
 
   test("탭을 눌러 이동한다", async ({ page }) => {
-    // 데이터를 가져오지 않는 탭으로 확인한다. API가 떠 있어야 통과하는
-    // 검증은 docker compose --profile full로 띄우는 별도 스위트가 맡는다
-    // (TEST.md).
+    // 데이터를 가져오지 않는 탭으로 확인한다. API가 내려간 상태에서 데이터를
+    // 읽는 탭으로 클릭 전환하면 useSuspenseQuery가 전환 중 던진 오류를 React가
+    // 전환 폐기로 처리해 이동이 일어나지 않는다 (CHANGELOG의 Known Issues).
+    // API가 살아 있으면 모든 탭에서 정상 동작하며, 그 검증은
+    // docker compose --profile full로 띄우는 별도 스위트가 맡는다 (TEST.md).
+    //
+    // 남은 정적 탭이 /ai, /my 둘뿐이므로 이 탭들이 채워지면 이 테스트는
+    // href 단정으로 합치거나 전체 스위트를 API 기동 전제로 옮겨야 한다.
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto("/");
 
     await page
       .getByRole("navigation", { name: "주요 메뉴" })
-      .getByRole("link", { name: "테마" })
+      .getByRole("link", { name: "AI 코스" })
       .click();
 
-    await expect(page).toHaveURL(/\/theme$/);
+    await expect(page).toHaveURL(/\/ai$/);
   });
 
   test("안내 탭이 API 없이도 렌더링된다", async ({ page }) => {
