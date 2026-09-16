@@ -289,6 +289,73 @@
         }
       }
     },
+    "/api/v1/themes": {
+      "get": {
+        "tags": [
+          "themes"
+        ],
+        "summary": "List Themes",
+        "operationId": "list_themes_api_v1_themes_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ThemeRead"
+                  },
+                  "type": "array",
+                  "title": "Response List Themes Api V1 Themes Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/themes/{slug}": {
+      "get": {
+        "tags": [
+          "themes"
+        ],
+        "summary": "Get Theme",
+        "operationId": "get_theme_api_v1_themes__slug__get",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThemeDetailRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "tags": [
@@ -340,6 +407,24 @@
         ],
         "title": "HomeRail",
         "description": "홈 화면의 가로 레일 소속. 어디에도 안 실리면 NULL이다."
+      },
+      "MenuItem": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "price": {
+            "type": "string",
+            "title": "Price"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "price"
+        ],
+        "title": "MenuItem"
       },
       "PostCreate": {
         "properties": {
@@ -502,6 +587,57 @@
             ],
             "title": "Thumbnail Url"
           },
+          "about": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "About"
+          },
+          "hours": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hours"
+          },
+          "tip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tip"
+          },
+          "parking": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parking"
+          },
+          "menu": {
+            "items": {
+              "$ref": "#/components/schemas/MenuItem"
+            },
+            "type": "array",
+            "title": "Menu"
+          },
           "address": {
             "anyOf": [
               {
@@ -574,6 +710,11 @@
           "lng",
           "image_url",
           "thumbnail_url",
+          "about",
+          "hours",
+          "tip",
+          "parking",
+          "menu",
           "address",
           "tel",
           "homepage",
@@ -581,7 +722,7 @@
           "tour_content_id"
         ],
         "title": "SpotDetailRead",
-        "description": "상세용. TourAPI가 갖고 있는 사실 정보를 덧붙인다."
+        "description": "상세용. 편집 필드와 TourAPI 사실 정보를 함께 내려준다."
       },
       "SpotRead": {
         "properties": {
@@ -712,6 +853,137 @@
         ],
         "title": "SpotSpan",
         "description": "카드가 그리드에서 차지하는 폭. 편집자가 정하는 레이아웃 지시다."
+      },
+      "ThemeDetailRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "name_en": {
+            "type": "string",
+            "title": "Name En"
+          },
+          "tagline": {
+            "type": "string",
+            "title": "Tagline"
+          },
+          "season": {
+            "type": "string",
+            "title": "Season"
+          },
+          "car_note": {
+            "type": "string",
+            "title": "Car Note"
+          },
+          "body": {
+            "type": "string",
+            "title": "Body"
+          },
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/ThemeEntryRead"
+            },
+            "type": "array",
+            "title": "Entries"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "name_en",
+          "tagline",
+          "season",
+          "car_note",
+          "body",
+          "entries"
+        ],
+        "title": "ThemeDetailRead",
+        "description": "상세용. 본문과 장소 목록을 덧붙인다."
+      },
+      "ThemeEntryRead": {
+        "properties": {
+          "note": {
+            "type": "string",
+            "title": "Note"
+          },
+          "hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hint"
+          },
+          "spot": {
+            "$ref": "#/components/schemas/SpotRead"
+          }
+        },
+        "type": "object",
+        "required": [
+          "note",
+          "hint",
+          "spot"
+        ],
+        "title": "ThemeEntryRead",
+        "description": "테마 안의 장소 한 곳.\n\nnote/hint는 장소의 속성이 아니라 이 테마 맥락에서의 서술이다. 그래서\nSpotRead 안이 아니라 밖에 둔다."
+      },
+      "ThemeRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "name_en": {
+            "type": "string",
+            "title": "Name En"
+          },
+          "tagline": {
+            "type": "string",
+            "title": "Tagline"
+          },
+          "season": {
+            "type": "string",
+            "title": "Season"
+          },
+          "car_note": {
+            "type": "string",
+            "title": "Car Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "name_en",
+          "tagline",
+          "season",
+          "car_note"
+        ],
+        "title": "ThemeRead",
+        "description": "목록용. 테마 카드가 그리는 데 필요한 만큼만 담는다."
       },
       "ValidationError": {
         "properties": {

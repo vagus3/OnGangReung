@@ -74,6 +74,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/themes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Themes */
+        get: operations["list_themes_api_v1_themes_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/themes/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Theme */
+        get: operations["get_theme_api_v1_themes__slug__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -106,6 +140,13 @@ export interface components {
          * @enum {string}
          */
         HomeRail: "beach" | "food" | "hot" | "night";
+        /** MenuItem */
+        MenuItem: {
+            /** Name */
+            name: string;
+            /** Price */
+            price: string;
+        };
         /** PostCreate */
         PostCreate: {
             /** Title */
@@ -135,7 +176,7 @@ export interface components {
         SpotCategory: "nature" | "cafe" | "history" | "food" | "downtown";
         /**
          * SpotDetailRead
-         * @description 상세용. TourAPI가 갖고 있는 사실 정보를 덧붙인다.
+         * @description 상세용. 편집 필드와 TourAPI 사실 정보를 함께 내려준다.
          */
         SpotDetailRead: {
             /** Id */
@@ -162,6 +203,16 @@ export interface components {
             image_url: string | null;
             /** Thumbnail Url */
             thumbnail_url: string | null;
+            /** About */
+            about: string | null;
+            /** Hours */
+            hours: string | null;
+            /** Tip */
+            tip: string | null;
+            /** Parking */
+            parking: string | null;
+            /** Menu */
+            menu: components["schemas"]["MenuItem"][];
             /** Address */
             address: string | null;
             /** Tel */
@@ -209,6 +260,64 @@ export interface components {
          * @enum {string}
          */
         SpotSpan: "std" | "wide" | "tall";
+        /**
+         * ThemeDetailRead
+         * @description 상세용. 본문과 장소 목록을 덧붙인다.
+         */
+        ThemeDetailRead: {
+            /** Id */
+            id: number;
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Name En */
+            name_en: string;
+            /** Tagline */
+            tagline: string;
+            /** Season */
+            season: string;
+            /** Car Note */
+            car_note: string;
+            /** Body */
+            body: string;
+            /** Entries */
+            entries: components["schemas"]["ThemeEntryRead"][];
+        };
+        /**
+         * ThemeEntryRead
+         * @description 테마 안의 장소 한 곳.
+         *
+         *     note/hint는 장소의 속성이 아니라 이 테마 맥락에서의 서술이다. 그래서
+         *     SpotRead 안이 아니라 밖에 둔다.
+         */
+        ThemeEntryRead: {
+            /** Note */
+            note: string;
+            /** Hint */
+            hint: string | null;
+            spot: components["schemas"]["SpotRead"];
+        };
+        /**
+         * ThemeRead
+         * @description 목록용. 테마 카드가 그리는 데 필요한 만큼만 담는다.
+         */
+        ThemeRead: {
+            /** Id */
+            id: number;
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Name En */
+            name_en: string;
+            /** Tagline */
+            tagline: string;
+            /** Season */
+            season: string;
+            /** Car Note */
+            car_note: string;
+        };
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -405,6 +514,57 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SpotDetailRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_themes_api_v1_themes_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThemeRead"][];
+                };
+            };
+        };
+    };
+    get_theme_api_v1_themes__slug__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ThemeDetailRead"];
                 };
             };
             /** @description Validation Error */
