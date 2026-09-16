@@ -2,16 +2,21 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 import { themeApi, themeKeys } from "@/entities/theme";
 import { createQueryClient } from "@/shared/api";
-import { ThemeListPage } from "@/views/theme";
+import { ThemeDetailPage } from "@/views/theme";
 
 export const dynamic = "force-dynamic";
 
-export default async function Page() {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
   const queryClient = createQueryClient();
   try {
     await queryClient.prefetchQuery({
-      queryKey: themeKeys.list(),
-      queryFn: themeApi.list,
+      queryKey: themeKeys.detail(slug),
+      queryFn: () => themeApi.detail(slug),
     });
   } catch {
     // 프리페치 실패가 렌더링을 막지 않는다
@@ -19,7 +24,7 @@ export default async function Page() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ThemeListPage />
+      <ThemeDetailPage slug={slug} />
     </HydrationBoundary>
   );
 }
