@@ -1,0 +1,1052 @@
+{
+  "themes": [
+    {
+      "slug": "bread",
+      "name": "빵지순례",
+      "name_en": "BREAD ROUTE",
+      "tagline": "마늘빵과 감자빵을 하루에 다 돕니다.",
+      "season": "사계절",
+      "car_note": "차 없이 가능",
+      "body": "성심당처럼 강릉도 빵으로 하루가 됩니다. 줄이 짧은 시간대 순서로 묶었습니다.",
+      "order": 1,
+      "entries": [
+        {
+          "slug": "spot_gangneung_sand",
+          "note": "기차에서 먹을 것을 미리 삽니다.",
+          "hint": "역 도보 2분",
+          "order": 1
+        },
+        {
+          "slug": "spot_garlic_bread_bakery",
+          "note": "한 봉지 사서 차에서 다 먹게 됩니다.",
+          "hint": "오후 품절",
+          "order": 2
+        },
+        {
+          "slug": "spot_chodang_cream_bread",
+          "note": "두부를 넣은 빵을 팝니다.",
+          "hint": "한정 수량",
+          "order": 3
+        },
+        {
+          "slug": "spot_jumunjin_bakery",
+          "note": "항구 근처의 오래된 빵집.",
+          "hint": "08:00 오픈",
+          "order": 4
+        }
+      ]
+    },
+    {
+      "slug": "eat",
+      "name": "그래서 밥은",
+      "name_en": "WHAT TO EAT",
+      "tagline": "초당옥수수, 강릉샌드, 짬뽕순두부부터.",
+      "season": "사계절",
+      "car_note": "권역별 다름",
+      "body": "강릉은 먹으러 가는 곳입니다. 무엇을 먹을지만 모았습니다. 문 여는 시간과 웨이팅은 안내 탭에.",
+      "order": 2,
+      "entries": [
+        {
+          "slug": "spot_jjamppong_sundubu",
+          "note": "초당두부에 짬뽕 국물. 강릉에서 시작됐습니다.",
+          "hint": "아침부터",
+          "order": 1
+        },
+        {
+          "slug": "spot_chodang_corn",
+          "note": "삶지 않고 그냥 베어 먹는 단맛.",
+          "hint": "6–9월",
+          "order": 2
+        },
+        {
+          "slug": "spot_jang_kalguksu",
+          "note": "고추장을 풀어 끓입니다.",
+          "hint": "겨울",
+          "order": 3
+        },
+        {
+          "slug": "spot_mulhoe",
+          "note": "얼음 띄운 국물에 회를 넣습니다.",
+          "hint": "여름",
+          "order": 4
+        }
+      ]
+    },
+    {
+      "slug": "cafe",
+      "name": "카페 · 커피",
+      "name_en": "COFFEE",
+      "tagline": "안목에서 시작해 시내까지 퍼졌습니다.",
+      "season": "사계절",
+      "car_note": "차 없이 가능",
+      "body": "강릉 커피는 안목 해변의 자판기에서 시작했습니다. 지금은 로스터리가 시내까지 있습니다.",
+      "order": 3,
+      "entries": [
+        {
+          "slug": "spot_anmok",
+          "note": "바다를 정면으로 보고 앉습니다.",
+          "hint": "주차 어려움",
+          "order": 1
+        },
+        {
+          "slug": "spot_gyeongpo_roastery",
+          "note": "호수 쪽 창이 큰 곳.",
+          "hint": "09:00",
+          "order": 2
+        },
+        {
+          "slug": "spot_myeongjudong_cafe",
+          "note": "오래된 집을 고쳐 씁니다.",
+          "hint": "도보",
+          "order": 3
+        },
+        {
+          "slug": "spot_heonhwaro_oceanview_cafe",
+          "note": "드라이브 중간에 섭니다.",
+          "hint": "차 필요",
+          "order": 4
+        }
+      ]
+    },
+    {
+      "slug": "hot",
+      "name": "지금 핫한 것",
+      "name_en": "TRENDING",
+      "tagline": "백화점 팝업까지 올라간 것들.",
+      "season": "지금",
+      "car_note": "차 없이 가능",
+      "body": "유행은 빨리 지나갑니다. 지금 줄이 서는 것만 남겨두고 지난 것은 내립니다.",
+      "order": 4,
+      "entries": [
+        {
+          "slug": "spot_beach_popup_store",
+          "note": "여름 한정으로 해변에 섭니다.",
+          "hint": "8–9월",
+          "order": 1
+        },
+        {
+          "slug": "spot_garlic_bread",
+          "note": "한 봉지로는 부족합니다.",
+          "hint": "오후 품절",
+          "order": 2
+        },
+        {
+          "slug": "spot_roastery_new_branch",
+          "note": "올해 문을 연 곳들.",
+          "hint": "신규",
+          "order": 3
+        },
+        {
+          "slug": "spot_gamja_bread",
+          "note": "팝업이 서울 백화점까지 갔습니다.",
+          "hint": "진행 중",
+          "order": 4
+        }
+      ]
+    },
+    {
+      "slug": "walk",
+      "name": "차 없이 뚜벅이",
+      "name_en": "NO CAR",
+      "tagline": "기차에서 내려 걸어서만 다니기.",
+      "season": "사계절",
+      "car_note": "차 없이",
+      "body": "KTX 강릉역에서 내려 버스와 걷기로만 도는 구간입니다. 렌트를 하지 않아도 됩니다.",
+      "order": 5,
+      "entries": [
+        {
+          "slug": "spot_gangneung_station",
+          "note": "여기서 시작합니다.",
+          "hint": "KTX",
+          "order": 1
+        },
+        {
+          "slug": "spot_wolhwa",
+          "note": "기찻길을 걷어낸 자리를 걷습니다.",
+          "hint": "도보 10분",
+          "order": 2
+        },
+        {
+          "slug": "spot_jungang_market",
+          "note": "먹거리가 한곳에 모여 있습니다.",
+          "hint": "도보",
+          "order": 3
+        },
+        {
+          "slug": "spot_gyeongpo_beach",
+          "note": "시내버스로 20분.",
+          "hint": "버스",
+          "order": 4
+        },
+        {
+          "slug": "spot_jeongdongjin_station",
+          "note": "기차가 곧 목적입니다.",
+          "hint": "기차",
+          "order": 5
+        }
+      ]
+    },
+    {
+      "slug": "indoor",
+      "name": "물놀이 · 실내",
+      "name_en": "RAIN PLAN",
+      "tagline": "비 오는 날과 아이 있는 날.",
+      "season": "여름 · 우천",
+      "car_note": "차 권장",
+      "body": "비가 오면 계획이 무너집니다. 실내로 대체할 수 있는 곳을 미리 적어둡니다.",
+      "order": 6,
+      "entries": [
+        {
+          "slug": "spot_city_museum",
+          "note": "오죽헌과 붙어 있습니다.",
+          "hint": "실내",
+          "order": 1
+        },
+        {
+          "slug": "spot_aquarium",
+          "note": "비 오는 오후에.",
+          "hint": "실내",
+          "order": 2
+        },
+        {
+          "slug": "spot_olympic_museum",
+          "note": "평창 동계올림픽의 기록.",
+          "hint": "실내",
+          "order": 3
+        },
+        {
+          "slug": "spot_coffee_museum",
+          "note": "강릉 커피의 역사.",
+          "hint": "실내",
+          "order": 4
+        }
+      ]
+    },
+    {
+      "slug": "night",
+      "name": "야경 · 별",
+      "name_en": "AFTER DARK",
+      "tagline": "육백마지기와 안반데기의 은하수.",
+      "season": "여름–가을",
+      "car_note": "차 필요",
+      "body": "달이 없는 날짜를 골라 가면 은하수가 보입니다. 도시 야경과 별을 함께 묶었습니다.",
+      "order": 7,
+      "entries": [
+        {
+          "slug": "spot_wolhwa_night",
+          "note": "걸어 다니는 야경.",
+          "hint": "야경",
+          "order": 1
+        },
+        {
+          "slug": "spot_gyeongpo_night_sea",
+          "note": "조명이 적어 파도 소리가 큽니다.",
+          "hint": "야경",
+          "order": 2
+        },
+        {
+          "slug": "spot_anbandegi_milkyway",
+          "note": "해발 700m. 구름이 발아래.",
+          "hint": "별",
+          "order": 3
+        },
+        {
+          "slug": "spot_yukbaekmajigi",
+          "note": "차로 올라가 그대로 앉습니다.",
+          "hint": "별",
+          "order": 4
+        }
+      ]
+    },
+    {
+      "slug": "heritage",
+      "name": "문화재",
+      "name_en": "HERITAGE",
+      "tagline": "오죽헌과 선교장, 허난설헌.",
+      "season": "사계절",
+      "car_note": "차 권장",
+      "body": "강릉은 문화재도 강릉입니다. 감성 코스에서 밀리지만 한 번은 볼 값이 있습니다.",
+      "order": 8,
+      "entries": [
+        {
+          "slug": "spot_gangneung_hyanggyo",
+          "note": "지금도 쓰이는 건물.",
+          "hint": "도보",
+          "order": 1
+        },
+        {
+          "slug": "spot_ojukheon",
+          "note": "신사임당과 이이가 태어난 집.",
+          "hint": "09:00",
+          "order": 2
+        },
+        {
+          "slug": "spot_seongyojang",
+          "note": "조선 후기 사대부 가옥.",
+          "hint": "도보권",
+          "order": 3
+        },
+        {
+          "slug": "spot_gyeongpo",
+          "note": "경포호를 내려다보는 누각.",
+          "hint": "상시",
+          "order": 4
+        }
+      ]
+    }
+  ],
+  "places": [
+    {
+      "slug": "spot_gangneung_sand",
+      "name": "강릉샌드 매장",
+      "zone": "CITY",
+      "category": "FOOD",
+      "editorial_desc": "기차에서 먹을 것을 미리 삽니다.",
+      "about": "강릉역 안에 있는 매장입니다. 기차 타기 전에 사서 좌석에서 먹는 사람이 대부분입니다.",
+      "hours": "07:00 – 21:00 · 연중무휴",
+      "tip": "오후 6시 이후에는 인기 맛이 빠집니다.",
+      "parking": "강릉역 환승주차장 · 유료",
+      "menu": [
+        {
+          "name": "강릉샌드 6입",
+          "price": "9,800원"
+        },
+        {
+          "name": "버터바 4입",
+          "price": "8,500원"
+        }
+      ],
+      "lat": 37.7639,
+      "lng": 128.8961,
+      "tags": []
+    },
+    {
+      "slug": "spot_garlic_bread_bakery",
+      "name": "마늘빵 베이커리",
+      "zone": "CITY",
+      "category": "FOOD",
+      "editorial_desc": "한 봉지 사서 차에서 다 먹게 됩니다.",
+      "about": "갓 구운 마늘빵을 낱개로 팝니다. 한 봉지를 사면 차에서 다 먹게 됩니다.",
+      "hours": "09:00 – 소진 시 마감",
+      "tip": "오후 3시 전후로 품절됩니다.",
+      "parking": "노상 주차",
+      "menu": [
+        {
+          "name": "마늘빵 5개",
+          "price": "7,000원"
+        },
+        {
+          "name": "크림 마늘빵",
+          "price": "2,000원"
+        }
+      ],
+      "lat": 37.7519,
+      "lng": 128.8961,
+      "tags": []
+    },
+    {
+      "slug": "spot_chodang_cream_bread",
+      "name": "초당 크림빵",
+      "zone": "GYEONGPO",
+      "category": "FOOD",
+      "editorial_desc": "두부를 넣은 빵을 팝니다.",
+      "about": "초당두부를 넣어 만든 빵입니다. 하루 만드는 양이 정해져 있습니다.",
+      "hours": "10:00 – 18:00 · 화요일 휴무",
+      "tip": "한정 수량이라 오전에 가는 편이 확실합니다.",
+      "parking": "마을 공영",
+      "menu": [
+        {
+          "name": "두부 크림빵",
+          "price": "3,500원"
+        },
+        {
+          "name": "순두부 라떼",
+          "price": "5,500원"
+        }
+      ],
+      "lat": 37.7906,
+      "lng": 128.9033,
+      "tags": []
+    },
+    {
+      "slug": "spot_jumunjin_bakery",
+      "name": "주문진 빵집",
+      "zone": "JUMUNJIN",
+      "category": "FOOD",
+      "editorial_desc": "항구 근처의 오래된 빵집.",
+      "about": "항구 근처에서 오래 한 자리를 지킨 빵집입니다.",
+      "hours": "08:00 – 20:00",
+      "tip": "경매를 보고 나오는 길에 들르기 좋습니다.",
+      "parking": "항구 노상",
+      "menu": [
+        {
+          "name": "소보로",
+          "price": "1,800원"
+        },
+        {
+          "name": "팥빵",
+          "price": "2,000원"
+        }
+      ],
+      "lat": 37.8925,
+      "lng": 128.83,
+      "tags": []
+    },
+    {
+      "slug": "spot_jjamppong_sundubu",
+      "name": "짬뽕순두부",
+      "zone": "GYEONGPO",
+      "category": "FOOD",
+      "editorial_desc": "초당두부에 짬뽕 국물. 강릉에서 시작됐습니다.",
+      "about": "초당두부에 짬뽕 국물을 부어 냅니다. 강릉에서 시작된 조합입니다.",
+      "hours": "07:00 – 20:00 · 브레이크 15:00–16:30",
+      "tip": "아침 8시 전이 가장 안 기다립니다.",
+      "parking": "마을 공영",
+      "menu": [
+        {
+          "name": "짬뽕순두부",
+          "price": "11,000원"
+        },
+        {
+          "name": "초당순두부 정식",
+          "price": "12,000원"
+        }
+      ],
+      "lat": 37.7906,
+      "lng": 128.9033,
+      "tags": []
+    },
+    {
+      "slug": "spot_chodang_corn",
+      "name": "초당옥수수",
+      "zone": "GYEONGPO",
+      "category": "FOOD",
+      "editorial_desc": "삶지 않고 그냥 베어 먹는 단맛.",
+      "about": "삶지 않고 그대로 베어 먹는 단맛입니다. 여름 한정으로 노점에 나옵니다.",
+      "hours": "09:00 – 해질 때까지 · 6–9월",
+      "tip": "9월 중순이면 끝납니다.",
+      "parking": "해변 주차장",
+      "menu": [
+        {
+          "name": "초당옥수수 1개",
+          "price": "3,000원"
+        },
+        {
+          "name": "5개 묶음",
+          "price": "13,000원"
+        }
+      ],
+      "lat": 37.789,
+      "lng": 128.906,
+      "tags": []
+    },
+    {
+      "slug": "spot_jang_kalguksu",
+      "name": "장칼국수",
+      "zone": "CITY",
+      "category": "FOOD",
+      "editorial_desc": "고추장을 풀어 끓입니다.",
+      "about": "고추장을 풀어 끓인 칼국수. 겨울에 특히 줄이 깁니다.",
+      "hours": "10:30 – 19:00 · 일요일 휴무",
+      "tip": "점심 피크는 12–13시입니다.",
+      "parking": "없음 · 도보",
+      "menu": [
+        {
+          "name": "장칼국수",
+          "price": "9,000원"
+        },
+        {
+          "name": "감자옹심이",
+          "price": "10,000원"
+        }
+      ],
+      "lat": 37.7561,
+      "lng": 128.8977,
+      "tags": []
+    },
+    {
+      "slug": "spot_mulhoe",
+      "name": "물회",
+      "zone": "JUMUNJIN",
+      "category": "FOOD",
+      "editorial_desc": "얼음 띄운 국물에 회를 넣습니다.",
+      "about": "얼음을 띄운 국물에 회를 넣습니다. 여름에 먹는 음식입니다.",
+      "hours": "10:00 – 21:00",
+      "tip": "주말 점심은 30분 이상 기다립니다.",
+      "parking": "시장 주차장",
+      "menu": [
+        {
+          "name": "물회",
+          "price": "18,000원"
+        },
+        {
+          "name": "회덮밥",
+          "price": "15,000원"
+        }
+      ],
+      "lat": 37.8925,
+      "lng": 128.83,
+      "tags": []
+    },
+    {
+      "slug": "spot_anmok",
+      "name": "안목 커피거리",
+      "zone": "CITY",
+      "category": "CAFE",
+      "editorial_desc": "바다를 정면으로 보고 앉습니다.",
+      "about": "자판기 커피에서 시작한 거리입니다. 바다를 정면으로 보고 앉습니다.",
+      "hours": "카페별 08:00 – 22:00",
+      "tip": "주차가 어렵습니다. 버스가 편합니다.",
+      "parking": "유료 · 만차 잦음",
+      "menu": [
+        {
+          "name": "핸드드립",
+          "price": "6,000원"
+        },
+        {
+          "name": "바다 뷰 좌석",
+          "price": "추가 없음"
+        }
+      ],
+      "lat": 37.7714,
+      "lng": 128.9483,
+      "tags": []
+    },
+    {
+      "slug": "spot_gyeongpo_roastery",
+      "name": "경포호 로스터리",
+      "zone": "GYEONGPO",
+      "category": "CAFE",
+      "editorial_desc": "호수 쪽 창이 큰 곳.",
+      "about": "호수 쪽 창이 큰 로스터리입니다. 직접 볶은 원두를 씁니다.",
+      "hours": "09:00 – 21:00",
+      "tip": "오전에 호수 반사광이 좋습니다.",
+      "parking": "가게 앞",
+      "menu": [
+        {
+          "name": "드립 커피",
+          "price": "6,500원"
+        },
+        {
+          "name": "원두 200g",
+          "price": "18,000원"
+        }
+      ],
+      "lat": 37.7929,
+      "lng": 128.8963,
+      "tags": []
+    },
+    {
+      "slug": "spot_myeongjudong_cafe",
+      "name": "명주동 골목 카페",
+      "zone": "CITY",
+      "category": "CAFE",
+      "editorial_desc": "오래된 집을 고쳐 씁니다.",
+      "about": "오래된 집을 고쳐 쓴 카페입니다. 골목 전체가 함께 바뀌었습니다.",
+      "hours": "11:00 – 20:00 · 월요일 휴무",
+      "tip": "골목이 좁아 차는 두고 걷는 편이 낫습니다.",
+      "parking": "없음 · 도보",
+      "menu": [
+        {
+          "name": "에스프레소",
+          "price": "4,500원"
+        },
+        {
+          "name": "수제 디저트",
+          "price": "7,000원"
+        }
+      ],
+      "lat": 37.75,
+      "lng": 128.8944,
+      "tags": []
+    },
+    {
+      "slug": "spot_heonhwaro_oceanview_cafe",
+      "name": "헌화로 오션뷰 카페",
+      "zone": "JEONGDONGJIN",
+      "category": "CAFE",
+      "editorial_desc": "드라이브 중간에 섭니다.",
+      "about": "헌화로 드라이브 중간에 서는 곳입니다. 바다가 창 전체입니다.",
+      "hours": "09:00 – 21:00",
+      "tip": "해질녘에 창가 자리가 먼저 찹니다.",
+      "parking": "카페 앞",
+      "menu": [
+        {
+          "name": "아메리카노",
+          "price": "5,500원"
+        },
+        {
+          "name": "시그니처 라떼",
+          "price": "7,500원"
+        }
+      ],
+      "lat": 37.6383,
+      "lng": 129.0347,
+      "tags": []
+    },
+    {
+      "slug": "spot_beach_popup_store",
+      "name": "해변 팝업 스토어",
+      "zone": "GYEONGPO",
+      "category": "FOOD",
+      "editorial_desc": "여름 한정으로 해변에 섭니다.",
+      "about": "여름 한정으로 해변에 서는 팝업입니다. 매년 구성이 바뀝니다.",
+      "hours": "11:00 – 20:00 · 8–9월",
+      "tip": "9월 첫 주에 철수합니다.",
+      "parking": "해변 주차장",
+      "menu": [
+        {
+          "name": "시즌 굿즈",
+          "price": "15,000원~"
+        },
+        {
+          "name": "한정 음료",
+          "price": "7,000원"
+        }
+      ],
+      "lat": 37.7956,
+      "lng": 128.9107,
+      "tags": []
+    },
+    {
+      "slug": "spot_garlic_bread",
+      "name": "마늘빵",
+      "zone": "CITY",
+      "category": "FOOD",
+      "editorial_desc": "한 봉지로는 부족합니다.",
+      "about": "강릉에서 요즘 가장 많이 사 가는 빵입니다.",
+      "hours": "09:00 – 소진 시 마감",
+      "tip": "한 봉지로는 부족합니다.",
+      "parking": "노상",
+      "menu": [
+        {
+          "name": "마늘빵 5개",
+          "price": "7,000원"
+        },
+        {
+          "name": "선물 박스",
+          "price": "20,000원"
+        }
+      ],
+      "lat": 37.7519,
+      "lng": 128.8961,
+      "tags": []
+    },
+    {
+      "slug": "spot_roastery_new_branch",
+      "name": "커피 로스터리 신점",
+      "zone": "CITY",
+      "category": "FOOD",
+      "editorial_desc": "올해 문을 연 곳들.",
+      "about": "올해 문을 연 곳들입니다. 시내 쪽으로 계속 늘고 있습니다.",
+      "hours": "10:00 – 22:00",
+      "tip": "평일 오후가 가장 조용합니다.",
+      "parking": "노상",
+      "menu": [
+        {
+          "name": "싱글 오리진",
+          "price": "7,000원"
+        },
+        {
+          "name": "콜드브루 병",
+          "price": "12,000원"
+        }
+      ],
+      "lat": 37.7561,
+      "lng": 128.8977,
+      "tags": []
+    },
+    {
+      "slug": "spot_gamja_bread",
+      "name": "감자빵",
+      "zone": "DAEGWALLYEONG",
+      "category": "FOOD",
+      "editorial_desc": "팝업이 서울 백화점까지 갔습니다.",
+      "about": "겉모양까지 감자입니다. 서울 백화점 팝업까지 올라갔습니다.",
+      "hours": "09:00 – 18:00",
+      "tip": "주말은 오전에 품절되기도 합니다.",
+      "parking": "휴게소 주차장",
+      "menu": [
+        {
+          "name": "감자빵 5입",
+          "price": "13,000원"
+        },
+        {
+          "name": "감자빵 10입",
+          "price": "25,000원"
+        }
+      ],
+      "lat": 37.6961,
+      "lng": 128.7581,
+      "tags": []
+    },
+    {
+      "slug": "spot_gangneung_station",
+      "name": "강릉역",
+      "zone": "CITY",
+      "category": "DOWNTOWN",
+      "editorial_desc": "여기서 시작합니다.",
+      "about": "KTX가 서는 역입니다. 뚜벅이 여행은 여기서 시작합니다.",
+      "hours": "첫차 05:10 · 막차 23:00",
+      "tip": "역 안에 강릉샌드 매장이 있습니다.",
+      "parking": "환승주차장 · 유료",
+      "menu": [
+        {
+          "name": "서울 KTX 편도",
+          "price": "27,600원"
+        },
+        {
+          "name": "짐 보관함",
+          "price": "4,000원"
+        }
+      ],
+      "lat": 37.7639,
+      "lng": 128.8961,
+      "tags": []
+    },
+    {
+      "slug": "spot_wolhwa",
+      "name": "월화거리",
+      "zone": "CITY",
+      "category": "DOWNTOWN",
+      "editorial_desc": "기찻길을 걷어낸 자리를 걷습니다.",
+      "about": "기찻길을 걷어낸 자리를 걷습니다. 밤에 조명이 켜집니다.",
+      "hours": "상시 개방",
+      "tip": "역에서 도보 10분입니다.",
+      "parking": "중앙시장 공영",
+      "menu": [
+        {
+          "name": "입장",
+          "price": "무료"
+        },
+        {
+          "name": "야시장",
+          "price": "주말 저녁"
+        }
+      ],
+      "lat": 37.7561,
+      "lng": 128.8977,
+      "tags": []
+    },
+    {
+      "slug": "spot_jungang_market",
+      "name": "중앙시장",
+      "zone": "CITY",
+      "category": "DOWNTOWN",
+      "editorial_desc": "먹거리가 한곳에 모여 있습니다.",
+      "about": "먹거리가 한곳에 모여 있습니다. 닭강정 줄이 가장 깁니다.",
+      "hours": "09:00 – 20:00 · 매월 둘째 주 화요일 휴무",
+      "tip": "현금을 조금 챙겨 가면 빠릅니다.",
+      "parking": "시장 공영 · 유료",
+      "menu": [
+        {
+          "name": "닭강정 중",
+          "price": "15,000원"
+        },
+        {
+          "name": "어묵 꼬치",
+          "price": "1,500원"
+        }
+      ],
+      "lat": 37.7519,
+      "lng": 128.8961,
+      "tags": []
+    },
+    {
+      "slug": "spot_gyeongpo_beach",
+      "name": "경포해변",
+      "zone": "GYEONGPO",
+      "category": "DOWNTOWN",
+      "editorial_desc": "시내버스로 20분.",
+      "about": "넓고 완만합니다. 처음 오는 사람에게 가장 무리가 없습니다.",
+      "hours": "상시 개방 · 해수욕 7–8월",
+      "tip": "시내버스로 20분입니다.",
+      "parking": "제1주차장 · 유료",
+      "menu": [
+        {
+          "name": "입장",
+          "price": "무료"
+        },
+        {
+          "name": "파라솔 대여",
+          "price": "20,000원"
+        }
+      ],
+      "lat": 37.7956,
+      "lng": 128.9107,
+      "tags": []
+    },
+    {
+      "slug": "spot_jeongdongjin_station",
+      "name": "정동진역",
+      "zone": "JEONGDONGJIN",
+      "category": "DOWNTOWN",
+      "editorial_desc": "기차가 곧 목적입니다.",
+      "about": "바다에서 가장 가까운 역입니다. 플랫폼 끝이 해변입니다.",
+      "hours": "첫차 06:00 · 막차 21:30",
+      "tip": "일출 시간에 주차장이 먼저 찹니다.",
+      "parking": "역 주차장 · 유료",
+      "menu": [
+        {
+          "name": "입장권",
+          "price": "2,000원"
+        },
+        {
+          "name": "정동진 무궁화호",
+          "price": "4,800원"
+        }
+      ],
+      "lat": 37.6906,
+      "lng": 129.0331,
+      "tags": []
+    },
+    {
+      "slug": "spot_city_museum",
+      "name": "시립박물관",
+      "zone": "GYEONGPO",
+      "category": "DOWNTOWN",
+      "editorial_desc": "오죽헌과 붙어 있습니다.",
+      "about": "오죽헌과 붙어 있어 함께 봅니다. 비 오는 날 대안이 됩니다.",
+      "hours": "09:00 – 18:00 · 월요일 휴관",
+      "tip": "오죽헌 표로 함께 들어갑니다.",
+      "parking": "무료 · 여유",
+      "menu": [
+        {
+          "name": "통합 입장권",
+          "price": "3,000원"
+        },
+        {
+          "name": "어린이",
+          "price": "1,000원"
+        }
+      ],
+      "lat": 37.7844,
+      "lng": 128.8783,
+      "tags": []
+    },
+    {
+      "slug": "spot_aquarium",
+      "name": "아쿠아리움",
+      "zone": "GYEONGPO",
+      "category": "DOWNTOWN",
+      "editorial_desc": "비 오는 오후에.",
+      "about": "비 오는 오후에 아이와 시간을 보내기 좋습니다.",
+      "hours": "10:00 – 19:00",
+      "tip": "온라인 예매가 더 쌉니다.",
+      "parking": "건물 주차장",
+      "menu": [
+        {
+          "name": "성인",
+          "price": "29,000원"
+        },
+        {
+          "name": "어린이",
+          "price": "25,000원"
+        }
+      ],
+      "lat": 37.7975,
+      "lng": 128.9095,
+      "tags": []
+    },
+    {
+      "slug": "spot_olympic_museum",
+      "name": "올림픽뮤지엄",
+      "zone": "DAEGWALLYEONG",
+      "category": "DOWNTOWN",
+      "editorial_desc": "평창 동계올림픽의 기록.",
+      "about": "평창 동계올림픽의 기록을 모아둔 곳입니다.",
+      "hours": "10:00 – 18:00 · 월요일 휴관",
+      "tip": "주차가 넉넉합니다.",
+      "parking": "무료 · 여유",
+      "menu": [
+        {
+          "name": "입장",
+          "price": "무료"
+        },
+        {
+          "name": "체험존",
+          "price": "3,000원"
+        }
+      ],
+      "lat": 37.7628,
+      "lng": 128.8886,
+      "tags": []
+    },
+    {
+      "slug": "spot_coffee_museum",
+      "name": "커피 박물관",
+      "zone": "DAEGWALLYEONG",
+      "category": "DOWNTOWN",
+      "editorial_desc": "강릉 커피의 역사.",
+      "about": "강릉 커피가 어떻게 시작했는지 봅니다.",
+      "hours": "09:00 – 18:00",
+      "tip": "체험은 예약이 필요합니다.",
+      "parking": "무료",
+      "menu": [
+        {
+          "name": "입장 + 커피",
+          "price": "9,000원"
+        },
+        {
+          "name": "로스팅 체험",
+          "price": "25,000원"
+        }
+      ],
+      "lat": 37.65,
+      "lng": 128.8,
+      "tags": []
+    },
+    {
+      "slug": "spot_wolhwa_night",
+      "name": "월화거리 야경",
+      "zone": "CITY",
+      "category": "NATURE",
+      "editorial_desc": "걸어 다니는 야경.",
+      "about": "걸어 다니는 야경입니다. 조명이 켜지면 분위기가 바뀝니다.",
+      "hours": "일몰 후 – 24:00",
+      "tip": "역에서 걸어서 갈 수 있습니다.",
+      "parking": "중앙시장 공영",
+      "menu": [
+        {
+          "name": "입장",
+          "price": "무료"
+        }
+      ],
+      "lat": 37.7561,
+      "lng": 128.8977,
+      "tags": []
+    },
+    {
+      "slug": "spot_gyeongpo_night_sea",
+      "name": "경포 밤바다",
+      "zone": "GYEONGPO",
+      "category": "NATURE",
+      "editorial_desc": "조명이 적어 파도 소리가 큽니다.",
+      "about": "조명이 적어 파도 소리가 더 크게 들립니다.",
+      "hours": "상시",
+      "tip": "겨울 밤은 바람이 셉니다.",
+      "parking": "해변 주차장",
+      "menu": [
+        {
+          "name": "입장",
+          "price": "무료"
+        }
+      ],
+      "lat": 37.7956,
+      "lng": 128.9107,
+      "tags": []
+    },
+    {
+      "slug": "spot_anbandegi_milkyway",
+      "name": "안반데기 은하수",
+      "zone": "DAEGWALLYEONG",
+      "category": "NATURE",
+      "editorial_desc": "해발 700m. 구름이 발아래.",
+      "about": "해발 700m. 구름이 발아래에 있고 그 위로 은하수가 지나갑니다.",
+      "hours": "상시 · 별은 22시 이후",
+      "tip": "달이 없는 날짜를 고르면 선명합니다. 올라가는 길이 급합니다.",
+      "parking": "무료 · 밤 만차",
+      "menu": [
+        {
+          "name": "입장",
+          "price": "무료"
+        },
+        {
+          "name": "주차",
+          "price": "무료"
+        }
+      ],
+      "lat": 37.5972,
+      "lng": 128.7458,
+      "tags": []
+    },
+    {
+      "slug": "spot_yukbaekmajigi",
+      "name": "육백마지기",
+      "zone": "DAEGWALLYEONG",
+      "category": "NATURE",
+      "editorial_desc": "차로 올라가 그대로 앉습니다.",
+      "about": "차로 올라가 그대로 앉아 별을 봅니다. 평창 경계에 있습니다.",
+      "hours": "상시",
+      "tip": "여름–가을이 가장 맑습니다.",
+      "parking": "정상 노상",
+      "menu": [
+        {
+          "name": "입장",
+          "price": "무료"
+        }
+      ],
+      "lat": 37.4661,
+      "lng": 128.6519,
+      "tags": []
+    },
+    {
+      "slug": "spot_gangneung_hyanggyo",
+      "name": "강릉 향교",
+      "zone": "CITY",
+      "category": "HISTORY",
+      "editorial_desc": "지금도 쓰이는 건물.",
+      "about": "지금도 쓰이는 건물입니다. 사람이 적어 조용합니다.",
+      "hours": "09:00 – 17:00",
+      "tip": "평일 오전이 가장 한적합니다.",
+      "parking": "노상",
+      "menu": [
+        {
+          "name": "입장",
+          "price": "무료"
+        }
+      ],
+      "lat": 37.7481,
+      "lng": 128.8869,
+      "tags": []
+    },
+    {
+      "slug": "spot_ojukheon",
+      "name": "오죽헌",
+      "zone": "GYEONGPO",
+      "category": "HISTORY",
+      "editorial_desc": "신사임당과 이이가 태어난 집.",
+      "about": "신사임당과 이이가 태어난 집입니다.",
+      "hours": "09:00 – 18:00 · 연중무휴",
+      "tip": "시립박물관과 통합권으로 봅니다.",
+      "parking": "무료 · 여유",
+      "menu": [
+        {
+          "name": "성인",
+          "price": "3,000원"
+        },
+        {
+          "name": "청소년",
+          "price": "2,000원"
+        }
+      ],
+      "lat": 37.7844,
+      "lng": 128.8783,
+      "tags": []
+    },
+    {
+      "slug": "spot_seongyojang",
+      "name": "선교장",
+      "zone": "GYEONGPO",
+      "category": "HISTORY",
+      "editorial_desc": "조선 후기 사대부 가옥.",
+      "about": "조선 후기 사대부 가옥입니다. 한옥 숙박도 합니다.",
+      "hours": "09:00 – 18:00",
+      "tip": "오죽헌에서 도보권입니다.",
+      "parking": "무료",
+      "menu": [
+        {
+          "name": "성인",
+          "price": "5,000원"
+        },
+        {
+          "name": "한복 대여",
+          "price": "10,000원"
+        }
+      ],
+      "lat": 37.7889,
+      "lng": 128.8853,
+      "tags": []
+    }
+  ]
+}
