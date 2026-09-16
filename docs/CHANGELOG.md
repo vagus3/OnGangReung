@@ -30,6 +30,12 @@
   정보구조이므로 링크를 지우는 대신 자리를 둔다
 - 관광지 큐레이션 시드 `uv run python -m scripts.seed_spots`.
   TourAPI 키 없이도 화면을 확인할 수 있다
+- 테마 코스 — `themes`·`theme_spots` 테이블과 조회 API, 테마 탭 목록·상세 화면.
+  디자인의 테마 8개와 장소 33곳을 시드로 적재
+  (`uv run python -m scripts.seed_themes`)
+- 장소 상세 화면 `/spots/[slug]` — 소개, 운영시간, 메뉴·가격, 방문 팁, 주차.
+  홈·안내·테마의 카드가 모두 이 화면으로 들어온다
+- `spots`에 상세용 편집 필드 추가 (about/hours/tip/parking/menu)
 
 ### Known Issues
 
