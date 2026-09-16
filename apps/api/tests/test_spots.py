@@ -16,6 +16,7 @@ def make_spot(**overrides: object) -> Spot:
         "span": SpotSpan.STD,
         "editorial_desc": "예부터 다섯 개의 달이 뜬다고 전해지는 강릉의 심장.",
         "tags": ["호수", "일출"],
+        "menu": [],
     }
     base.update(overrides)
     return Spot(**base)  # type: ignore[arg-type]
@@ -221,3 +222,38 @@ async def test_없는_slug는_404다(client: AsyncClient) -> None:
 
     assert response.status_code == 404
     assert response.json()["code"] == "spot_not_found"
+
+
+async def test_상세는_편집_필드를_함께_내려준다(
+    seeded_client: tuple[AsyncClient, async_sessionmaker[AsyncSession]],
+) -> None:
+    client, factory = seeded_client
+    await seed(
+        factory,
+        make_spot(
+            about="강릉역 안에 있는 매장입니다.",
+            hours="07:00 – 21:00 · 연중무휴",
+            tip="오후 6시 이후에는 인기 맛이 빠집니다.",
+            parking="강릉역 환승주차장 · 유료",
+            menu=[{"name": "강릉샌드 6입", "price": "9,800원"}],
+        ),
+    )
+
+    body = (await client.get("/api/v1/spots/spot_gyeongpo")).json()
+
+    assert body["about"] == "강릉역 안에 있는 매장입니다."
+    assert body["hours"] == "07:00 – 21:00 · 연중무휴"
+    assert body["parking"] == "강릉역 환승주차장 · 유료"
+    assert body["menu"] == [{"name": "강릉샌드 6입", "price": "9,800원"}]
+
+
+async def test_편집_필드가_비어_있어도_상세가_열린다(
+    seeded_client: tuple[AsyncClient, async_sessionmaker[AsyncSession]],
+) -> None:
+    client, factory = seeded_client
+    await seed(factory, make_spot())
+
+    body = (await client.get("/api/v1/spots/spot_gyeongpo")).json()
+
+    assert body["about"] is None
+    assert body["menu"] == []

@@ -57,9 +57,19 @@ class SpotRead(BaseModel):
         )
 
 
-class SpotDetailRead(SpotRead):
-    """상세용. TourAPI가 갖고 있는 사실 정보를 덧붙인다."""
+class MenuItem(BaseModel):
+    name: str
+    price: str
 
+
+class SpotDetailRead(SpotRead):
+    """상세용. 편집 필드와 TourAPI 사실 정보를 함께 내려준다."""
+
+    about: str | None
+    hours: str | None
+    tip: str | None
+    parking: str | None
+    menu: list[MenuItem]
     address: str | None
     tel: str | None
     homepage: str | None
@@ -75,6 +85,11 @@ class SpotDetailRead(SpotRead):
             address = " ".join(filter(None, (content.addr1, content.addr2)))
         return cls(
             **base.model_dump(),
+            about=spot.about,
+            hours=spot.hours,
+            tip=spot.tip,
+            parking=spot.parking,
+            menu=[MenuItem.model_validate(item) for item in spot.menu],
             address=address,
             tel=content.tel if content else None,
             homepage=content.homepage if content else None,
