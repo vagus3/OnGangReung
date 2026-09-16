@@ -58,6 +58,15 @@ class Spot(Base):
     tags: Mapped[list[str]] = mapped_column(JSON, default=list)
     display_order: Mapped[int] = mapped_column(Integer, server_default="0", default=0)
 
+    # 상세 화면용 편집 필드. TourAPI detailIntro2가 일부를 주지만 미러가 연결되지
+    # 않은 장소도 있고 문체가 달라, 편집자가 쓰는 쪽을 우선한다.
+    about: Mapped[str | None] = mapped_column(Text)
+    hours: Mapped[str | None] = mapped_column(String(200))
+    tip: Mapped[str | None] = mapped_column(Text)
+    parking: Mapped[str | None] = mapped_column(String(200))
+    # [{"name": "...", "price": "..."}] — 표시 전용이라 정규화하지 않는다
+    menu: Mapped[list[dict[str, str]]] = mapped_column(JSON, default=list)
+
     # TourAPI에 대응 콘텐츠가 없는 장소를 위한 자체 좌표
     lat: Mapped[float | None] = mapped_column(Float)
     lng: Mapped[float | None] = mapped_column(Float)
