@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import type { Spot } from "@/entities/spot";
 import { CATEGORY_LABELS } from "@/entities/zone";
@@ -14,7 +15,10 @@ const WIDTH_BY_SPAN: Record<Spot["span"], string> = {
 export function SpotCard({ spot }: { spot: Spot }) {
   return (
     <Card as="article">
-      <div className={WIDTH_BY_SPAN[spot.span]}>
+      <Link
+        href={`/spots/${spot.slug}`}
+        className={`block ${WIDTH_BY_SPAN[spot.span]}`}
+      >
         <div className="bg-sand relative mb-3 aspect-[4/3] overflow-hidden rounded-[16px]">
           {spot.image_url !== null ? (
             <Image
@@ -56,7 +60,7 @@ export function SpotCard({ spot }: { spot: Spot }) {
             ))}
           </ul>
         )}
-      </div>
+      </Link>
     </Card>
   );
 }

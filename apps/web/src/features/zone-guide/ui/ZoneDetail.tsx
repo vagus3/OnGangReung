@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import type { Spot } from "@/entities/spot";
 import type { ZoneInfo } from "@/entities/zone";
 import { CATEGORY_LABELS } from "@/entities/zone";
@@ -31,15 +33,17 @@ export function ZoneDetail({ zone, spots }: ZoneDetailProps) {
           {spots.map((spot) => (
             <li key={spot.slug}>
               <Card as="article">
-                <p className="text-muted text-[10.5px] font-bold tracking-[0.12em]">
-                  {CATEGORY_LABELS[spot.category]}
-                </p>
-                <h4 className="font-display text-ink mt-1 text-[17px]">
-                  {spot.name}
-                </h4>
-                <p className="text-muted mt-2 text-[12.5px] leading-relaxed">
-                  {spot.editorial_desc}
-                </p>
+                <Link href={`/spots/${spot.slug}`} className="block">
+                  <p className="text-muted text-[10.5px] font-bold tracking-[0.12em]">
+                    {CATEGORY_LABELS[spot.category]}
+                  </p>
+                  <h4 className="font-display text-ink mt-1 text-[17px]">
+                    {spot.name}
+                  </h4>
+                  <p className="text-muted mt-2 text-[12.5px] leading-relaxed">
+                    {spot.editorial_desc}
+                  </p>
+                </Link>
               </Card>
             </li>
           ))}
