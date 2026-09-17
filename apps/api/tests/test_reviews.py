@@ -57,3 +57,16 @@ async def test_도움됨이_많은_순으로_온다(
     body = (await client.get("/api/v1/reviews")).json()
 
     assert [r["author_name"] for r in body["items"]] == ["많음", "적음"]
+
+
+async def test_summary_counts_all_reviews_beyond_display_limit(
+    seeded_client: tuple[AsyncClient, async_sessionmaker[AsyncSession]],
+) -> None:
+    client, factory = seeded_client
+    async with factory() as session:
+        session.add_all([make(rating=5, helpful_count=1) for _ in range(10)] + [make(rating=1)])
+        await session.commit()
+    body = (await client.get("/api/v1/reviews")).json()
+    assert len(body["items"]) == 10
+    assert body["count"] == 11
+    assert body["average"] == 4.6
