@@ -41,9 +41,15 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 strict = true
 packages = ["app"]
 
+[tool.coverage.run]
+# SQLAlchemy asyncio는 greenlet 위에서 돈다. 기본 추적기는 greenlet 안에서
+# 실행된 줄을 놓쳐 서비스 레이어가 실제보다 낮게 측정된다 (auth 서비스가
+# 테스트를 다 지나는데도 60%로 나왔다).
+concurrency = ["thread", "greenlet"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-# 커버리지 하한선 래칫 — 현재 89%, 하락만 막고 테스트가 늘면 올린다
-addopts = "--cov=app --cov-report=term-missing --cov-report=xml:coverage/coverage.xml --cov-fail-under=85"
+# 커버리지 하한선 래칫 — 현재 99%, 하락만 막고 테스트가 늘면 올린다
+addopts = "--cov=app --cov-report=term-missing --cov-report=xml:coverage/coverage.xml --cov-fail-under=95"
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
