@@ -7,13 +7,14 @@ import { SectionHeading } from "@/shared/ui";
 
 /** 별점을 별 문자와 숫자 둘 다로 알린다 — 색·기호만으로 전달하지 않는다. */
 function Stars({ rating }: { rating: number }) {
+  const stars = Math.min(5, Math.max(0, Math.round(rating)));
   return (
     <span
       className="text-sun text-[12px]"
       aria-label={`5점 만점에 ${rating}점`}
     >
-      {"★".repeat(rating)}
-      <span className="text-line">{"★".repeat(5 - rating)}</span>
+      {"★".repeat(stars)}
+      <span className="text-line">{"★".repeat(5 - stars)}</span>
     </span>
   );
 }
@@ -23,7 +24,8 @@ export function ReviewCarousel({ summary }: { summary: ReviewSummary }) {
 
   if (summary.items.length === 0) return null;
 
-  const review = summary.items[index] ?? summary.items[0];
+  const activeIndex = Math.min(index, summary.items.length - 1);
+  const review = summary.items[activeIndex];
   if (review === undefined) return null;
 
   return (
@@ -44,18 +46,18 @@ export function ReviewCarousel({ summary }: { summary: ReviewSummary }) {
           </footer>
         </blockquote>
 
-        <ul className="mt-4 flex gap-2" aria-label="후기 고르기">
+        <ul className="mt-4 flex flex-wrap" aria-label="후기 고르기">
           {summary.items.map((item, i) => (
             <li key={item.id}>
               <button
                 type="button"
                 aria-label={`${i + 1}번째 후기`}
-                aria-current={i === index ? "true" : undefined}
+                aria-current={i === activeIndex ? "true" : undefined}
                 onClick={() => setIndex(i)}
                 className={
-                  i === index
-                    ? "bg-ink size-2.5 rounded-full"
-                    : "bg-line size-2.5 rounded-full"
+                  i === activeIndex
+                    ? "bg-ink size-11 rounded-full border-[16px] border-paper"
+                    : "bg-line size-11 rounded-full border-[16px] border-paper"
                 }
               />
             </li>

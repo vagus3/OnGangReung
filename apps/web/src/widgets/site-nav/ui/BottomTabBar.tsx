@@ -11,7 +11,7 @@ export function BottomTabBar() {
   return (
     <nav
       aria-label="하단 메뉴"
-      className="border-line bg-[var(--color-nav)] fixed inset-x-0 bottom-0 z-50 border-t backdrop-blur md:hidden"
+      className="border-line bg-[var(--color-nav)] fixed inset-x-0 bottom-0 z-50 border-t pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
     >
       <ul className="flex">
         {NAV_TABS.map((tab) => (
