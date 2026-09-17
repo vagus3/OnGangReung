@@ -11,6 +11,8 @@ import type { Zone } from "@/entities/spot";
  * 값은 디자인 캔버스의 guideZones / guideContent에서 기계적으로 추출했다.
  */
 
+// 뒤의 세 항목은 v3 디자인이 마크업을 지운 것들이다. 데이터와 뷰모델이
+// 남아 있었고 관광 앱에서 실제로 쓰이는 정보라 되살렸다.
 export const GUIDE_SECTION_LABELS = [
   "날씨",
   "교통",
@@ -18,6 +20,9 @@ export const GUIDE_SECTION_LABELS = [
   "주차장",
   "먹거리",
   "축제",
+  "안내소",
+  "무장애",
+  "회화",
 ] as const;
 
 export type GuideSectionLabel = (typeof GUIDE_SECTION_LABELS)[number];

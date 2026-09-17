@@ -8,9 +8,12 @@ import { FestivalRow } from "@/features/festival-list";
 import { Chip } from "@/shared/ui";
 
 import { useGuideScrollSpy } from "../model/useGuideScrollSpy";
+import { GuideAccess } from "./GuideAccess";
+import { GuideCenters } from "./GuideCenters";
 import { GuideEats } from "./GuideEats";
 import { GuideIndex } from "./GuideIndex";
 import { GuideParking } from "./GuideParking";
+import { GuidePhrases } from "./GuidePhrases";
 import { GuideStays } from "./GuideStays";
 import { GuideTransport } from "./GuideTransport";
 import { GuideWeather } from "./GuideWeather";
@@ -41,6 +44,9 @@ export function ZoneGuide({ festivals }: { festivals: Festival[] }) {
         ))}
       </div>
     ),
+    <GuideCenters key="centers" />,
+    <GuideAccess key="access" />,
+    <GuidePhrases key="phrases" />,
   ];
 
   return (

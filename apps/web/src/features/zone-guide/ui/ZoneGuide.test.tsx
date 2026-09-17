@@ -42,12 +42,41 @@ function festival(over: Partial<Festival> = {}): Festival {
 }
 
 describe("ZoneGuide", () => {
-  it("여섯 개 섹션을 모두 그린다", () => {
+  it("아홉 개 섹션을 모두 그린다", () => {
     render(<ZoneGuide festivals={[]} />);
 
-    for (const label of ["날씨", "교통", "숙박", "주차장", "먹거리", "축제"]) {
+    for (const label of [
+      "날씨",
+      "교통",
+      "숙박",
+      "주차장",
+      "먹거리",
+      "축제",
+      // 아래 셋은 v3가 지운 것을 되살린 섹션이다
+      "안내소",
+      "무장애",
+      "회화",
+    ]) {
       expect(screen.getByRole("region", { name: label })).toBeInTheDocument();
     }
+  });
+
+  it("되살린 섹션에 실제 내용이 있다", () => {
+    render(<ZoneGuide festivals={[]} />);
+
+    const centers = screen.getByRole("region", { name: "안내소" });
+    expect(within(centers).getByText("경포 관광안내센터")).toBeInTheDocument();
+
+    const access = screen.getByRole("region", { name: "무장애" });
+    // 무장애 경로는 3곳이고 모두 "열린관광지"를 언급한다
+    expect(
+      within(access).getByText("경포해변 · 경포생태저류지"),
+    ).toBeInTheDocument();
+
+    const phrases = screen.getByRole("region", { name: "회화" });
+    expect(
+      within(phrases).getByText("이 근처에 화장실이 어디에 있나요?"),
+    ).toBeInTheDocument();
   });
 
   it("처음에는 첫 권역이 선택된다", () => {
@@ -113,6 +142,6 @@ describe("ZoneGuide", () => {
     render(<ZoneGuide festivals={[]} />);
 
     const index = screen.getByRole("navigation", { name: "안내 목차" });
-    expect(within(index).getAllByRole("button")).toHaveLength(6);
+    expect(within(index).getAllByRole("button")).toHaveLength(9);
   });
 });
