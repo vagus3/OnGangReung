@@ -9,5 +9,7 @@ export type { components, paths } from "./types";
  * 경로/요청/응답 타입은 FastAPI OpenAPI 스키마에서 자동 생성된다 (src/types.ts).
  */
 export function createApiClient(baseUrl: string) {
-  return createClient<paths>({ baseUrl });
+  // 세션이 httpOnly 쿠키라 크로스 오리진 요청에도 쿠키를 실어야 한다.
+  // 이게 없으면 로그인해도 다음 요청이 비로그인으로 간다 (ADR 008).
+  return createClient<paths>({ baseUrl, credentials: "include" });
 }
