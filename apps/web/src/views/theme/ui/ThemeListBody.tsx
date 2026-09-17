@@ -1,15 +1,19 @@
 "use client";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { themeApi, themeKeys } from "@/entities/theme";
+import { QueryFeedback } from "@/shared/ui";
 import { ThemeCard } from "@/features/theme-list";
 
 export function ThemeListBody() {
-  const { data: themes } = useSuspenseQuery({
+  const query = useQuery({
     queryKey: themeKeys.list(),
     queryFn: themeApi.list,
   });
+
+  if (!query.data) return <QueryFeedback label="테마 정보" query={query} />;
+  const themes = query.data;
 
   if (themes.length === 0) {
     return (

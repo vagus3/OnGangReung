@@ -80,14 +80,7 @@ test.describe("홈", () => {
   });
 
   test("탭을 눌러 이동한다", async ({ page }) => {
-    // 데이터를 가져오지 않는 탭으로 확인한다. API가 내려간 상태에서 데이터를
-    // 읽는 탭으로 클릭 전환하면 useSuspenseQuery가 전환 중 던진 오류를 React가
-    // 전환 폐기로 처리해 이동이 일어나지 않는다 (CHANGELOG의 Known Issues).
-    // API가 살아 있으면 모든 탭에서 정상 동작하며, 그 검증은
-    // docker compose --profile full로 띄우는 별도 스위트가 맡는다 (TEST.md).
-    //
-    // 남은 정적 탭이 /ai, /my 둘뿐이므로 이 탭들이 채워지면 이 테스트는
-    // href 단정으로 합치거나 전체 스위트를 API 기동 전제로 옮겨야 한다.
+    // API 장애 시 데이터 탭 이동은 resilience.spec.ts에서 별도로 검증한다.
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto("/");
 

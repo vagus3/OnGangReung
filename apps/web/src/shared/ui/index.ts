@@ -6,3 +6,5 @@ export { ErrorBoundary } from "./ErrorBoundary";
 export { GeoMap, type GeoMapMode, type GeoPoint } from "./GeoMap";
 export { Rail, RailItem } from "./Rail";
 export { SectionHeading } from "./SectionHeading";
+
+export { QueryFeedback } from "./QueryFeedback";

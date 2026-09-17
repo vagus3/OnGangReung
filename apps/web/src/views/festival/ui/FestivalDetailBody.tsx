@@ -1,15 +1,18 @@
 "use client";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { festivalApi, festivalKeys } from "@/entities/festival";
-import { GeoMap } from "@/shared/ui";
+import { GeoMap, QueryFeedback } from "@/shared/ui";
 
 export function FestivalDetailBody({ slug }: { slug: string }) {
-  const { data: festival } = useSuspenseQuery({
+  const query = useQuery({
     queryKey: festivalKeys.detail(slug),
     queryFn: () => festivalApi.detail(slug),
   });
+
+  if (!query.data) return <QueryFeedback label="축제 정보" query={query} />;
+  const festival = query.data;
 
   const facts = [
     { label: "기간", value: festival.when_label },

@@ -1,16 +1,19 @@
 "use client";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { themeApi, themeKeys } from "@/entities/theme";
 import { ThemeEntryCard } from "@/features/theme-list";
-import { GeoMap } from "@/shared/ui";
+import { GeoMap, QueryFeedback } from "@/shared/ui";
 
 export function ThemeDetailBody({ slug }: { slug: string }) {
-  const { data: theme } = useSuspenseQuery({
+  const query = useQuery({
     queryKey: themeKeys.detail(slug),
     queryFn: () => themeApi.detail(slug),
   });
+
+  if (!query.data) return <QueryFeedback label="테마 정보" query={query} />;
+  const theme = query.data;
 
   return (
     <article className="px-4 pb-16 sm:px-12">

@@ -1,19 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { spotApi, spotKeys } from "@/entities/spot";
 import { CATEGORY_LABELS, findZone } from "@/entities/zone";
 import { SaveButton } from "@/features/my-saves";
 import { SpotFacts, SpotMenu } from "@/features/spot-detail";
-import { GeoMap } from "@/shared/ui";
+import { GeoMap, QueryFeedback } from "@/shared/ui";
 
 export function SpotDetailBody({ slug }: { slug: string }) {
-  const { data: spot } = useSuspenseQuery({
+  const query = useQuery({
     queryKey: spotKeys.detail(slug),
     queryFn: () => spotApi.detail(slug),
   });
+
+  if (!query.data) return <QueryFeedback label="관광지 정보" query={query} />;
+  const spot = query.data;
 
   const zone = findZone(spot.zone);
 
