@@ -208,7 +208,7 @@ async def test_사라진_콘텐츠는_삭제가_아니라_비활성된다(
     await upsert_contents(session, fixture_items())
     await session.commit()
 
-    count = await deactivate_missing(session, seen_ids={"126508"})
+    count = await deactivate_missing(session, seen_ids={"126508"}, area_code="32")
     await session.commit()
 
     assert count == 1
@@ -238,7 +238,7 @@ async def test_비활성_처리해도_참조하는_spot이_끊기지_않는다(
     )
     await session.commit()
 
-    await deactivate_missing(session, seen_ids={"126508"})
+    await deactivate_missing(session, seen_ids={"126508"}, area_code="32")
     await session.commit()
 
     spot = (await session.execute(select(Spot).where(Spot.slug == "spot_ojukheon"))).scalar_one()
@@ -279,3 +279,55 @@ async def test_형식이_어긋난_시각은_버린다() -> None:
     item = TourItem.model_validate({"contentid": "1", "title": "x", "modifiedtime": "not-a-date"})
 
     assert item.modified_at is None
+
+
+async def test_partial_sync_does_not_deactivate_unfetched_rows(session: AsyncSession) -> None:
+    items = fixture_items()
+    await upsert_contents(session, items)
+    await session.commit()
+    result = await sync_area(
+        session,
+        FakeTourApiClient([[items[0]]], total=2),
+        area_code="32",
+        num_of_rows=1,
+        max_pages=1,
+        deactivate=True,
+    )
+    assert result.deactivated == 0
+    assert (await session.get(TourContent, items[1].content_id)).is_active
+
+
+async def test_sync_only_deactivates_its_scope(session: AsyncSession) -> None:
+    item = fixture_items()[0]
+    others = [
+        item.model_copy(update={"content_id": "other-area", "area_code": "1"}),
+        item.model_copy(update={"content_id": "other-city", "sigungu_code": "99"}),
+        item.model_copy(update={"content_id": "other-type", "content_type_id": "99"}),
+        item.model_copy(update={"content_id": "missing"}),
+    ]
+    await upsert_contents(session, [item, *others])
+    await session.commit()
+    result = await sync_area(
+        session,
+        FakeTourApiClient([[item]]),
+        area_code=item.area_code or "32",
+        sigungu_code=item.sigungu_code,
+        content_type_id=item.content_type_id,
+        deactivate=True,
+    )
+    assert result.deactivated == 1
+    for other in others[:3]:
+        assert (await session.get(TourContent, other.content_id)).is_active
+
+
+async def test_duplicate_items_and_reappearing_content(session: AsyncSession) -> None:
+    item = fixture_items()[0]
+    assert await upsert_contents(session, [item, item]) == (1, 0, 1)
+    await session.commit()
+    row = await session.get(TourContent, item.content_id)
+    assert row is not None
+    row.is_active = False
+    await session.commit()
+    await upsert_contents(session, [item])
+    await session.commit()
+    assert row.is_active

@@ -105,23 +105,40 @@ async def upsert_contents(session: AsyncSession, items: list[TourItem]) -> tuple
             content = TourContent(content_id=item.content_id)
             _apply(content, item)
             session.add(content)
+            existing[item.content_id] = content
             created += 1
         elif _is_stale(current, item):
             _apply(current, item)
             updated += 1
         else:
+            current.is_active = True
+            current.synced_at = datetime.now(UTC)
             skipped += 1
 
     return (created, updated, skipped)
 
 
-async def deactivate_missing(session: AsyncSession, seen_ids: set[str]) -> int:
+async def deactivate_missing(
+    session: AsyncSession,
+    seen_ids: set[str],
+    *,
+    area_code: str,
+    sigungu_code: str | None = None,
+    content_type_id: str | None = None,
+) -> int:
     """이번 동기화에서 보이지 않은 행을 내린다.
 
     삭제하지 않는 이유는 spots가 참조하고 있을 수 있어서다. 외부에서 사라졌다고
     우리 편집 행이 끊기면 안 된다.
     """
-    result = await session.execute(select(TourContent).where(TourContent.is_active.is_(True)))
+    query = select(TourContent).where(
+        TourContent.is_active.is_(True), TourContent.area_code == area_code
+    )
+    if sigungu_code is not None:
+        query = query.where(TourContent.sigungu_code == sigungu_code)
+    if content_type_id is not None:
+        query = query.where(TourContent.content_type_id == content_type_id)
+    result = await session.execute(query)
     count = 0
     for content in result.scalars():
         if content.content_id not in seen_ids:
@@ -149,6 +166,7 @@ async def sync_area(
     """
     summary = SyncResult()
     seen: set[str] = set()
+    complete = False
 
     for page_no in range(1, max_pages + 1):
         items, total = await client.list_area_contents(
@@ -169,11 +187,19 @@ async def sync_area(
         summary.updated += updated
         summary.skipped += skipped
 
-        if page_no * num_of_rows >= total:
+        if len(seen) >= total:
+            complete = True
             break
 
-    if deactivate and seen:
-        summary.deactivated = await deactivate_missing(session, seen)
+    # Never deactivate unseen rows after a truncated/empty upstream response.
+    if deactivate and seen and complete:
+        summary.deactivated = await deactivate_missing(
+            session,
+            seen,
+            area_code=area_code,
+            sigungu_code=sigungu_code,
+            content_type_id=content_type_id,
+        )
 
     # 서비스가 커밋을 소유한다 (DATABASE.md). 라우터나 CLI는 커밋하지 않는다.
     await session.commit()
