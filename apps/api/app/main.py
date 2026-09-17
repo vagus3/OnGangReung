@@ -3,10 +3,19 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1.router import api_router
 from app.core.config import settings
-from app.core.exceptions import NotFoundError, not_found_handler
+from app.core.exceptions import (
+    AuthError,
+    ConflictError,
+    NotFoundError,
+    auth_handler,
+    conflict_handler,
+    not_found_handler,
+)
 
 app = FastAPI(title="SHG API", version="0.1.0")
 app.add_exception_handler(NotFoundError, not_found_handler)  # type: ignore[arg-type]
+app.add_exception_handler(ConflictError, conflict_handler)  # type: ignore[arg-type]
+app.add_exception_handler(AuthError, auth_handler)  # type: ignore[arg-type]
 
 app.add_middleware(
     CORSMiddleware,

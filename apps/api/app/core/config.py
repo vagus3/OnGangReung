@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     tourapi_service_key: str = ""
     tourapi_app_name: str = "ongangreung"
 
+    # 세션 쿠키 (ADR 008). 운영에서는 secure를 켠다.
+    session_cookie_name: str = "ongangreung_session"
+    session_cookie_secure: bool = False
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
