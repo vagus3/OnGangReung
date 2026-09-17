@@ -18,6 +18,9 @@ dependencies = [
     # EmailStr 검증에 필요하다. 형식이 틀린 이메일로 가입되면 나중에
     # 비밀번호 재설정 메일이 닿지 않는다.
     "email-validator>=2.2",
+    # AI 코스 생성 (ADR 009). 키가 없으면 스텁이 대신 응답하므로
+    # 개발·테스트에서는 호출되지 않는다.
+    "anthropic>=0.40",
 ]
 
 [dependency-groups]

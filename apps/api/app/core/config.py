@@ -24,6 +24,9 @@ class Settings(BaseSettings):
     session_cookie_name: str = "ongangreung_session"
     session_cookie_secure: bool = False
 
+    # AI 코스 생성 (ADR 009). 비어 있으면 결정적 스텁이 대신 응답한다.
+    anthropic_api_key: str = ""
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
