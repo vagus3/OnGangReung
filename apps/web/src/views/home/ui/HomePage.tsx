@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "@/shared/ui";
 
 import { HomeHero } from "./HomeHero";
+import { HomeNight } from "./HomeNight";
 import { HomeSections } from "./HomeSections";
 
 export function HomePage() {
@@ -26,6 +27,8 @@ export function HomePage() {
           <HomeSections />
         </Suspense>
       </ErrorBoundary>
+
+      <HomeNight />
     </main>
   );
 }
