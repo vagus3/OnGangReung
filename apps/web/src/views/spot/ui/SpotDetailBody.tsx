@@ -6,6 +6,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { spotApi, spotKeys } from "@/entities/spot";
 import { CATEGORY_LABELS, findZone } from "@/entities/zone";
 import { SpotFacts, SpotMenu } from "@/features/spot-detail";
+import { GeoMap } from "@/shared/ui";
 
 export function SpotDetailBody({ slug }: { slug: string }) {
   const { data: spot } = useSuspenseQuery({
@@ -81,7 +82,30 @@ export function SpotDetailBody({ slug }: { slug: string }) {
             </section>
           )}
         </div>
-        <SpotMenu menu={spot.menu} />
+        <div className="space-y-8">
+          <SpotMenu menu={spot.menu} />
+          {spot.lat !== null && spot.lng !== null && (
+            <section>
+              <h2 className="text-ink text-[13.5px] font-bold">위치</h2>
+              <div className="mt-3">
+                <GeoMap
+                  label={`${spot.name} 위치`}
+                  mode="single"
+                  height={280}
+                  points={[
+                    {
+                      name: spot.name,
+                      lat: spot.lat,
+                      lng: spot.lng,
+                      meta: zone?.name,
+                      sub: spot.address ?? undefined,
+                    },
+                  ]}
+                />
+              </div>
+            </section>
+          )}
+        </div>
       </div>
 
       {spot.tags.length > 0 && (
