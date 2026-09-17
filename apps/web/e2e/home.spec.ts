@@ -7,12 +7,30 @@ test.describe("홈", () => {
   test("히어로와 네비게이션이 렌더링된다", async ({ page }) => {
     await page.goto("/");
 
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "바다와 커피",
-    );
+    // 히어로 문구는 계절마다 다르므로 특정 문장을 단정하지 않는다.
+    // 제목이 있다는 것과 계절 칩이 있다는 것만 본다.
+    await expect(page.getByRole("heading", { level: 1 })).not.toBeEmpty();
     await expect(
       page.getByRole("link", { name: "온강릉 GANGNEUNG" }),
     ).toBeVisible();
+  });
+
+  test("계절을 바꾸면 히어로 문구가 바뀐다", async ({ page }) => {
+    await page.goto("/");
+
+    const heading = page.getByRole("heading", { level: 1 });
+    const before = await heading.textContent();
+
+    // 지금 계절이 무엇이든 겨울과 여름 중 하나는 다른 문구다
+    await page.getByRole("button", { name: "겨울" }).click();
+    const winter = await heading.textContent();
+    await page.getByRole("button", { name: "여름" }).click();
+    const summer = await heading.textContent();
+
+    expect(winter).not.toBe(summer);
+    expect([winter, summer]).toContain(
+      before === winter ? winter : before === summer ? summer : winter,
+    );
   });
 
   test("화면 모드를 바꾸면 루트 속성이 따라 바뀐다", async ({ page }) => {
