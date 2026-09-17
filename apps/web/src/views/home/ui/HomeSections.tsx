@@ -3,8 +3,10 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { festivalApi, festivalKeys } from "@/entities/festival";
+import { reviewApi, reviewKeys } from "@/entities/review";
 import { spotApi, spotKeys, type HomeRail } from "@/entities/spot";
 import { FestivalSection } from "@/features/festival-list";
+import { ReviewCarousel } from "@/features/review-carousel";
 import { SpotRail } from "@/features/spot-rail";
 
 // 디자인의 홈 레일 구성. 제목 문구도 디자인 그대로다.
@@ -27,6 +29,10 @@ export function HomeSections() {
     queryKey: festivalKeys.list(),
     queryFn: () => festivalApi.list(),
   });
+  const { data: reviews } = useSuspenseQuery({
+    queryKey: reviewKeys.summary,
+    queryFn: reviewApi.summary,
+  });
 
   return (
     <>
@@ -41,6 +47,8 @@ export function HomeSections() {
 
       {/* 디자인 순서: 해변 · 먹거리 · 인기 다음이 축제, 마지막이 야경 */}
       <FestivalSection festivals={festivals} />
+
+      <ReviewCarousel summary={reviews} />
     </>
   );
 }
