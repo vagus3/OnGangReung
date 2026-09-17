@@ -153,6 +153,18 @@ a:hover {
   color: var(--color-ink);
 }
 
+/* OSM 래스터 타일을 다크에 맞춘다. 디자인이 쓰던 보정값 그대로다.
+   타일 제공자가 다크 스타일을 주지 않으므로 CSS 필터로 뒤집는다. */
+:root[data-theme="dark"] .leaflet-tile {
+  filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.9);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .leaflet-tile {
+    filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.9);
+  }
+}
+
 /* 다크에서 사진이 그대로 튀지 않도록 낮춘다 (디자인 동일) */
 :root[data-theme="dark"] img {
   filter: brightness(0.88) saturate(0.94);
