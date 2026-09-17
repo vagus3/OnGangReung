@@ -13,6 +13,11 @@ dependencies = [
     # 공공데이터 API 호출에 런타임으로 필요하다. dev 그룹에 두면 프로덕션
     # 이미지의 uv sync에서 빠져 동기화가 죽는다.
     "httpx>=0.28",
+    # 비밀번호 해시. PHC 우승 알고리즘이고 기본 파라미터가 안전한 쪽이다 (ADR 008)
+    "argon2-cffi>=23.1",
+    # EmailStr 검증에 필요하다. 형식이 틀린 이메일로 가입되면 나중에
+    # 비밀번호 재설정 메일이 닿지 않는다.
+    "email-validator>=2.2",
 ]
 
 [dependency-groups]
