@@ -4,7 +4,7 @@
  * 디자인 자체가 정적 목업이라 그 값을 그대로 옮겼다. 기상청 단기예보·연안예보
  * 실연동은 `docs/api/public-data-apis.md`에 정리돼 있고 별도 슬라이스다.
  *
- * 화면의 출처 문구는 유지한다 — 연동이 붙으면 이 상수만 교체된다.
+ * 실시간 예보로 오인하지 않도록 화면에 예시임을 명시한다.
  */
 
 export type WeatherStat = { label: string; value: string };
@@ -18,8 +18,8 @@ export type DailyWeather = {
 };
 
 export const WEATHER = {
-  updated: "오늘 오후 2시 발표",
-  source: "기상청 동해중부 연안예보",
+  updated: "예시 날씨",
+  source: "실시간 예보 미연동",
   temp: 24,
   feels: 26,
   sky: "맑음",
@@ -54,4 +54,4 @@ export const WEATHER = {
 } as const;
 
 export const WEATHER_DISCLAIMER =
-  "기상 정보는 기상청 동해중부 연안예보 기준이며 현장 상황과 다를 수 있습니다.";
+  "표시된 수치는 화면 예시이며 현재 날씨가 아닙니다. 여행 전 기상청의 최신 예보를 확인해 주세요.";

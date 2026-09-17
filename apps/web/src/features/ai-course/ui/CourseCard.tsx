@@ -27,7 +27,7 @@ export function CourseCard({ course }: { course: Course }) {
       {course.generated_by === "stub" && (
         // 스텁으로 만든 결과를 실제 추천처럼 보이게 두지 않는다
         <p className="border-line text-muted mt-3 rounded-[12px] border border-dashed px-3 py-2 text-[11px]">
-          예시 일정입니다. API 키를 넣으면 실제 추천이 동작합니다.
+          예시 일정입니다. 실제 AI 추천은 현재 준비 중입니다.
         </p>
       )}
 
@@ -78,8 +78,8 @@ export function CourseCard({ course }: { course: Course }) {
       {/* 디자인은 이동 시간이 시내버스 실시간 배차 기준이라고 적었지만
           그 연동이 없다. 지킬 수 있는 말로 바꾼다 (ADR 009). */}
       <p className="text-muted mt-5 text-[11px] leading-relaxed">
-        소요 시간은 직선거리 기준의 어림값입니다. 운영시간과 휴무일은 방문 전
-        확인해 주세요.
+        표시된 시간은 예상 체류 시간이며 실제 이동 시간을 반영하지 않습니다.
+        운영시간과 휴무일은 방문 전 확인해 주세요.
       </p>
     </article>
   );

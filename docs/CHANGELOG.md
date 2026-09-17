@@ -67,6 +67,7 @@
 - 지도 팝업을 HTML 문자열에서 DOM 텍스트로 전환
 - 안내·마이페이지 조합을 widgets로 옮겨 FSD 동일 레이어 교차 의존 제거
 - 모바일 safe area와 후기 고르기 버튼의 터치 영역 확대
+- 예시 날씨·AI 예상 시간 등 실제 구현과 다른 안내 문구 수정
 - /posts 정적 프리렌더로 인한 웹 빌드 실패 (API 없이 빌드하면 ECONNREFUSED로
   죽어 CI build 단계도 실패 상태였음). force-dynamic으로 전환
 - husky v10에서 실패할 deprecated 부트스트랩 라인 제거

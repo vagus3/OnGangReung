@@ -65,10 +65,12 @@ describe("CourseCard", () => {
     expect(screen.queryByText(/예시 일정입니다/)).not.toBeInTheDocument();
   });
 
-  it("이동 시간이 어림값임을 밝힌다", () => {
+  it("실제 이동 시간이 반영되지 않음을 밝힌다", () => {
     // 디자인의 "시내버스 실시간 배차" 문구는 지킬 수 없다 (ADR 009)
     render(<CourseCard course={course()} />);
 
-    expect(screen.getByText(/직선거리 기준의 어림값/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/실제 이동 시간을 반영하지 않습니다/),
+    ).toBeInTheDocument();
   });
 });
