@@ -142,6 +142,92 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Signup */
+        post: operations["signup_api_v1_auth_signup_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Login */
+        post: operations["login_api_v1_auth_login_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Logout */
+        post: operations["logout_api_v1_auth_logout_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Me */
+        get: operations["me_api_v1_auth_me_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Me */
+        patch: operations["update_me_api_v1_auth_me_patch"];
+        trace?: never;
+    };
+    "/api/v1/auth/me/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Notifications */
+        patch: operations["update_notifications_api_v1_auth_me_notifications_patch"];
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -233,12 +319,48 @@ export interface components {
          * @enum {string}
          */
         HomeRail: "beach" | "food" | "hot" | "night";
+        /** LoginRequest */
+        LoginRequest: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Password */
+            password: string;
+        };
         /** MenuItem */
         MenuItem: {
             /** Name */
             name: string;
             /** Price */
             price: string;
+        };
+        /** NotificationSettings */
+        NotificationSettings: {
+            /** Weather */
+            weather: boolean;
+            /** Festival */
+            festival: boolean;
+            /** Course */
+            course: boolean;
+            /** Emergency */
+            emergency: boolean;
+            /** Marketing */
+            marketing: boolean;
+        };
+        /** NotificationUpdate */
+        NotificationUpdate: {
+            /** Weather */
+            weather: boolean;
+            /** Festival */
+            festival: boolean;
+            /** Course */
+            course: boolean;
+            /** Emergency */
+            emergency: boolean;
+            /** Marketing */
+            marketing: boolean;
         };
         /** PostCreate */
         PostCreate: {
@@ -260,6 +382,40 @@ export interface components {
              * Format: date-time
              */
             created_at: string;
+        };
+        /** ProfileUpdate */
+        ProfileUpdate: {
+            /** Nickname */
+            nickname: string;
+            /** Phone */
+            phone?: string | null;
+            /** Home Region */
+            home_region?: string | null;
+            /** Travel Style */
+            travel_style?: string | null;
+        };
+        /** SignupRequest */
+        SignupRequest: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Password */
+            password: string;
+            /** Nickname */
+            nickname: string;
+            /** Phone */
+            phone?: string | null;
+            /** Home Region */
+            home_region?: string | null;
+            /** Travel Style */
+            travel_style?: string | null;
+            /**
+             * Noti Marketing
+             * @default false
+             */
+            noti_marketing: boolean;
         };
         /**
          * SpotCategory
@@ -410,6 +566,22 @@ export interface components {
             season: string;
             /** Car Note */
             car_note: string;
+        };
+        /** UserRead */
+        UserRead: {
+            /** Id */
+            id: number;
+            /** Email */
+            email: string;
+            /** Nickname */
+            nickname: string;
+            /** Phone */
+            phone: string | null;
+            /** Home Region */
+            home_region: string | null;
+            /** Travel Style */
+            travel_style: string | null;
+            notifications: components["schemas"]["NotificationSettings"];
         };
         /** ValidationError */
         ValidationError: {
@@ -721,6 +893,202 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FestivalDetailRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    signup_api_v1_auth_signup_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignupRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    login_api_v1_auth_login_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    logout_api_v1_auth_logout_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                ongangreung_session?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    me_api_v1_auth_me_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                ongangreung_session?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_me_api_v1_auth_me_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                ongangreung_session?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProfileUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_notifications_api_v1_auth_me_notifications_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                ongangreung_session?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotificationUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserRead"];
                 };
             };
             /** @description Validation Error */

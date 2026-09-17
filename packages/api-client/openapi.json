@@ -453,6 +453,295 @@
         }
       }
     },
+    "/api/v1/auth/signup": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Signup",
+        "operationId": "signup_api_v1_auth_signup_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login",
+        "operationId": "login_api_v1_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Logout",
+        "operationId": "logout_api_v1_auth_logout_post",
+        "parameters": [
+          {
+            "name": "ongangreung_session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Ongangreung Session"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Me",
+        "operationId": "me_api_v1_auth_me_get",
+        "parameters": [
+          {
+            "name": "ongangreung_session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Ongangreung Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Update Me",
+        "operationId": "update_me_api_v1_auth_me_patch",
+        "parameters": [
+          {
+            "name": "ongangreung_session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Ongangreung Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/me/notifications": {
+      "patch": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Update Notifications",
+        "operationId": "update_notifications_api_v1_auth_me_notifications_patch",
+        "parameters": [
+          {
+            "name": "ongangreung_session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Ongangreung Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotificationUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "tags": [
@@ -713,6 +1002,25 @@
         "title": "HomeRail",
         "description": "홈 화면의 가로 레일 소속. 어디에도 안 실리면 NULL이다."
       },
+      "LoginRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "LoginRequest"
+      },
       "MenuItem": {
         "properties": {
           "name": {
@@ -730,6 +1038,72 @@
           "price"
         ],
         "title": "MenuItem"
+      },
+      "NotificationSettings": {
+        "properties": {
+          "weather": {
+            "type": "boolean",
+            "title": "Weather"
+          },
+          "festival": {
+            "type": "boolean",
+            "title": "Festival"
+          },
+          "course": {
+            "type": "boolean",
+            "title": "Course"
+          },
+          "emergency": {
+            "type": "boolean",
+            "title": "Emergency"
+          },
+          "marketing": {
+            "type": "boolean",
+            "title": "Marketing"
+          }
+        },
+        "type": "object",
+        "required": [
+          "weather",
+          "festival",
+          "course",
+          "emergency",
+          "marketing"
+        ],
+        "title": "NotificationSettings"
+      },
+      "NotificationUpdate": {
+        "properties": {
+          "weather": {
+            "type": "boolean",
+            "title": "Weather"
+          },
+          "festival": {
+            "type": "boolean",
+            "title": "Festival"
+          },
+          "course": {
+            "type": "boolean",
+            "title": "Course"
+          },
+          "emergency": {
+            "type": "boolean",
+            "title": "Emergency"
+          },
+          "marketing": {
+            "type": "boolean",
+            "title": "Marketing"
+          }
+        },
+        "type": "object",
+        "required": [
+          "weather",
+          "festival",
+          "course",
+          "emergency",
+          "marketing"
+        ],
+        "title": "NotificationUpdate"
       },
       "PostCreate": {
         "properties": {
@@ -780,6 +1154,126 @@
           "created_at"
         ],
         "title": "PostRead"
+      },
+      "ProfileUpdate": {
+        "properties": {
+          "nickname": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Nickname"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 30
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "home_region": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Home Region"
+          },
+          "travel_style": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Travel Style"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nickname"
+        ],
+        "title": "ProfileUpdate"
+      },
+      "SignupRequest": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 10,
+            "title": "Password"
+          },
+          "nickname": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Nickname"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 30
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "home_region": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Home Region"
+          },
+          "travel_style": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Travel Style"
+          },
+          "noti_marketing": {
+            "type": "boolean",
+            "title": "Noti Marketing",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "password",
+          "nickname"
+        ],
+        "title": "SignupRequest"
       },
       "SpotCategory": {
         "type": "string",
@@ -1289,6 +1783,69 @@
         ],
         "title": "ThemeRead",
         "description": "목록용. 테마 카드가 그리는 데 필요한 만큼만 담는다."
+      },
+      "UserRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "nickname": {
+            "type": "string",
+            "title": "Nickname"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "home_region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Home Region"
+          },
+          "travel_style": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Travel Style"
+          },
+          "notifications": {
+            "$ref": "#/components/schemas/NotificationSettings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "nickname",
+          "phone",
+          "home_region",
+          "travel_style",
+          "notifications"
+        ],
+        "title": "UserRead"
       },
       "ValidationError": {
         "properties": {
