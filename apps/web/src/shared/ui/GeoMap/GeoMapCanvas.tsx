@@ -25,31 +25,32 @@ type Props = {
 // 마커는 divIcon으로 만든다. 기본 핀 이미지를 쓰면 번들에 아이콘 에셋이
 // 딸려오고 색·번호를 넣을 수 없다.
 function iconFor(color: string, text: string): L.DivIcon {
-  const inner =
-    text === ""
-      ? ""
-      : `<span style="font-size:10px;font-weight:700;color:#fff;line-height:1">${text}</span>`;
+  const marker = document.createElement("div");
+  marker.className = "map-marker";
+  marker.style.backgroundColor = color;
+  marker.textContent = text;
   return L.divIcon({
     className: "",
     iconSize: [22, 22],
     iconAnchor: [11, 11],
-    html:
-      `<div style="width:22px;height:22px;border-radius:999px;background:${color};` +
-      `display:flex;align-items:center;justify-content:center;` +
-      `box-shadow:0 0 0 2px rgba(255,255,255,0.9)">${inner}</div>`,
+    html: marker,
   });
 }
 
-function popupFor(point: GeoPoint): string {
-  const meta =
-    point.meta === undefined
-      ? ""
-      : `<div style="font-size:10.5px;opacity:0.7">${point.meta}</div>`;
-  const sub =
-    point.sub === undefined
-      ? ""
-      : `<div style="font-size:11px;margin-top:2px">${point.sub}</div>`;
-  return `<div style="font-weight:700;font-size:12.5px">${point.name}</div>${meta}${sub}`;
+function popupFor(point: GeoPoint): HTMLElement {
+  const popup = document.createElement("div");
+  for (const [value, className] of [
+    [point.name, "map-popup-name"],
+    [point.meta, "map-popup-meta"],
+    [point.sub, "map-popup-sub"],
+  ]) {
+    if (value === undefined) continue;
+    const row = document.createElement("div");
+    row.className = className ?? "";
+    row.textContent = value;
+    popup.append(row);
+  }
+  return popup;
 }
 
 export function GeoMapCanvas({ points, mode, accent, label }: Props) {
