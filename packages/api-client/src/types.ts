@@ -108,6 +108,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/festivals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Festivals */
+        get: operations["list_festivals_api_v1_festivals_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/festivals/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Festival */
+        get: operations["get_festival_api_v1_festivals__slug__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -129,6 +163,65 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** FestivalDetailRead */
+        FestivalDetailRead: {
+            /** Id */
+            id: number;
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Tagline */
+            tagline: string;
+            /** When Label */
+            when_label: string;
+            /** Badge */
+            badge: string | null;
+            /** Is Now */
+            is_now: boolean;
+            zone: components["schemas"]["Zone"];
+            /** Zone Label */
+            zone_label: string | null;
+            /** Place */
+            place: string;
+            /** About */
+            about: string;
+            /** Hours */
+            hours: string | null;
+            /** Price */
+            price: string | null;
+            /** Tip */
+            tip: string | null;
+            /** Lat */
+            lat: number | null;
+            /** Lng */
+            lng: number | null;
+        };
+        /**
+         * FestivalRead
+         * @description 목록용. 홈 축제 섹션과 안내 06이 쓴다.
+         */
+        FestivalRead: {
+            /** Id */
+            id: number;
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Tagline */
+            tagline: string;
+            /** When Label */
+            when_label: string;
+            /** Badge */
+            badge: string | null;
+            /** Is Now */
+            is_now: boolean;
+            zone: components["schemas"]["Zone"];
+            /** Zone Label */
+            zone_label: string | null;
+            /** Place */
+            place: string;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -565,6 +658,69 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ThemeDetailRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_festivals_api_v1_festivals_get: {
+        parameters: {
+            query?: {
+                /** @description 권역 */
+                zone?: components["schemas"]["Zone"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FestivalRead"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_festival_api_v1_festivals__slug__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FestivalDetailRead"];
                 };
             };
             /** @description Validation Error */

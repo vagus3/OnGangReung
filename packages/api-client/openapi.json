@@ -356,6 +356,103 @@
         }
       }
     },
+    "/api/v1/festivals": {
+      "get": {
+        "tags": [
+          "festivals"
+        ],
+        "summary": "List Festivals",
+        "operationId": "list_festivals_api_v1_festivals_get",
+        "parameters": [
+          {
+            "name": "zone",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Zone"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "권역",
+              "title": "Zone"
+            },
+            "description": "권역"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FestivalRead"
+                  },
+                  "title": "Response List Festivals Api V1 Festivals Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/festivals/{slug}": {
+      "get": {
+        "tags": [
+          "festivals"
+        ],
+        "summary": "Get Festival",
+        "operationId": "get_festival_api_v1_festivals__slug__get",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FestivalDetailRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "tags": [
@@ -384,6 +481,214 @@
   },
   "components": {
     "schemas": {
+      "FestivalDetailRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "tagline": {
+            "type": "string",
+            "title": "Tagline"
+          },
+          "when_label": {
+            "type": "string",
+            "title": "When Label"
+          },
+          "badge": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Badge"
+          },
+          "is_now": {
+            "type": "boolean",
+            "title": "Is Now"
+          },
+          "zone": {
+            "$ref": "#/components/schemas/Zone"
+          },
+          "zone_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Zone Label"
+          },
+          "place": {
+            "type": "string",
+            "title": "Place"
+          },
+          "about": {
+            "type": "string",
+            "title": "About"
+          },
+          "hours": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hours"
+          },
+          "price": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price"
+          },
+          "tip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tip"
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "lng": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lng"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "tagline",
+          "when_label",
+          "badge",
+          "is_now",
+          "zone",
+          "zone_label",
+          "place",
+          "about",
+          "hours",
+          "price",
+          "tip",
+          "lat",
+          "lng"
+        ],
+        "title": "FestivalDetailRead"
+      },
+      "FestivalRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "tagline": {
+            "type": "string",
+            "title": "Tagline"
+          },
+          "when_label": {
+            "type": "string",
+            "title": "When Label"
+          },
+          "badge": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Badge"
+          },
+          "is_now": {
+            "type": "boolean",
+            "title": "Is Now"
+          },
+          "zone": {
+            "$ref": "#/components/schemas/Zone"
+          },
+          "zone_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Zone Label"
+          },
+          "place": {
+            "type": "string",
+            "title": "Place"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "tagline",
+          "when_label",
+          "badge",
+          "is_now",
+          "zone",
+          "zone_label",
+          "place"
+        ],
+        "title": "FestivalRead",
+        "description": "목록용. 홈 축제 섹션과 안내 06이 쓴다."
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
