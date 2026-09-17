@@ -1,6 +1,6 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
-import { spotApi, spotKeys } from "@/entities/spot";
+import { festivalApi, festivalKeys } from "@/entities/festival";
 import { createQueryClient } from "@/shared/api";
 import { InfoPage } from "@/views/info";
 
@@ -13,8 +13,8 @@ export default async function Page() {
   // 클라이언트의 ErrorBoundary가 사용자에게 상태를 알린다.
   try {
     await queryClient.prefetchQuery({
-      queryKey: spotKeys.list({ limit: 100 }),
-      queryFn: () => spotApi.list({ limit: 100 }),
+      queryKey: festivalKeys.list(),
+      queryFn: () => festivalApi.list(),
     });
   } catch {
     // 무시 — 아래 dehydrate가 빈 상태를 넘긴다

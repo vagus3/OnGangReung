@@ -2,14 +2,14 @@
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { spotApi, spotKeys } from "@/entities/spot";
+import { festivalApi, festivalKeys } from "@/entities/festival";
 import { ZoneGuide } from "@/features/zone-guide";
 
 export function InfoSections() {
-  const { data: spots } = useSuspenseQuery({
-    queryKey: spotKeys.list({ limit: 100 }),
-    queryFn: () => spotApi.list({ limit: 100 }),
+  const { data: festivals } = useSuspenseQuery({
+    queryKey: festivalKeys.list(),
+    queryFn: () => festivalApi.list(),
   });
 
-  return <ZoneGuide spots={spots} />;
+  return <ZoneGuide festivals={festivals} />;
 }

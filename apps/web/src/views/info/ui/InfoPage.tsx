@@ -10,8 +10,8 @@ export function InfoPage() {
       <div className="border-line border-b py-12">
         <SectionHeading eyebrow="GUIDE" title="어느 권역부터 도실 건가요?" />
         <p className="text-muted mt-3 max-w-[52ch] px-4 text-[13.5px] leading-relaxed sm:px-12">
-          강릉을 다섯 권역으로 나눠 담았습니다. 하루에 한 권역씩 끊으면 이동으로
-          버리는 시간이 가장 적습니다.
+          강릉을 다섯 권역으로 나눠 담았습니다. 권역을 고르면 날씨부터 축제까지
+          그 권역 기준으로 바뀝니다.
         </p>
       </div>
 
