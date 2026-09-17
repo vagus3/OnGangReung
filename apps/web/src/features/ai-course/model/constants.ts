@@ -1,3 +1,5 @@
+import type { CourseRequest } from "@/entities/ai-course";
+
 /** 디자인의 위저드 선택지. */
 export const INTERESTS = [
   "자연",
@@ -16,7 +18,7 @@ export type Preset = {
   body: string;
   meta: string;
   interests: string[];
-  duration: string;
+  duration: NonNullable<CourseRequest["duration"]>;
   prompt: string;
 };
 
@@ -42,7 +44,7 @@ export const PRESETS: readonly Preset[] = [
   {
     id: "night",
     title: "별을 보러",
-    body: "육백마지기와 안반데기. 달이 없는 날짜를 골라 드립니다.",
+    body: "육백마지기와 안반데기. 별을 보기 좋은 장소를 중심으로 계획합니다.",
     meta: "야경 · 별 · 1박",
     interests: ["사진명소", "자연"],
     duration: "1박2일",

@@ -7,6 +7,7 @@ from typing import Any
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.concurrency import run_in_threadpool
 
 from app.core.exceptions import NotFoundError
 from app.integrations.anthropic import CourseGenerator
@@ -95,7 +96,7 @@ async def create_course(
     user: User | None,
 ) -> CourseRead:
     spots = await _candidate_spots(session)
-    generated = generator.generate(data, spots)
+    generated = await run_in_threadpool(generator.generate, data, spots)
 
     course = AiCourse(
         user_id=user.id if user is not None else None,
@@ -125,8 +126,10 @@ async def list_courses(session: AsyncSession, user: User) -> list[CourseRead]:
     return [await _read_for(session, course) for course in courses]
 
 
-async def get_course(session: AsyncSession, course_id: int) -> CourseRead:
+async def get_course(session: AsyncSession, course_id: int, user: User | None) -> CourseRead:
     course = await session.get(AiCourse, course_id)
-    if course is None:
+    if course is None or (
+        course.user_id is not None and (user is None or course.user_id != user.id)
+    ):
         raise NotFoundError(code="course_not_found", detail=f"Course {course_id} not found")
     return await _read_for(session, course)

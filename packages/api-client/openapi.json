@@ -869,6 +869,22 @@
               "type": "integer",
               "title": "Course Id"
             }
+          },
+          {
+            "name": "ongangreung_session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Ongangreung Session"
+            }
           }
         ],
         "responses": {
@@ -1091,6 +1107,11 @@
           },
           "duration": {
             "type": "string",
+            "enum": [
+              "당일치기",
+              "1박2일",
+              "2박3일"
+            ],
             "title": "Duration",
             "default": "1박2일"
           },

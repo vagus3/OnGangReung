@@ -9,16 +9,24 @@ import {
   type Course,
   type CourseRequest,
 } from "@/entities/ai-course";
+import { useMe } from "@/entities/user";
 import { CourseCard, CourseWizard, PRESETS } from "@/features/ai-course";
-import { Button, Card, SectionHeading } from "@/shared/ui";
+import { Button, Card, QueryFeedback, SectionHeading } from "@/shared/ui";
 
 export function AiCoursePage() {
+  const { data: user } = useMe();
+  return <AiCourseWorkspace key={user?.id ?? "guest"} userId={user?.id} />;
+}
+
+function AiCourseWorkspace({ userId }: { userId?: number }) {
   const [courses, setCourses] = useState<Course[]>([]);
   const [prompt, setPrompt] = useState("");
   const queryClient = useQueryClient();
 
+  const historyKey = aiCourseKeys.history(userId);
   const history = useQuery({
-    queryKey: aiCourseKeys.history(),
+    queryKey: historyKey,
+    enabled: userId !== undefined,
     queryFn: aiCourseApi.history,
     retry: false,
   });
@@ -28,7 +36,7 @@ export function AiCoursePage() {
     onSuccess: (course) => {
       setCourses((prev) => [course, ...prev]);
       setPrompt("");
-      void queryClient.invalidateQueries({ queryKey: aiCourseKeys.history() });
+      void queryClient.invalidateQueries({ queryKey: historyKey });
     },
   });
 
@@ -47,7 +55,7 @@ export function AiCoursePage() {
       </div>
 
       <div className="grid gap-8 px-4 py-8 sm:px-12 lg:grid-cols-[minmax(0,1fr)_258px]">
-        <div className="space-y-8">
+        <div className="min-w-0 space-y-8">
           {courses.length === 0 && (
             <>
               <ul className="grid gap-3 sm:grid-cols-2">
@@ -119,11 +127,15 @@ export function AiCoursePage() {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               rows={2}
+              maxLength={500}
               placeholder="아이 둘과 1박 2일, 이동은 짧게"
               className="text-ink w-full resize-none bg-transparent px-2 py-1 text-[13px] outline-none"
             />
             <div className="mt-2 flex justify-end">
-              <Button type="submit" disabled={create.isPending}>
+              <Button
+                type="submit"
+                disabled={create.isPending || prompt.trim() === ""}
+              >
                 보내기
               </Button>
             </div>
@@ -132,9 +144,13 @@ export function AiCoursePage() {
 
         <aside>
           <h2 className="text-ink text-[13px] font-bold">지난 코스</h2>
-          {historyItems.length === 0 ? (
+          {userId !== undefined && (history.isPending || history.isError) ? (
+            <QueryFeedback label="지난 코스" query={history} />
+          ) : historyItems.length === 0 ? (
             <p className="text-muted mt-3 text-[11.5px] leading-relaxed">
-              로그인하면 만든 코스가 여기에 남습니다.
+              {userId === undefined
+                ? "로그인하면 만든 코스가 여기에 남습니다."
+                : "아직 만든 코스가 없습니다."}
             </p>
           ) : (
             <ul className="mt-3 space-y-2">

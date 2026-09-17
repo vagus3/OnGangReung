@@ -16,7 +16,9 @@ function useAfterAuth(redirectTo: string) {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  return (user: User) => {
+  return async (user: User) => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
     queryClient.setQueryData(userKeys.me, user);
     router.push(redirectTo);
     // 서버 컴포넌트가 들고 있는 로그인 상태도 다시 읽게 한다
@@ -46,7 +48,9 @@ export function useLogout() {
 
   return useMutation({
     mutationFn: userApi.logout,
-    onSuccess: () => {
+    onSuccess: async () => {
+      await queryClient.cancelQueries();
+      queryClient.clear();
       queryClient.setQueryData(userKeys.me, null);
       router.refresh();
     },

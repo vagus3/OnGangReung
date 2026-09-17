@@ -14,8 +14,6 @@ from anthropic import Anthropic
 from app.core.config import settings
 from app.schemas.ai_course import CourseDay, CourseItem, CourseRequest, GeneratedCourse
 
-MODEL = "claude-opus-5"
-
 SYSTEM = """당신은 강릉 여행 일정을 짜는 사람입니다.
 
 규칙:
@@ -88,7 +86,7 @@ class ClaudeCourseGenerator:
         )
 
         response = self._client.messages.parse(
-            model=MODEL,
+            model=settings.anthropic_model,
             max_tokens=16000,
             system=SYSTEM,
             messages=[{"role": "user", "content": prompt}],
@@ -143,7 +141,10 @@ class StubCourseGenerator:
         interests = " · ".join(request.interests[:2]) if request.interests else "강릉"
         return GeneratedCourse(
             title=f"{interests} {request.duration}",
-            summary="키가 없어 예시 일정으로 채웠습니다. 실제 추천은 API 키를 넣으면 동작합니다.",
+            summary=(
+                "선택한 기간에 맞춘 예시 일정입니다. "
+                "실제 방문 전 운영시간과 이동 경로를 확인해 주세요."
+            ),
             days=built,
         )
 

@@ -295,3 +295,23 @@ async def test_키가_없으면_스텁을_고른다() -> None:
     from app.integrations.anthropic import StubCourseGenerator, build_course_generator
 
     assert isinstance(build_course_generator(), StubCourseGenerator)
+
+
+async def test_invalid_duration_is_rejected(client: AsyncClient) -> None:
+    response = await client.post("/api/v1/ai/courses", json={"duration": "a" * 100})
+    assert response.status_code == 422
+
+
+async def test_private_course_requires_its_owner(
+    seeded_client: tuple[AsyncClient, async_sessionmaker[AsyncSession]],
+) -> None:
+    client, factory = seeded_client
+    await seed_spots(factory)
+    await client.post("/api/v1/auth/signup", json=SIGNUP)
+    course = (await client.post("/api/v1/ai/courses", json={})).json()
+    url = f"/api/v1/ai/courses/{course['id']}"
+    assert (await client.get(url)).status_code == 200
+    await client.post("/api/v1/auth/logout")
+    assert (await client.get(url)).status_code == 404
+    await client.post("/api/v1/auth/signup", json={**SIGNUP, "email": "other@example.com"})
+    assert (await client.get(url)).status_code == 404

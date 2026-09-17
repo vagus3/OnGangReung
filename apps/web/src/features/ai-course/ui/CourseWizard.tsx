@@ -2,12 +2,16 @@
 
 import { useState } from "react";
 
+import type { CourseRequest } from "@/entities/ai-course";
 import { Button, Chip } from "@/shared/ui";
 
 import { DURATIONS, INTERESTS } from "../model/constants";
 
 type Props = {
-  onSubmit: (interests: string[], duration: string) => void;
+  onSubmit: (
+    interests: string[],
+    duration: NonNullable<CourseRequest["duration"]>,
+  ) => void;
   isPending?: boolean;
 };
 
@@ -15,7 +19,8 @@ type Props = {
 export function CourseWizard({ onSubmit, isPending = false }: Props) {
   const [phase, setPhase] = useState<"interests" | "duration">("interests");
   const [interests, setInterests] = useState<string[]>([]);
-  const [duration, setDuration] = useState<string>("1박2일");
+  const [duration, setDuration] =
+    useState<NonNullable<CourseRequest["duration"]>>("1박2일");
 
   function toggle(value: string) {
     setInterests((prev) =>

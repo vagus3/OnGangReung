@@ -372,8 +372,9 @@ export interface components {
             /**
              * Duration
              * @default 1박2일
+             * @enum {string}
              */
-            duration: string;
+            duration: "당일치기" | "1박2일" | "2박3일";
             /**
              * Prompt
              * @default
@@ -1335,7 +1336,9 @@ export interface operations {
             path: {
                 course_id: number;
             };
-            cookie?: never;
+            cookie?: {
+                ongangreung_session?: string | null;
+            };
         };
         requestBody?: never;
         responses: {

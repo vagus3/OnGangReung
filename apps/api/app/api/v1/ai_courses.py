@@ -46,5 +46,5 @@ async def list_courses(session: SessionDep, user: CurrentUser) -> list[CourseRea
 
 
 @router.get("/{course_id}")
-async def get_course(session: SessionDep, course_id: int) -> CourseRead:
-    return await ai_course_service.get_course(session, course_id)
+async def get_course(session: SessionDep, course_id: int, user: OptionalUser) -> CourseRead:
+    return await ai_course_service.get_course(session, course_id, user)

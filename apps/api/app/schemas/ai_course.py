@@ -4,6 +4,8 @@
 장소 상세로 이어진다 (ADR 009).
 """
 
+from typing import Literal
+
 from pydantic import BaseModel, ConfigDict, Field
 
 DURATIONS = ("당일치기", "1박2일", "2박3일")
@@ -35,7 +37,7 @@ class GeneratedCourse(BaseModel):
 
 class CourseRequest(BaseModel):
     interests: list[str] = Field(default_factory=list, max_length=6)
-    duration: str = Field(default="1박2일")
+    duration: Literal["당일치기", "1박2일", "2박3일"] = "1박2일"
     prompt: str = Field(default="", max_length=500)
 
 

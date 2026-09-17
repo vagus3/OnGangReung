@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     모듈 코드에서 os.environ 직접 접근 금지 — 반드시 이 settings를 통해 읽는다.
     """
 
-    model_config = SettingsConfigDict(env_file=(".env", "../../.env"), extra="ignore")
+    model_config = SettingsConfigDict(env_file=("../../.env", ".env"), extra="ignore")
 
     database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/app_dev"
     cors_origins: str = "http://localhost:3000"
@@ -26,6 +26,7 @@ class Settings(BaseSettings):
 
     # AI 코스 생성 (ADR 009). 비어 있으면 결정적 스텁이 대신 응답한다.
     anthropic_api_key: str = ""
+    anthropic_model: str = "claude-opus-5"
 
     @property
     def cors_origin_list(self) -> list[str]:
