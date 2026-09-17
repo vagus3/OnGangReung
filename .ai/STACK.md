@@ -33,6 +33,7 @@
 | zod             | 3.25              | 환경변수/입력 검증                       |
 | Tailwind CSS    | 4.3 (CSS-first)   | 스타일링. 토큰은 `@theme`. ADR 006 참조  |
 | Zustand         | 5.0               | 클라이언트 상태(화면 모드). ADR 002 참조 |
+| Leaflet         | 1.9               | 지도. OSM 래스터 타일, 키 불필요         |
 
 ---
 
