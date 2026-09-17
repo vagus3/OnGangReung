@@ -2,7 +2,9 @@
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 
+import { festivalApi, festivalKeys } from "@/entities/festival";
 import { spotApi, spotKeys, type HomeRail } from "@/entities/spot";
+import { FestivalSection } from "@/features/festival-list";
 import { SpotRail } from "@/features/spot-rail";
 
 // 디자인의 홈 레일 구성. 제목 문구도 디자인 그대로다.
@@ -20,10 +22,26 @@ export function HomeSections() {
     queryKey: spotKeys.list({ limit: 100 }),
     queryFn: () => spotApi.list({ limit: 100 }),
   });
+  const { data: festivals } = useSuspenseQuery({
+    queryKey: festivalKeys.list(),
+    queryFn: () => festivalApi.list(),
+  });
 
   return (
     <>
-      {RAILS.map(({ rail, eyebrow, title }) => (
+      {RAILS.slice(0, 3).map(({ rail, eyebrow, title }) => (
+        <SpotRail
+          key={rail}
+          eyebrow={eyebrow}
+          title={title}
+          spots={spots.filter((spot) => spot.rail === rail)}
+        />
+      ))}
+
+      {/* 디자인 순서: 해변 · 먹거리 · 인기 다음이 축제, 마지막이 야경 */}
+      <FestivalSection festivals={festivals} />
+
+      {RAILS.slice(3).map(({ rail, eyebrow, title }) => (
         <SpotRail
           key={rail}
           eyebrow={eyebrow}
