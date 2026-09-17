@@ -742,6 +742,159 @@
         }
       }
     },
+    "/api/v1/ai/courses": {
+      "post": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "Create Course",
+        "operationId": "create_course_api_v1_ai_courses_post",
+        "parameters": [
+          {
+            "name": "ongangreung_session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Ongangreung Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CourseRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "List Courses",
+        "description": "히스토리는 로그인한 사용자의 것만 있다.",
+        "operationId": "list_courses_api_v1_ai_courses_get",
+        "parameters": [
+          {
+            "name": "ongangreung_session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Ongangreung Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CourseRead"
+                  },
+                  "title": "Response List Courses Api V1 Ai Courses Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai/courses/{course_id}": {
+      "get": {
+        "tags": [
+          "ai"
+        ],
+        "summary": "Get Course",
+        "operationId": "get_course_api_v1_ai_courses__course_id__get",
+        "parameters": [
+          {
+            "name": "course_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Course Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "tags": [
@@ -770,6 +923,166 @@
   },
   "components": {
     "schemas": {
+      "CourseDayRead": {
+        "properties": {
+          "day": {
+            "type": "integer",
+            "title": "Day"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CourseItemRead"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "day",
+          "title",
+          "items"
+        ],
+        "title": "CourseDayRead"
+      },
+      "CourseItemRead": {
+        "properties": {
+          "spot_slug": {
+            "type": "string",
+            "title": "Spot Slug",
+            "description": "반드시 주어진 관광지 목록의 slug 중 하나"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "이 칸의 제목. 장소 이름과 달라도 된다"
+          },
+          "time_label": {
+            "type": "string",
+            "title": "Time Label",
+            "description": "오전 9:00 처럼 사람이 읽는 시각"
+          },
+          "duration_label": {
+            "type": "string",
+            "title": "Duration Label",
+            "description": "80분 처럼 사람이 읽는 소요 시간"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason",
+            "description": "왜 이 순서에 이 장소인지 한 문장"
+          },
+          "spot_name": {
+            "type": "string",
+            "title": "Spot Name"
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "lng": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lng"
+          }
+        },
+        "type": "object",
+        "required": [
+          "spot_slug",
+          "title",
+          "time_label",
+          "duration_label",
+          "reason",
+          "spot_name",
+          "lat",
+          "lng"
+        ],
+        "title": "CourseItemRead",
+        "description": "응답용. 화면이 바로 쓸 수 있게 장소 정보를 붙인다."
+      },
+      "CourseRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "duration": {
+            "type": "string",
+            "title": "Duration"
+          },
+          "days": {
+            "items": {
+              "$ref": "#/components/schemas/CourseDayRead"
+            },
+            "type": "array",
+            "title": "Days"
+          },
+          "generated_by": {
+            "type": "string",
+            "title": "Generated By"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "summary",
+          "duration",
+          "days",
+          "generated_by"
+        ],
+        "title": "CourseRead"
+      },
+      "CourseRequest": {
+        "properties": {
+          "interests": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "title": "Interests"
+          },
+          "duration": {
+            "type": "string",
+            "title": "Duration",
+            "default": "1박2일"
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 500,
+            "title": "Prompt",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "CourseRequest"
+      },
       "FestivalDetailRead": {
         "properties": {
           "id": {
