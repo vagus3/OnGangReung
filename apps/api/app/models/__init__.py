@@ -1,3 +1,4 @@
+from app.models.ai_course import AiCourse
 from app.models.base import Base
 from app.models.enums import HomeRail, SpotCategory, SpotSpan, Zone
 from app.models.festival import Festival
@@ -8,6 +9,7 @@ from app.models.tour_content import TourContent
 from app.models.user import Session, User
 
 __all__ = [
+    "AiCourse",
     "Base",
     "Festival",
     "HomeRail",
