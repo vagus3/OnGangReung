@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { useSpots } from "@/entities/spot";
-import { GeoMap } from "@/shared/ui";
+import { GeoMap, QueryFeedback } from "@/shared/ui";
 
 import { useSavesStore } from "@/features/my-saves";
 
@@ -21,7 +21,8 @@ export function MySaves() {
   const markVisited = useSavesStore((s) => s.markVisited);
   const toggleSave = useSavesStore((s) => s.toggleSave);
 
-  const { data: spots = [] } = useSpots({ limit: 100 });
+  const spotsQuery = useSpots({ limit: 100 });
+  const spots = spotsQuery.data ?? [];
   const [here, setHere] = useState<Position>(null);
   const [locating, setLocating] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
@@ -57,12 +58,17 @@ export function MySaves() {
     );
   }
 
+  if (!spotsQuery.data)
+    return <QueryFeedback label="저장한 장소 정보" query={spotsQuery} />;
+
   return (
     <div className="space-y-10">
       <section>
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h3 className="text-ink text-[13.5px] font-bold">
-            방문 스탬프 · {visited.size}/{spots.length}
+            방문 스탬프 ·{" "}
+            {spots.filter((spot) => visited.has(spot.slug)).length}/
+            {spots.length}
           </h3>
           <button
             type="button"

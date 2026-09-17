@@ -1,7 +1,8 @@
 import type { components } from "@shg/api-client";
 
 import { apiClient, toApiError } from "@/shared/api";
-import type { Zone } from "@/entities/spot";
+
+type Zone = components["schemas"]["Zone"];
 
 export type Festival = components["schemas"]["FestivalRead"];
 export type FestivalDetail = components["schemas"]["FestivalDetailRead"];

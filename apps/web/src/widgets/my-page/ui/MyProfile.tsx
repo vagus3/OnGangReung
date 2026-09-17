@@ -5,17 +5,17 @@ import { useForm } from "react-hook-form";
 
 import { useMe, userApi, userKeys, type ProfileUpdate } from "@/entities/user";
 import { AuthField, useLogout } from "@/features/auth";
-import { Button } from "@/shared/ui";
+import { Button, QueryFeedback } from "@/shared/ui";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 function SignedOut() {
   return (
     <div className="bg-sand rounded-[20px] p-6">
       <p className="text-ink text-[13.5px] leading-relaxed">
-        로그인하면 저장한 장소와 스탬프가 기기 간에 그대로 남습니다.
+        로그인하면 만든 AI 코스를 다시 확인할 수 있습니다.
       </p>
       <p className="text-muted mt-2 text-[12px]">
-        가입하지 않아도 앱은 전부 쓸 수 있습니다.
+        저장한 장소와 스탬프는 이 브라우저에 보관됩니다.
       </p>
       <div className="mt-5 flex gap-2">
         <Link
@@ -36,7 +36,8 @@ function SignedOut() {
 }
 
 export function MyProfile() {
-  const { data: me, isLoading } = useMe();
+  const meQuery = useMe();
+  const { data: me, isLoading } = meQuery;
   const logout = useLogout();
   const queryClient = useQueryClient();
 
@@ -58,6 +59,7 @@ export function MyProfile() {
     },
   });
 
+  if (meQuery.isError) return <QueryFeedback label="프로필" query={meQuery} />;
   if (isLoading) {
     return <p className="text-muted text-[12.5px]">불러오는 중입니다…</p>;
   }
@@ -102,8 +104,14 @@ export function MyProfile() {
         </div>
       </form>
 
+      {(save.error || logout.error) && (
+        <p role="alert" className="text-muted mt-4 text-[12.5px]">
+          {save.error?.message ?? logout.error?.message}
+        </p>
+      )}
       <button
         type="button"
+        disabled={logout.isPending}
         onClick={() => logout.mutate()}
         className="text-muted hover:text-ink mt-8 text-[12px] underline"
       >

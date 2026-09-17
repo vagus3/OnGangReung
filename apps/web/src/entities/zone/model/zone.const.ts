@@ -1,4 +1,6 @@
-import type { SpotCategory, Zone } from "@/entities/spot";
+import type { components } from "@shg/api-client";
+type Zone = components["schemas"]["Zone"];
+type SpotCategory = components["schemas"]["SpotCategory"];
 
 export type ZoneInfo = {
   id: Zone;

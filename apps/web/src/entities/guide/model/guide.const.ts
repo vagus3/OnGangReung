@@ -1,4 +1,5 @@
-import type { Zone } from "@/entities/spot";
+import type { components } from "@shg/api-client";
+type Zone = components["schemas"]["Zone"];
 
 /**
  * 안내 탭의 권역별 콘텐츠.

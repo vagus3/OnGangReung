@@ -18,7 +18,13 @@ import { GuideStays } from "./GuideStays";
 import { GuideTransport } from "./GuideTransport";
 import { GuideWeather } from "./GuideWeather";
 
-export function ZoneGuide({ festivals }: { festivals: Festival[] }) {
+export function ZoneGuide({
+  festivals,
+  festivalsUnavailable = false,
+}: {
+  festivals: Festival[];
+  festivalsUnavailable?: boolean;
+}) {
   const [selected, setSelected] = useState(GUIDE_ZONES[0].id);
   const zone = GUIDE_ZONES.find((z) => z.id === selected) ?? GUIDE_ZONES[0];
   const { setRef, jump, activeIndex } = useGuideScrollSpy(
@@ -35,7 +41,9 @@ export function ZoneGuide({ festivals }: { festivals: Festival[] }) {
     <GuideEats key="eats" zone={zone} />,
     zoneFestivals.length === 0 ? (
       <p key="festival" className="text-muted text-[12.5px]">
-        이 권역에 등록된 축제가 없습니다.
+        {festivalsUnavailable
+          ? "축제 정보를 불러오지 못했습니다."
+          : "이 권역에 등록된 축제가 없습니다."}
       </p>
     ) : (
       <div key="festival" className="border-line border-t">
@@ -75,7 +83,7 @@ export function ZoneGuide({ festivals }: { festivals: Festival[] }) {
       </div>
 
       <div className="grid gap-10 px-4 py-8 sm:px-12 lg:grid-cols-[minmax(0,1fr)_200px]">
-        <div>
+        <div className="min-w-0">
           {GUIDE_SECTION_LABELS.map((label, index) => (
             <section
               key={label}

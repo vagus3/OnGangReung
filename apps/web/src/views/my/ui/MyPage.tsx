@@ -10,7 +10,7 @@ import {
   MyPolicies,
   MyProfile,
   MySaves,
-} from "@/features/my-page";
+} from "@/widgets/my-page";
 import { ThemeToggle } from "@/shared/theme";
 import { SectionHeading } from "@/shared/ui";
 

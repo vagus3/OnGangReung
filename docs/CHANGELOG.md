@@ -65,6 +65,7 @@
 - 회원 AI 코스 단건 조회의 소유권 검사, 계정 변경 시 캐시 초기화·사용자별 키 적용
 - 동기 AI SDK 호출을 스레드에서 실행하고 기간 입력 검증·모델 환경설정 추가
 - 지도 팝업을 HTML 문자열에서 DOM 텍스트로 전환
+- 안내·마이페이지 조합을 widgets로 옮겨 FSD 동일 레이어 교차 의존 제거
 - /posts 정적 프리렌더로 인한 웹 빌드 실패 (API 없이 빌드하면 ECONNREFUSED로
   죽어 CI build 단계도 실패 상태였음). force-dynamic으로 전환
 - husky v10에서 실패할 deprecated 부트스트랩 라인 제거

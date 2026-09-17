@@ -1,15 +1,24 @@
 "use client";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { festivalApi, festivalKeys } from "@/entities/festival";
-import { ZoneGuide } from "@/features/zone-guide";
+import { QueryFeedback } from "@/shared/ui";
+import { ZoneGuide } from "@/widgets/zone-guide";
 
 export function InfoSections() {
-  const { data: festivals } = useSuspenseQuery({
+  const festivals = useQuery({
     queryKey: festivalKeys.list(),
     queryFn: () => festivalApi.list(),
   });
 
-  return <ZoneGuide festivals={festivals} />;
+  return (
+    <>
+      {!festivals.data && <QueryFeedback label="축제 정보" query={festivals} />}
+      <ZoneGuide
+        festivals={festivals.data ?? []}
+        festivalsUnavailable={festivals.isError}
+      />
+    </>
+  );
 }

@@ -1,4 +1,5 @@
-import type { Zone } from "@/entities/spot";
+import type { components } from "@shg/api-client";
+type Zone = components["schemas"]["Zone"];
 
 export const festivalKeys = {
   all: ["festivals"] as const,
