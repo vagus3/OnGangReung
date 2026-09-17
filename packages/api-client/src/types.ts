@@ -266,6 +266,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Reviews */
+        get: operations["list_reviews_api_v1_reviews_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health": {
         parameters: {
             query?: never;
@@ -507,6 +524,35 @@ export interface components {
             home_region?: string | null;
             /** Travel Style */
             travel_style?: string | null;
+        };
+        /** ReviewRead */
+        ReviewRead: {
+            /** Id */
+            id: number;
+            /** Author Name */
+            author_name: string;
+            /** Country */
+            country: string;
+            /** Rating */
+            rating: number;
+            /** Body */
+            body: string;
+            /** Spot Label */
+            spot_label: string;
+            /** Helpful Count */
+            helpful_count: number;
+        };
+        /**
+         * ReviewSummary
+         * @description 홈 카루셀이 쓰는 요약. 평균과 건수를 매번 계산하지 않도록 함께 준다.
+         */
+        ReviewSummary: {
+            /** Count */
+            count: number;
+            /** Average */
+            average: number;
+            /** Items */
+            items: components["schemas"]["ReviewRead"][];
         };
         /** SignupRequest */
         SignupRequest: {
@@ -1309,6 +1355,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_reviews_api_v1_reviews_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewSummary"];
                 };
             };
         };

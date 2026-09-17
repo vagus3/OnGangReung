@@ -895,6 +895,27 @@
         }
       }
     },
+    "/api/v1/reviews": {
+      "get": {
+        "tags": [
+          "reviews"
+        ],
+        "summary": "List Reviews",
+        "operationId": "list_reviews_api_v1_reviews_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewSummary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "tags": [
@@ -1518,6 +1539,76 @@
           "nickname"
         ],
         "title": "ProfileUpdate"
+      },
+      "ReviewRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "author_name": {
+            "type": "string",
+            "title": "Author Name"
+          },
+          "country": {
+            "type": "string",
+            "title": "Country"
+          },
+          "rating": {
+            "type": "integer",
+            "title": "Rating"
+          },
+          "body": {
+            "type": "string",
+            "title": "Body"
+          },
+          "spot_label": {
+            "type": "string",
+            "title": "Spot Label"
+          },
+          "helpful_count": {
+            "type": "integer",
+            "title": "Helpful Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "author_name",
+          "country",
+          "rating",
+          "body",
+          "spot_label",
+          "helpful_count"
+        ],
+        "title": "ReviewRead"
+      },
+      "ReviewSummary": {
+        "properties": {
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "average": {
+            "type": "number",
+            "title": "Average"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ReviewRead"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "count",
+          "average",
+          "items"
+        ],
+        "title": "ReviewSummary",
+        "description": "홈 카루셀이 쓰는 요약. 평균과 건수를 매번 계산하지 않도록 함께 준다."
       },
       "SignupRequest": {
         "properties": {
