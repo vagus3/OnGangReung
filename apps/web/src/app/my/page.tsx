@@ -1,10 +1,8 @@
-import { ComingSoon } from "@/views/coming-soon";
+import { MyPage } from "@/views/my";
+
+// 저장·스탬프가 브라우저 보관이라 서버에서 미리 그릴 것이 없다.
+export const dynamic = "force-dynamic";
 
 export default function Page() {
-  return (
-    <ComingSoon
-      title="마이페이지"
-      description="저장한 장소와 방문 스탬프를 여기에 모읍니다."
-    />
-  );
+  return <MyPage />;
 }

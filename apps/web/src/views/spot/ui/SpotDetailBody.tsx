@@ -5,6 +5,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { spotApi, spotKeys } from "@/entities/spot";
 import { CATEGORY_LABELS, findZone } from "@/entities/zone";
+import { SaveButton } from "@/features/my-saves";
 import { SpotFacts, SpotMenu } from "@/features/spot-detail";
 import { GeoMap } from "@/shared/ui";
 
@@ -67,6 +68,10 @@ export function SpotDetailBody({ slug }: { slug: string }) {
           {spot.editorial_desc}
         </p>
       )}
+
+      <div className="mt-6">
+        <SaveButton slug={spot.slug} />
+      </div>
 
       <div className="mt-8 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
         <div className="space-y-8">
