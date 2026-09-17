@@ -38,19 +38,45 @@ class Spot(Base):
     slug: Mapped[str] = mapped_column(String(80), unique=True, index=True)
     name: Mapped[str] = mapped_column(String(200))
 
-    # 네이티브 ENUM 대신 VARCHAR + CHECK을 쓴다. 테스트가 인메모리 SQLite로
+    # 네이티브 ENUM 대신 VARCHAR를 쓴다. 테스트가 인메모리 SQLite로
     # 돌아 네이티브 ENUM이 없고, Alembic autogenerate가 ENUM 값 추가를
     # 제대로 잡지 못한다. Python 쪽 타입 안전성은 StrEnum이 유지한다.
-    zone: Mapped[Zone] = mapped_column(Enum(Zone, native_enum=False, length=20), index=True)
+    zone: Mapped[Zone] = mapped_column(
+        Enum(
+            Zone,
+            values_callable=lambda members: [m.value for m in members],
+            native_enum=False,
+            length=20,
+        ),
+        index=True,
+    )
     category: Mapped[SpotCategory] = mapped_column(
-        Enum(SpotCategory, native_enum=False, length=20), index=True
+        Enum(
+            SpotCategory,
+            values_callable=lambda members: [m.value for m in members],
+            native_enum=False,
+            length=20,
+        ),
+        index=True,
     )
     span: Mapped[SpotSpan] = mapped_column(
-        Enum(SpotSpan, native_enum=False, length=10),
+        Enum(
+            SpotSpan,
+            values_callable=lambda members: [m.value for m in members],
+            native_enum=False,
+            length=10,
+        ),
         server_default=SpotSpan.STD.value,
         default=SpotSpan.STD,
     )
-    rail: Mapped[HomeRail | None] = mapped_column(Enum(HomeRail, native_enum=False, length=10))
+    rail: Mapped[HomeRail | None] = mapped_column(
+        Enum(
+            HomeRail,
+            values_callable=lambda members: [m.value for m in members],
+            native_enum=False,
+            length=10,
+        )
+    )
 
     sticker: Mapped[str | None] = mapped_column(String(60))
     editorial_desc: Mapped[str] = mapped_column(Text)

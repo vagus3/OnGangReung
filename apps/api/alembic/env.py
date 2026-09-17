@@ -13,7 +13,8 @@ config = context.config
 
 # DB URL은 alembic.ini가 아니라 앱 설정(settings.database_url)에서 주입한다.
 # 환경변수 DATABASE_URL 하나로 앱과 마이그레이션이 같은 DB를 바라보게 하기 위함.
-config.set_main_option("sqlalchemy.url", settings.database_url)
+# ConfigParser의 보간 문법과 URL 인코딩의 %가 충돌하지 않게 이스케이프한다.
+config.set_main_option("sqlalchemy.url", settings.database_url.replace("%", "%%"))
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

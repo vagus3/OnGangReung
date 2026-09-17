@@ -29,7 +29,15 @@ class Festival(Base):
     badge: Mapped[str | None] = mapped_column(String(20))
     is_now: Mapped[bool] = mapped_column(Boolean, server_default="0", default=False)
 
-    zone: Mapped[Zone] = mapped_column(Enum(Zone, native_enum=False, length=20), index=True)
+    zone: Mapped[Zone] = mapped_column(
+        Enum(
+            Zone,
+            values_callable=lambda members: [m.value for m in members],
+            native_enum=False,
+            length=20,
+        ),
+        index=True,
+    )
     # 권역 enum과 별개로 디자인이 쓰는 표시 문구 ('시내 · 안목권' 등)
     zone_label: Mapped[str | None] = mapped_column(String(40))
     place: Mapped[str] = mapped_column(String(200))

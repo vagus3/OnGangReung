@@ -63,6 +63,8 @@
 
 ### Fixed
 
+- SQLAlchemy enum 저장값과 마이그레이션 기본값 불일치 수정.
+  기존 데이터를 변환하는 0008 추가, 실제 마이그레이션 왕복 회귀 테스트 추가
 - /posts 정적 프리렌더로 인한 웹 빌드 실패 (API 없이 빌드하면 ECONNREFUSED로
   죽어 CI build 단계도 실패 상태였음). force-dynamic으로 전환
 - husky v10에서 실패할 deprecated 부트스트랩 라인 제거
