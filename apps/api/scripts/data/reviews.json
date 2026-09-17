@@ -1,0 +1,42 @@
+[
+  {
+    "author_name": "Sarah M.",
+    "country": "미국",
+    "rating": 5,
+    "body": "경포호수 일출이 정말 아름다웠어요. 다국어 안내가 있어서 처음 온 사람도 헤매지 않았습니다.",
+    "spot_label": "경포호수",
+    "helpful_count": 12
+  },
+  {
+    "author_name": "田中 一郎",
+    "country": "일본",
+    "rating": 4,
+    "body": "오프라인에서도 지도를 볼 수 있어서 데이터 걱정 없이 다녔어요. 주문진에서 신호가 약했는데 저장한 코스가 그대로 열렸습니다.",
+    "spot_label": "주문진 수산시장",
+    "helpful_count": 8
+  },
+  {
+    "author_name": "陳美玲",
+    "country": "대만",
+    "rating": 5,
+    "body": "AI 추천 코스 덕분에 1박 2일에 핵심만 골라 봤어요. 이동 동선이 겹치지 않게 짜여서 좋았습니다.",
+    "spot_label": "안목 커피거리",
+    "helpful_count": 15
+  },
+  {
+    "author_name": "이현우",
+    "country": "한국",
+    "rating": 5,
+    "body": "휠체어 대여를 경포에서 받아 부모님과 함께 해변 무장애길을 끝까지 걸었습니다. 예약 없이 가능했어요.",
+    "spot_label": "경포해변",
+    "helpful_count": 26
+  },
+  {
+    "author_name": "Léa D.",
+    "country": "프랑스",
+    "rating": 4,
+    "body": "커피 거리에서 로스터리 세 곳을 돌았어요. 번역 문구 재생 기능이 주문할 때 유용했습니다.",
+    "spot_label": "안목 커피거리",
+    "helpful_count": 9
+  }
+]
