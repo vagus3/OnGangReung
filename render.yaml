@@ -1,0 +1,43 @@
+databases:
+  - name: ongangreung-db
+    plan: free
+    databaseName: ongangreung
+    user: ongangreung
+
+services:
+  - type: web
+    name: ongangreung-api
+    runtime: docker
+    dockerfilePath: apps/api/Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /health
+    # Dockerfile은 마이그레이션을 컨테이너 시작과 의도적으로 분리한다
+    # (docker-compose full 프로필도 별도 run으로 실행). Render 배포에서는
+    # 매 배포 전에 한 번 실행해 스키마를 최신으로 맞춘다. seed_* 스크립트는
+    # 기본값이 "없는 것만 추가"라 매 배포마다 실행해도 중복이 생기지 않는다 —
+    # 관리형 DB라 직접 seed 커맨드를 실행할 셸 접근이 없어 여기서 겸한다.
+    preDeployCommand: >-
+      uv run --no-sync alembic upgrade head &&
+      uv run --no-sync python -m scripts.seed_spots &&
+      uv run --no-sync python -m scripts.seed_themes &&
+      uv run --no-sync python -m scripts.seed_festivals &&
+      uv run --no-sync python -m scripts.seed_reviews
+    envVars:
+      # Render가 주는 connectionString은 postgresql:// 스킴이라 asyncpg
+      # 드라이버(postgresql+asyncpg://)와 맞지 않는다. 배포 후 대시보드에서
+      # 실제 값으로 덮어써야 한다 (docs/DEPLOY-RENDER.md 참고).
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ongangreung-db
+          property: connectionString
+      - key: CORS_ORIGINS
+        value: https://on-gang-reung-web.vercel.app,https://on-gang-reung-web-vagus3s-projects.vercel.app
+      - key: ANTHROPIC_MODEL
+        value: claude-opus-5
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: TOURAPI_SERVICE_KEY
+        sync: false
+      - key: SESSION_COOKIE_SECURE
+        value: "true"

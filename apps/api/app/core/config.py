@@ -1,3 +1,4 @@
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -12,6 +13,21 @@ class Settings(BaseSettings):
 
     database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/app_dev"
     cors_origins: str = "http://localhost:3000"
+
+    @field_validator("database_url")
+    @classmethod
+    def _use_asyncpg_driver(cls, value: str) -> str:
+        # 관리형 Postgres(Render, Railway, Heroku류)가 주는 연결 문자열은
+        # 전부 postgresql:// / postgres:// 스킴이다. create_async_engine은
+        # 드라이버가 명시된 URL이 필요하므로 여기서 한 번만 맞춰준다 —
+        # 그러지 않으면 모든 배포지마다 DATABASE_URL을 손으로 고쳐야 한다.
+        if value.startswith("postgresql+asyncpg://"):
+            return value
+        if value.startswith("postgresql://"):
+            return "postgresql+asyncpg://" + value.removeprefix("postgresql://")
+        if value.startswith("postgres://"):
+            return "postgresql+asyncpg://" + value.removeprefix("postgres://")
+        return value
 
     # 공공데이터포털 (data.go.kr). 기관별로 트래픽이 따로 집계되므로 키를
     # 용도별로 나눠 둔다. 인코딩 키가 아니라 디코딩 키를 넣어야 한다 —

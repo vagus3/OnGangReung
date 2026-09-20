@@ -10,6 +10,8 @@
 
 ### Added
 
+- Render 배포 설정 `render.yaml` — API 서비스 + 관리형 Postgres,
+  배포 전 마이그레이션·시드 자동 실행 (CORS_ORIGINS는 Vercel 도메인 기준)
 - Tailwind CSS v4 스타일링 레이어. 디자인 캔버스의 oklch 토큰을 `@theme`으로
   옮기고, 다크 모드는 `data-theme` 속성 변형으로 처리 (ADR 006)
 - 공공데이터 연동 계층 설계와 기능별 API 지도 `docs/api/public-data-apis.md`.
@@ -60,6 +62,9 @@
 
 ### Fixed
 
+- DATABASE_URL이 `postgresql://`(Render·Railway 등 관리형 Postgres의 기본
+  스킴)로 와도 asyncpg 드라이버로 자동 보정. 배포지마다 손으로 스킴을
+  고치지 않아도 된다
 - API 장애 시 홈·안내·테마·상세 화면의 전환 실패를 해소하고 재시도 UI 추가.
   홈의 관광지·축제·후기 요청을 독립적으로 처리
 - SQLAlchemy enum 저장값과 마이그레이션 기본값 불일치 수정.
