@@ -15,6 +15,7 @@ import { CourseCard, CourseWizard, PRESETS } from "@/features/ai-course";
 import { QueryFeedback } from "@/shared/ui";
 
 import { AiAtmosphere } from "./AiAtmosphere";
+import { AiNavRail } from "./AiNavRail";
 
 const DISCLAIMER =
   "AI 추천 일정은 실제 영업시간 및 현장 상황과 다를 수 있습니다.";
@@ -60,6 +61,7 @@ function AiCourseWorkspace({ userId }: { userId?: number }) {
       <div className="ai-caustic" aria-hidden="true" />
       <div className="ai-scrim" aria-hidden="true" />
       <AiAtmosphere />
+      <AiNavRail />
 
       <div className="relative z-10 mx-auto flex max-w-[1360px]">
         {!sidebarOpen && (
