@@ -2,15 +2,22 @@ import Link from "next/link";
 
 import { NIGHT_SPOTS } from "@/entities/content";
 
+import { StarField } from "./StarField";
+
 // 고정 야간색. bg-ink 같은 토큰을 쓰면 다크 모드에서 뒤집혀 이 섹션만 밝은
 // 패널이 된다 — 디자인도 여기는 고정색을 쓴다.
 const NIGHT_BG = "oklch(14% 0.035 258)";
 
-/** 홈 마감 섹션. 디자인은 별 캔버스를 깔지만 연출은 뒤로 미룬다. */
+/** 홈 마감 섹션. 디자인의 별 캔버스(마우스 시차 반짝임)를 StarField로 재현한다. */
 export function HomeNight() {
   return (
-    <section className="py-16" style={{ background: NIGHT_BG }}>
-      <div className="px-4 sm:px-12">
+    <section
+      className="relative overflow-hidden py-16"
+      style={{ background: NIGHT_BG }}
+    >
+      <StarField />
+
+      <div className="relative z-10 px-4 sm:px-12">
         <p className="text-[10.5px] font-bold tracking-[0.2em] text-white/60">
           AFTER DARK
         </p>
@@ -19,7 +26,7 @@ export function HomeNight() {
         </h2>
       </div>
 
-      <ul className="mt-6 grid gap-3 px-4 sm:px-12 md:grid-cols-2 lg:grid-cols-4">
+      <ul className="relative z-10 mt-6 grid gap-3 px-4 sm:px-12 md:grid-cols-2 lg:grid-cols-4">
         {NIGHT_SPOTS.map((spot) => (
           <li key={spot.name} className="rounded-[20px] bg-white/10 p-5">
             <p className="text-[10.5px] text-white/60">{spot.tag}</p>
@@ -33,7 +40,7 @@ export function HomeNight() {
         ))}
       </ul>
 
-      <div className="mt-8 flex flex-wrap gap-2 px-4 sm:px-12">
+      <div className="relative z-10 mt-8 flex flex-wrap gap-2 px-4 sm:px-12">
         <Link
           href="/theme"
           className="inline-flex h-11 items-center rounded-[14px] bg-white px-4 text-[12.5px] font-bold text-[oklch(14%_0.035_258)]"

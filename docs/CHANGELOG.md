@@ -10,6 +10,9 @@
 
 ### Added
 
+- 홈 야경 섹션에 마우스 시차 반응하는 별 반짝임 캔버스(`StarField`) 추가.
+  디자인 캔버스의 연출이었으나 구현에서 뒤로 미뤄뒀던 부분
+  (`prefers-reduced-motion`에서는 정지 별만 렌더링)
 - Render 배포 설정 `render.yaml` — API 서비스 + 관리형 Postgres,
   배포 전 마이그레이션·시드 자동 실행 (CORS_ORIGINS는 Vercel 도메인 기준)
 - Tailwind CSS v4 스타일링 레이어. 디자인 캔버스의 oklch 토큰을 `@theme`으로
