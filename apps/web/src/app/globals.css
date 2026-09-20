@@ -480,14 +480,92 @@ a:hover {
   );
   transform: rotate(-8deg);
 }
+/* AI 코스 — 물속 연출. 값은 디자인 캔버스의 aiBgStyle / aiCausticStyle /
+   aiScrimStyle / aiGlowStyle을 그대로 옮겼다 (다크 분기 기준 — 이 화면은
+   테마와 무관하게 고정 야간색이다). 움직이는 두 겹(파문 캔버스·글로우)은
+   views/ai/ui/AiAtmosphere.tsx가 맡는다. */
 .ai-workspace {
   background:
     radial-gradient(
-      circle at 76% 15%,
-      oklch(54% 0.13 226 / 0.19),
-      transparent 32%
+      120% 90% at 18% 0%,
+      oklch(34% 0.1 250) 0%,
+      oklch(24% 0.07 262) 45%,
+      oklch(17% 0.05 265) 100%
     ),
-    linear-gradient(145deg, oklch(14% 0.036 258), oklch(22% 0.052 240));
+    linear-gradient(
+      155deg,
+      oklch(30% 0.09 245) 0%,
+      oklch(22% 0.06 258) 55%,
+      oklch(30% 0.08 40) 100%
+    );
+  background-blend-mode: screen, normal;
+}
+
+/* 수면 아래에서 빛이 굴절돼 생기는 물결 무늬(caustic). 동심원을 두 벌
+   겹치고 swell로 아주 천천히 흔든다. */
+.ai-caustic {
+  position: absolute;
+  inset: -12%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: soft-light;
+  background:
+    repeating-radial-gradient(
+      circle at 30% 25%,
+      oklch(98% 0.02 200 / 0.5) 0 1px,
+      transparent 1px 42px
+    ),
+    repeating-radial-gradient(
+      circle at 72% 68%,
+      oklch(98% 0.02 210 / 0.4) 0 1px,
+      transparent 1px 56px
+    );
+  animation: swell 15s ease-in-out infinite;
+}
+
+/* 본문이 바닥에 가라앉지 않게 위아래를 눌러주는 막 */
+.ai-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    oklch(16% 0.05 265 / 0.92),
+    oklch(20% 0.05 258 / 0.5) 52%,
+    oklch(18% 0.05 262 / 0.78)
+  );
+}
+
+/* 포인터를 따라다니는 물빛. transform만 갱신한다 (AiAtmosphere). */
+.ai-glow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 190px;
+  height: 190px;
+  margin-left: -95px;
+  margin-top: -95px;
+  z-index: 3;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  will-change: transform;
+  background: radial-gradient(
+    circle,
+    oklch(74% 0.09 220 / 0.4) 0%,
+    transparent 68%
+  );
+}
+
+@keyframes swell {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-1.5%, 1.5%, 0) scale(1.06);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -495,7 +573,8 @@ a:hover {
   .animate-stagger-in,
   .hero-cloud,
   .hero-sea i,
-  .ai-orb {
+  .ai-orb,
+  .ai-caustic {
     animation: none;
   }
 }

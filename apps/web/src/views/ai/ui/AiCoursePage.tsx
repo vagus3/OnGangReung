@@ -14,6 +14,8 @@ import { useMe } from "@/entities/user";
 import { CourseCard, CourseWizard, PRESETS } from "@/features/ai-course";
 import { QueryFeedback } from "@/shared/ui";
 
+import { AiAtmosphere } from "./AiAtmosphere";
+
 const DISCLAIMER =
   "AI 추천 일정은 실제 영업시간 및 현장 상황과 다를 수 있습니다.";
 
@@ -50,13 +52,74 @@ function AiCourseWorkspace({ userId }: { userId?: number }) {
 
   const historyItems = history.data ?? [];
   const empty = courses.length === 0;
+  // 디자인 캔버스도 기본값이 열린 상태다 (sidebarOpen: true).
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <div className="ai-workspace min-h-[calc(100svh-4rem)] text-white">
-      <div className="mx-auto flex max-w-[1360px]">
+    <div className="ai-workspace relative isolate min-h-[calc(100svh-4rem)] overflow-hidden text-white">
+      <div className="ai-caustic" aria-hidden="true" />
+      <div className="ai-scrim" aria-hidden="true" />
+      <AiAtmosphere />
+
+      <div className="relative z-10 mx-auto flex max-w-[1360px]">
+        {!sidebarOpen && (
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(true)}
+            aria-label="기록 열기"
+            title="기록 열기"
+            className="absolute top-6 left-4 z-20 hidden size-10 items-center justify-center rounded-full border border-white/30 bg-white/14 backdrop-blur transition hover:bg-white/25 lg:flex"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M4 7h16" />
+              <path d="M4 12h16" />
+              <path d="M4 17h16" />
+            </svg>
+          </button>
+        )}
         {/* 대화 사이드바. 디자인 캔버스는 이 자리에 '새 코스 만들기'와
             최근 대화를 둔다 — 데스크톱에서만 보인다. */}
-        <aside className="hidden w-[260px] shrink-0 flex-col gap-5 border-r border-white/10 px-5 py-6 lg:flex">
+        <aside
+          aria-hidden={!sidebarOpen}
+          className={`hidden shrink-0 flex-col gap-5 overflow-hidden bg-[oklch(20%_0.05_250/0.32)] backdrop-blur-[14px] transition-all duration-300 lg:flex ${
+            sidebarOpen
+              ? "w-[258px] border-r border-white/12 px-5 py-6 opacity-100"
+              : "pointer-events-none w-0 border-0 px-0 py-6 opacity-0"
+          }`}
+        >
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={() => setSidebarOpen(false)}
+              aria-label="기록 닫기"
+              title="기록 닫기"
+              className="flex size-8 items-center justify-center rounded-full border border-white/25 bg-white/10 text-white/80 transition hover:bg-white/20"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <path d="M6 6l12 12" />
+                <path d="M18 6L6 18" />
+              </svg>
+            </button>
+          </div>
+
           <button
             type="button"
             onClick={() => {
