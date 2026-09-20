@@ -12,21 +12,23 @@ services:
     dockerContext: .
     plan: free
     healthCheckPath: /health
-    # Dockerfile은 마이그레이션을 컨테이너 시작과 의도적으로 분리한다
-    # (docker-compose full 프로필도 별도 run으로 실행). Render 배포에서는
-    # 매 배포 전에 한 번 실행해 스키마를 최신으로 맞춘다. seed_* 스크립트는
-    # 기본값이 "없는 것만 추가"라 매 배포마다 실행해도 중복이 생기지 않는다 —
-    # 관리형 DB라 직접 seed 커맨드를 실행할 셸 접근이 없어 여기서 겸한다.
-    preDeployCommand: >-
-      uv run --no-sync alembic upgrade head &&
+    # preDeployCommand는 free 플랜에서 지원하지 않는다. 대신 컨테이너
+    # 시작 커맨드 자체에 마이그레이션·시드를 앞세운다. alembic upgrade는
+    # 이미 최신이면 없는 일이고, seed_* 스크립트는 기본값이 "없는 것만
+    # 추가"라 매 시작마다 실행해도(자유 티어는 유휴 시 슬립 후 재기동한다)
+    # 중복이 생기지 않는다. Dockerfile의 CMD(마이그레이션과 분리된
+    # uvicorn 단독 실행)를 여기서 덮어쓴다.
+    dockerCommand: >-
+      sh -c "uv run --no-sync alembic upgrade head &&
       uv run --no-sync python -m scripts.seed_spots &&
       uv run --no-sync python -m scripts.seed_themes &&
       uv run --no-sync python -m scripts.seed_festivals &&
-      uv run --no-sync python -m scripts.seed_reviews
+      uv run --no-sync python -m scripts.seed_reviews &&
+      uv run --no-sync uvicorn app.main:app --host 0.0.0.0 --port 8000"
     envVars:
-      # Render가 주는 connectionString은 postgresql:// 스킴이라 asyncpg
-      # 드라이버(postgresql+asyncpg://)와 맞지 않는다. 배포 후 대시보드에서
-      # 실제 값으로 덮어써야 한다 (docs/DEPLOY-RENDER.md 참고).
+      # Render가 주는 connectionString은 postgresql:// 스킴이라 그대로면
+      # asyncpg 드라이버와 안 맞는다. Settings.database_url의 field_validator
+      # (app/core/config.py)가 자동으로 postgresql+asyncpg://로 바꾼다.
       - key: DATABASE_URL
         fromDatabase:
           name: ongangreung-db
