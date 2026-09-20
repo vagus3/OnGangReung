@@ -20,7 +20,8 @@ describe("CourseWizard", () => {
     await user.click(screen.getByRole("button", { name: "자연" }));
     await user.click(screen.getByRole("button", { name: "다음 →" }));
 
-    expect(screen.getByText("STEP 2")).toBeInTheDocument();
+    // 라벨은 디자인 캔버스 문구를 그대로 쓴다 ("STEP 2 · 기간")
+    expect(screen.getByText(/STEP 2/)).toBeInTheDocument();
   });
 
   it("이전으로 돌아가면 고른 관심사가 남아 있다", async () => {

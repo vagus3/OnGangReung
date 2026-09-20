@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { POLICIES } from "@/entities/content";
 import { WEATHER_DISCLAIMER } from "@/entities/guide";
@@ -12,11 +15,18 @@ const LEGAL_LINKS = POLICIES.map((policy) => ({
   label: policy.title,
 }));
 
+// AI 코스는 디자인 캔버스에서 전체화면 몰입 화면이라 푸터가 없다.
+// 어두운 작업 화면 밑에 밝은 푸터가 붙으면 그 흐름이 끊긴다.
+const NO_FOOTER = ["/ai"];
+
 /**
  * 데스크톱 전용 하단 푸터. 디자인 캔버스에 있었으나 구현에서 빠져 있던
  * 조각 — 브랜드 소개, 약관 링크, AI·날씨 면책 문구, 문의처를 담는다.
  */
 export function SiteFooter() {
+  const pathname = usePathname();
+  if (NO_FOOTER.includes(pathname)) return null;
+
   return (
     <footer className="border-line bg-ink text-paper mt-16 hidden border-t px-4 pt-14 pb-10 sm:px-12 md:block">
       <div className="mx-auto max-w-[1360px]">

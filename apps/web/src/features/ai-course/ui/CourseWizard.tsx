@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import type { CourseRequest } from "@/entities/ai-course";
-import { Button, Chip } from "@/shared/ui";
+import { Chip } from "@/shared/ui";
 
 import { DURATIONS, INTERESTS } from "../model/constants";
 
@@ -15,7 +15,10 @@ type Props = {
   isPending?: boolean;
 };
 
-/** 디자인의 2단계 위저드 — 관심사 고르고 기간 고르기. */
+/**
+ * 디자인 캔버스의 2단계 위저드. 어두운 AI 코스 화면 위에 얹히는
+ * 가운데 정렬 패널이다 — STEP 라벨, 질문, 칩, 하단 CTA 순.
+ */
 export function CourseWizard({ onSubmit, isPending = false }: Props) {
   const [phase, setPhase] = useState<"interests" | "duration">("interests");
   const [interests, setInterests] = useState<string[]>([]);
@@ -28,56 +31,32 @@ export function CourseWizard({ onSubmit, isPending = false }: Props) {
     );
   }
 
-  if (phase === "interests") {
-    return (
-      <div>
-        <p className="text-muted text-[10.5px] font-bold tracking-[0.2em]">
-          STEP 1
-        </p>
-        <h3 className="font-display text-ink mt-2 text-[20px]">
-          무엇을 보고 싶으세요?
-        </h3>
-
-        <ul className="mt-5 flex flex-wrap gap-2">
-          {INTERESTS.map((item) => (
-            <li key={item}>
-              <Chip
-                selected={interests.includes(item)}
-                onClick={() => toggle(item)}
-              >
-                {item}
-              </Chip>
-            </li>
-          ))}
-        </ul>
-
-        <div className="mt-6">
-          <Button
-            onClick={() => setPhase("duration")}
-            disabled={interests.length === 0}
-          >
-            {interests.length === 0
-              ? "관심사를 하나 이상 골라주세요"
-              : "다음 →"}
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  const onInterests = phase === "interests";
 
   return (
-    <div>
-      <p className="text-muted text-[10.5px] font-bold tracking-[0.2em]">
-        STEP 2
+    <div className="rounded-[20px] border border-white/12 bg-white/5 px-6 py-8 text-center sm:px-10">
+      <p className="text-[11px] font-bold tracking-[0.22em] text-white/55">
+        {onInterests ? "STEP 1 · 관심사 (복수 선택)" : "STEP 2 · 기간"}
       </p>
-      <h3 className="font-display text-ink mt-2 text-[20px]">며칠 머무세요?</h3>
+      <p className="mt-2.5 text-[14px] text-white/85">
+        {onInterests
+          ? "강릉에서 어떤 경험을 하고 싶으세요?"
+          : "얼마나 머무르시나요?"}
+      </p>
 
-      <ul className="mt-5 flex flex-wrap gap-2">
-        {DURATIONS.map((item) => (
+      <ul className="mt-6 flex flex-wrap justify-center gap-3">
+        {(onInterests ? INTERESTS : DURATIONS).map((item) => (
           <li key={item}>
             <Chip
-              selected={duration === item}
-              onClick={() => setDuration(item)}
+              tone="onDark"
+              selected={
+                onInterests ? interests.includes(item) : duration === item
+              }
+              onClick={() =>
+                onInterests
+                  ? toggle(item)
+                  : setDuration(item as NonNullable<CourseRequest["duration"]>)
+              }
             >
               {item}
             </Chip>
@@ -85,16 +64,32 @@ export function CourseWizard({ onSubmit, isPending = false }: Props) {
         ))}
       </ul>
 
-      <div className="mt-6 flex gap-2">
-        <Button variant="secondary" onClick={() => setPhase("interests")}>
-          ← 이전
-        </Button>
-        <Button
-          onClick={() => onSubmit(interests, duration)}
-          disabled={isPending}
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+        {!onInterests && (
+          <button
+            type="button"
+            onClick={() => setPhase("interests")}
+            className="inline-flex h-11 items-center rounded-full border border-white/25 px-5 text-[13px] text-white/80 transition hover:bg-white/10"
+          >
+            ← 이전
+          </button>
+        )}
+        <button
+          type="button"
+          disabled={(onInterests && interests.length === 0) || isPending}
+          onClick={() =>
+            onInterests ? setPhase("duration") : onSubmit(interests, duration)
+          }
+          className="inline-flex h-11 items-center rounded-full bg-white/15 px-6 text-[13px] font-bold text-white transition hover:bg-white/25 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/45"
         >
-          {isPending ? "만드는 중…" : "코스 만들기"}
-        </Button>
+          {onInterests
+            ? interests.length === 0
+              ? "관심사를 하나 이상 골라주세요"
+              : "다음 →"
+            : isPending
+              ? "만드는 중…"
+              : "코스 만들기"}
+        </button>
       </div>
     </div>
   );

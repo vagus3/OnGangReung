@@ -12,7 +12,10 @@ import {
 } from "@/entities/ai-course";
 import { useMe } from "@/entities/user";
 import { CourseCard, CourseWizard, PRESETS } from "@/features/ai-course";
-import { Button, Card, QueryFeedback, SectionHeading } from "@/shared/ui";
+import { QueryFeedback } from "@/shared/ui";
+
+const DISCLAIMER =
+  "AI 추천 일정은 실제 영업시간 및 현장 상황과 다를 수 있습니다.";
 
 export function AiCoursePage() {
   const { data: user } = useMe();
@@ -46,148 +49,187 @@ function AiCourseWorkspace({ userId }: { userId?: number }) {
   });
 
   const historyItems = history.data ?? [];
+  const empty = courses.length === 0;
 
   return (
-    <main className="ai-workspace min-h-[calc(100svh-4rem)] pb-24 text-white md:pb-12">
-      <div className="mx-auto max-w-[1360px] border-b border-white/15 py-14 sm:py-20">
-        <SectionHeading
-          eyebrow="AI COURSE"
-          title="문장 하나로 일정을 짜볼까요?"
-          inverse
-        />
-        <p className="mt-3 max-w-[52ch] px-4 text-[13.5px] leading-relaxed text-white/60 sm:px-12">
-          관심사와 기간을 고르거나, 하고 싶은 말을 그대로 적어주세요.
-        </p>
-      </div>
+    <div className="ai-workspace min-h-[calc(100svh-4rem)] text-white">
+      <div className="mx-auto flex max-w-[1360px]">
+        {/* 대화 사이드바. 디자인 캔버스는 이 자리에 '새 코스 만들기'와
+            최근 대화를 둔다 — 데스크톱에서만 보인다. */}
+        <aside className="hidden w-[260px] shrink-0 flex-col gap-5 border-r border-white/10 px-5 py-6 lg:flex">
+          <button
+            type="button"
+            onClick={() => {
+              setCourses([]);
+              setPrompt("");
+            }}
+            className="w-full rounded-[12px] border border-white/15 bg-white/8 py-3 text-[13px] font-bold text-white transition hover:bg-white/15"
+          >
+            + 새 코스 만들기
+          </button>
 
-      <div className="mx-auto grid max-w-[1360px] gap-8 px-4 py-8 sm:px-12 lg:grid-cols-[minmax(0,1fr)_258px] lg:py-12">
-        <div className="min-w-0 space-y-8">
-          {courses.length === 0 && (
-            <>
-              <ul className="grid gap-3 sm:grid-cols-2">
-                {PRESETS.map((preset) => (
-                  <li key={preset.id}>
+          <div>
+            <p className="text-[11px] font-bold tracking-[0.2em] text-white/45">
+              최근 대화
+            </p>
+            {userId !== undefined && (history.isPending || history.isError) ? (
+              <QueryFeedback label="지난 코스" query={history} />
+            ) : historyItems.length === 0 ? (
+              <p className="mt-3 text-[12px] leading-relaxed text-white/55">
+                {userId === undefined
+                  ? "로그인하면 만든 코스가 여기에 쌓입니다."
+                  : "아직 만든 코스가 없습니다. 문장을 보내면 여기에 쌓입니다."}
+              </p>
+            ) : (
+              <ul className="mt-3 space-y-1">
+                {historyItems.map((course) => (
+                  <li key={course.id}>
                     <button
                       type="button"
-                      disabled={create.isPending}
                       onClick={() =>
-                        create.mutate({
-                          interests: preset.interests,
-                          duration: preset.duration,
-                          prompt: preset.prompt,
-                        })
+                        setCourses((prev) =>
+                          prev.some((c) => c.id === course.id)
+                            ? prev
+                            : [course, ...prev],
+                        )
                       }
-                      className="block w-full rounded-[20px] border border-white/15 bg-white/8 p-5 text-left transition hover:-translate-y-1 hover:border-white/35 hover:bg-white/12"
+                      className="w-full rounded-[10px] px-3 py-2.5 text-left transition hover:bg-white/8"
                     >
-                      <p className="text-[10.5px] text-white/45">
-                        {preset.meta}
-                      </p>
-                      <p className="font-display mt-1.5 text-[19px] text-white">
-                        {preset.title}
-                      </p>
-                      <p className="mt-2 text-[12px] leading-relaxed text-white/55">
-                        {preset.body}
-                      </p>
+                      <span className="block truncate text-[12.5px] text-white/85">
+                        {course.title}
+                      </span>
+                      <span className="mt-0.5 block text-[10.5px] text-white/45">
+                        {course.duration}
+                      </span>
                     </button>
                   </li>
                 ))}
               </ul>
+            )}
+          </div>
 
-              <Card className="shadow-[0_30px_80px_rgb(0_0_0/0.24)]">
+          <hr className="border-white/10" />
+          <p className="text-[11px] leading-relaxed text-white/40">
+            {DISCLAIMER}
+          </p>
+        </aside>
+
+        <main className="min-w-0 flex-1 px-4 py-10 sm:px-8 lg:py-14">
+          <div className="mx-auto w-full max-w-[730px]">
+            {empty && (
+              <>
+                <h1 className="font-display text-center text-[clamp(26px,3.6vw,36px)] leading-tight">
+                  어떤 여행을 하고 싶으세요?
+                </h1>
+                <p className="mt-3 text-center text-[13.5px] text-white/60">
+                  문장으로 적어도 되고, 아래에서 골라도 됩니다.
+                </p>
+
+                <ul className="mt-9 grid gap-5 sm:grid-cols-2">
+                  {PRESETS.map((preset) => (
+                    <li key={preset.id}>
+                      <button
+                        type="button"
+                        disabled={create.isPending}
+                        onClick={() =>
+                          create.mutate({
+                            interests: preset.interests,
+                            duration: preset.duration,
+                            prompt: preset.prompt,
+                          })
+                        }
+                        className="flex h-full w-full flex-col rounded-[18px] border border-white/12 bg-white/6 p-6 text-left transition hover:-translate-y-1 hover:border-white/30 hover:bg-white/10 disabled:cursor-not-allowed"
+                      >
+                        <p className="font-display text-[19px] text-white">
+                          {preset.title}
+                        </p>
+                        <p className="mt-2.5 text-[12.5px] leading-relaxed text-white/60">
+                          {preset.body}
+                        </p>
+                        <p className="mt-6 text-[11px] text-white/40">
+                          {preset.meta}
+                        </p>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="my-9 flex items-center gap-4">
+                  <span className="h-px flex-1 bg-white/12" />
+                  <span className="text-[12px] text-white/50">
+                    또는 하나씩 골라볼까요?
+                  </span>
+                  <span className="h-px flex-1 bg-white/12" />
+                </div>
+
                 <CourseWizard
                   isPending={create.isPending}
                   onSubmit={(interests, duration) =>
                     create.mutate({ interests, duration, prompt: "" })
                   }
                 />
-              </Card>
-            </>
-          )}
+              </>
+            )}
 
-          {create.isPending && (
-            <p role="status" className="text-muted text-[12.5px]">
-              코스를 만들고 있습니다…
-            </p>
-          )}
-          {create.isError && (
-            <p role="alert" className="text-[12.5px] text-[oklch(55%_0.19_25)]">
-              {create.error.message}
-            </p>
-          )}
-
-          {courses.map((course) => (
-            <CourseCard key={course.id} course={course} />
-          ))}
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (prompt.trim() === "") return;
-              create.mutate({ interests: [], duration: "1박2일", prompt });
-            }}
-            className={`border-line bg-paper rounded-[20px] border p-3 text-ink shadow-[0_20px_60px_rgb(0_0_0/0.25)] ${courses.length > 0 ? "sticky bottom-20 md:bottom-4" : "relative"}`}
-          >
-            <label htmlFor="ai-prompt" className="sr-only">
-              하고 싶은 말
-            </label>
-            <textarea
-              id="ai-prompt"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              rows={2}
-              maxLength={500}
-              placeholder="아이 둘과 1박 2일, 이동은 짧게"
-              className="text-ink w-full resize-none bg-transparent px-2 py-1 text-[13px] outline-none"
-            />
-            <div className="mt-2 flex justify-end">
-              <Button
-                type="submit"
-                disabled={create.isPending || prompt.trim() === ""}
+            {create.isPending && (
+              <p role="status" className="mt-6 text-[12.5px] text-white/70">
+                동선을 계산하는 중입니다…
+              </p>
+            )}
+            {create.isError && (
+              <p
+                role="alert"
+                className="mt-6 text-[12.5px] text-[oklch(72%_0.16_25)]"
               >
-                보내기
-              </Button>
-            </div>
-          </form>
-        </div>
+                {create.error.message}
+              </p>
+            )}
 
-        <aside>
-          <h2 className="text-[13px] font-bold text-white">지난 코스</h2>
-          {userId !== undefined && (history.isPending || history.isError) ? (
-            <QueryFeedback label="지난 코스" query={history} />
-          ) : historyItems.length === 0 ? (
-            <p className="text-muted mt-3 text-[11.5px] leading-relaxed">
-              {userId === undefined
-                ? "로그인하면 만든 코스가 여기에 남습니다."
-                : "아직 만든 코스가 없습니다."}
-            </p>
-          ) : (
-            <ul className="mt-3 space-y-2">
-              {historyItems.map((course) => (
-                <li key={course.id}>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setCourses((prev) =>
-                        prev.some((c) => c.id === course.id)
-                          ? prev
-                          : [course, ...prev],
-                      )
-                    }
-                    className="border-line hover:border-sea/40 w-full rounded-[14px] border p-3 text-left transition-colors"
-                  >
-                    <span className="text-ink block text-[12px] font-bold">
-                      {course.title}
-                    </span>
-                    <span className="text-muted mt-0.5 block text-[10.5px]">
-                      {course.duration}
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </aside>
+            {!empty && (
+              <div className="space-y-8">
+                {courses.map((course) => (
+                  <CourseCard key={course.id} course={course} />
+                ))}
+              </div>
+            )}
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (prompt.trim() === "") return;
+                create.mutate({ interests: [], duration: "1박2일", prompt });
+              }}
+              className={`mt-10 rounded-[16px] border border-white/12 bg-white/6 px-4 py-3 ${
+                empty ? "" : "sticky bottom-20 backdrop-blur md:bottom-4"
+              }`}
+            >
+              <label htmlFor="ai-prompt" className="sr-only">
+                하고 싶은 말
+              </label>
+              <div className="flex items-end gap-3">
+                <textarea
+                  id="ai-prompt"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  rows={2}
+                  maxLength={500}
+                  placeholder="예) 부모님과 천천히 걷는 이틀, 계단 적은 곳으로"
+                  className="min-w-0 flex-1 resize-none bg-transparent py-1 text-[13px] text-white placeholder:text-white/35 focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  disabled={create.isPending || prompt.trim() === ""}
+                  className="inline-flex h-10 shrink-0 items-center rounded-full bg-white/15 px-5 text-[12.5px] font-bold text-white transition hover:bg-white/25 disabled:cursor-not-allowed disabled:bg-white/8 disabled:text-white/40"
+                >
+                  전송 →
+                </button>
+              </div>
+            </form>
+
+            <p className="mt-3 text-[11px] text-white/40">{DISCLAIMER}</p>
+          </div>
+        </main>
       </div>
-    </main>
+    </div>
   );
 }
