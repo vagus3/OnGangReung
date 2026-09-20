@@ -4,6 +4,7 @@ export { Card } from "./Card";
 export { Chip } from "./Chip";
 export { ErrorBoundary } from "./ErrorBoundary";
 export { GeoMap, type GeoMapMode, type GeoPoint } from "./GeoMap";
+export { IconMenu, IconMenuItem } from "./IconMenu";
 export { Rail, RailItem } from "./Rail";
 export { SectionHeading } from "./SectionHeading";
 

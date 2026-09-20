@@ -9,6 +9,7 @@ import { useLogout } from "@/features/auth";
 import { ThemeToggle } from "@/shared/theme";
 
 import { isActiveTab, NAV_TABS } from "../model/tabs";
+import { LanguageMenu } from "./LanguageMenu";
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -38,9 +39,10 @@ export function SiteHeader() {
                 isActiveTab(pathname, tab.href) ? "page" : undefined
               }
               className={
+                // 활성 탭은 디자인처럼 채워진 알약이다
                 isActiveTab(pathname, tab.href)
-                  ? "text-ink shrink-0 rounded-full px-3 py-2 text-[12.5px] font-bold"
-                  : "text-muted hover:text-ink shrink-0 rounded-full px-3 py-2 text-[12.5px]"
+                  ? "bg-ink text-paper shrink-0 rounded-full px-4 py-2 text-[12.5px] font-bold"
+                  : "text-muted hover:text-ink shrink-0 rounded-full px-4 py-2 text-[12.5px]"
               }
             >
               {tab.label}
@@ -50,6 +52,7 @@ export function SiteHeader() {
 
         <div className="ml-auto flex shrink-0 items-center gap-2">
           <AiSearch />
+          <LanguageMenu />
           <ThemeToggle />
           <AuthLinks />
         </div>
