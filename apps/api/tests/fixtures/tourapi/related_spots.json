@@ -1,0 +1,31 @@
+{
+  "response": {
+    "header": { "resultCode": "0000", "resultMsg": "OK" },
+    "body": {
+      "items": {
+        "item": [
+          {
+            "tAtsNm": "경포해변",
+            "rlteTatsNm": "안목해변",
+            "rlteRank": "1",
+            "rlteCtgryLclsNm": "자연",
+            "rlteCtgryMclsNm": "해수욕장",
+            "rlteRegnNm": "강원특별자치도",
+            "rlteSignguNm": "강릉시"
+          },
+          {
+            "tAtsNm": "경포해변",
+            "rlteTatsNm": "오죽헌",
+            "rlteRank": "",
+            "rlteCtgryLclsNm": "역사",
+            "rlteRegnNm": "강원특별자치도",
+            "rlteSignguNm": "강릉시"
+          }
+        ]
+      },
+      "numOfRows": 100,
+      "pageNo": 1,
+      "totalCount": 2
+    }
+  }
+}

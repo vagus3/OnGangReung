@@ -1,0 +1,30 @@
+{
+  "response": {
+    "header": { "resultCode": "0000", "resultMsg": "OK" },
+    "body": {
+      "items": {
+        "item": [
+          {
+            "tAtsNm": "경포해변",
+            "areaCd": "32",
+            "areaNm": "강원특별자치도",
+            "signguCd": "32030",
+            "signguNm": "강릉시",
+            "baseYmd": "20260815",
+            "cnctrRate": "87.4"
+          },
+          {
+            "tAtsNm": "정동진",
+            "areaCd": "32",
+            "signguNm": "강릉시",
+            "baseYmd": "20260815",
+            "cnctrRate": ""
+          }
+        ]
+      },
+      "numOfRows": 100,
+      "pageNo": 1,
+      "totalCount": 2
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "response": {
+    "header": { "resultCode": "0000", "resultMsg": "OK" },
+    "body": {
+      "items": {
+        "item": [
+          {
+            "galContentId": "2717055",
+            "galTitle": "경포호 일출",
+            "galWebImageUrl": "http://tong.visitkorea.or.kr/cms/kor/2717055.jpg",
+            "galPhotographer": "홍길동",
+            "galSearchKeyword": "강릉,경포호,일출",
+            "galPhotographyLocation": "강원특별자치도 강릉시 경포로",
+            "galPhotographyMonth": "202410"
+          },
+          {
+            "galContentId": "2717056",
+            "galTitle": "안목 커피거리",
+            "galWebImageUrl": "http://tong.visitkorea.or.kr/cms/kor/2717056.jpg",
+            "galPhotographer": "",
+            "galSearchKeyword": "강릉,안목,커피",
+            "galPhotographyLocation": "",
+            "galPhotographyMonth": "잘못된값"
+          }
+        ]
+      },
+      "numOfRows": 30,
+      "pageNo": 1,
+      "totalCount": 2
+    }
+  }
+}

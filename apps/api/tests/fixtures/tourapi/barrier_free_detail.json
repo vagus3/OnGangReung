@@ -1,0 +1,26 @@
+{
+  "response": {
+    "header": { "resultCode": "0000", "resultMsg": "OK" },
+    "body": {
+      "items": {
+        "item": [
+          {
+            "contentid": "126508",
+            "parking": "장애인 전용 주차구역 4면, 주출입구까지 20m",
+            "route": "주차장에서 매표소까지 경사로로 이어집니다.",
+            "elevator": "",
+            "restroom": "1층에 장애인 화장실이 있습니다.",
+            "wheelchair": "수동 휠체어 2대 무료 대여",
+            "exit": "주출입구 턱 없음",
+            "brailleblock": "매표소까지 점자블록 설치",
+            "audioguide": "음성 안내 수신기 대여 가능",
+            "stroller": "유모차 대여 가능"
+          }
+        ]
+      },
+      "numOfRows": 1,
+      "pageNo": 1,
+      "totalCount": 1
+    }
+  }
+}

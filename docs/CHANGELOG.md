@@ -10,6 +10,10 @@
 
 ### Added
 
+- TourAPI 부가 서비스 5종 연동 레이어 — 무장애 여행(`KorWithService2`),
+  다국어(`Eng/Jpn/Chs/ChtService2`), 관광 사진(`PhotoGalleryService1`),
+  연관 관광지(`TarRlteTarService1`), 집중률(`TatsCnctrRateService`).
+  기관 루트를 `tourapi_root_url` 하나로 두고 서비스 경로만 갈아 끼운다
 - 홈을 화면 높이만 한 패널로 끊고 배경을 sand ↔ 지면으로 번갈아 깔아
   섹션을 구분 (`HomeSection`). 각 섹션은 스크롤로 들어올 때 46px 아래에서
   올라오며 드러난다 (`Reveal` — 캔버스의 data-reveal)

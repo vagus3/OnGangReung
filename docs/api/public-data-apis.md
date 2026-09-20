@@ -52,8 +52,26 @@
 | 분류 코드 → 자체 카테고리 매핑                         | `KorService2` / `categoryCode2`               | 설계됨 |
 | 축제 — 홈 축제 섹션, 안내 탭 축제                      | `KorService2` / `searchFestival2`             | 예정   |
 | 위치 기반 주변 검색 — 내 주변 / GPS 스탬프             | `KorService2` / `locationBasedList2`          | 예정   |
-| 무장애 여행 — 안내 탭 접근성 경로                      | `KorWithService2`                             | 예정   |
-| 다국어 콘텐츠 — i18n (EN/JP/CN)                        | `EngService2` / `JpnService2` / `ChsService2` | 예정   |
+| 무장애 여행 — 안내 탭 접근성 경로                      | `KorWithService2` / `detailWithTour2`         | 설계됨 |
+| 다국어 콘텐츠 — i18n (EN/JP/CN)                        | `EngService2` / `JpnService2` / `ChsService2` | 설계됨 |
+| 관광 사진 — 카드·상세의 "사진 준비 중" 자리            | `PhotoGalleryService1` / `gallerySearchList1` | 설계됨 |
+| 연관 관광지 — 상세의 "이어서 보기", AI 코스 후보       | `TarRlteTarService1` / `areaBasedList1`       | 설계됨 |
+| 집중률 — 안내 탭 "지금은 성수기입니다"                 | `TatsCnctrRateService` / `tatsCnctrRatedList` | 설계됨 |
+
+기관 루트는 `app/core/config.py`의 `tourapi_root_url` 하나이고, 서비스 경로는
+`app/integrations/tourapi/services.py`가 들고 있다. 인증·페이징·봉투는 서비스가
+달라도 같으므로 `PublicDataClient`를 그대로 재사용한다.
+
+다국어는 오퍼레이션 이름과 응답 스키마가 국문과 같다. 그래서 언어별 클라이언트를
+따로 만들지 않고 `HttpTourApiClient`에 경로만 바꿔 넣는다 (`TourLanguage`).
+
+> CAUTION: 오퍼레이션 이름은 공공데이터포털 문서에서 확인한 것이다. 실제 키로
+> 호출해 응답 필드까지 맞춰본 것은 `KorService2`뿐이다. 나머지 다섯은 키를 받은
+> 뒤 필드명을 한 번 대조해야 한다 — 특히 사진(`gal*`)과 데이터랩 계열(`rlte*`,
+> `cnctr*`)은 표기 규칙이 국문 서비스와 다르다.
+
+> NOTE: 관광 사진은 공공누리 1유형이다. 출처(촬영자)를 함께 보관하고 화면에
+> 밝혀야 한다 — `GalleryPhoto.photographer`를 버리지 않는 이유다.
 
 `areaCode=32`가 강원이다. 강릉 `sigunguCode`는 `areaCode2`로 조회해서 쓴다.
 

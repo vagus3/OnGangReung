@@ -17,14 +17,14 @@ import sys
 from app.core.config import settings
 from app.db.session import SessionFactory
 from app.integrations.publicdata import PublicDataClient, PublicDataError
-from app.integrations.tourapi import GANGWON_AREA_CODE, HttpTourApiClient
+from app.integrations.tourapi import GANGWON_AREA_CODE, KOR, HttpTourApiClient, service_url
 from app.services.tour_sync import sync_area
 
 
 def _build_client() -> HttpTourApiClient:
     return HttpTourApiClient(
         PublicDataClient(
-            base_url=settings.tourapi_base_url,
+            base_url=service_url(settings.tourapi_root_url, KOR),
             service_key=settings.tourapi_service_key,
             mobile_app=settings.tourapi_app_name,
         )

@@ -32,7 +32,10 @@ class Settings(BaseSettings):
     # 공공데이터포털 (data.go.kr). 기관별로 트래픽이 따로 집계되므로 키를
     # 용도별로 나눠 둔다. 인코딩 키가 아니라 디코딩 키를 넣어야 한다 —
     # httpx가 쿼리 파라미터를 다시 인코딩하므로 이중 인코딩이 된다.
-    tourapi_base_url: str = "http://apis.data.go.kr/B551011/KorService2"
+    # 기관 루트. 한국관광공사는 이 아래에 서비스를 여러 개 둔다
+    # (국문·다국어·무장애·사진·연관·집중률). 서비스 경로는
+    # app/integrations/tourapi/services.py가 들고 있다.
+    tourapi_root_url: str = "http://apis.data.go.kr/B551011"
     tourapi_service_key: str = ""
     tourapi_app_name: str = "ongangreung"
 
