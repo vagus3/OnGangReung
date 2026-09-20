@@ -184,7 +184,7 @@ function AiCourseWorkspace({ userId }: { userId?: number }) {
                 <h1 className="font-display text-center text-[clamp(26px,3.6vw,36px)] leading-tight">
                   어떤 여행을 하고 싶으세요?
                 </h1>
-                <p className="mt-3 text-center text-[13.5px] text-white/60">
+                <p className="ai-sub mt-3 text-center text-[13.5px]">
                   문장으로 적어도 되고, 아래에서 골라도 됩니다.
                 </p>
 
@@ -201,7 +201,7 @@ function AiCourseWorkspace({ userId }: { userId?: number }) {
                             prompt: preset.prompt,
                           })
                         }
-                        className="flex h-full w-full flex-col rounded-[18px] border border-white/12 bg-white/6 p-6 text-left transition hover:-translate-y-1 hover:border-white/30 hover:bg-white/10 disabled:cursor-not-allowed"
+                        className="ai-card flex h-full w-full flex-col rounded-[18px] border border-white/12 p-6 text-left transition hover:-translate-y-1 hover:border-white/30 hover:brightness-125 disabled:cursor-not-allowed"
                       >
                         <p className="font-display text-[19px] text-white">
                           {preset.title}

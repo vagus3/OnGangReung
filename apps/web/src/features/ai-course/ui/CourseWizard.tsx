@@ -34,8 +34,8 @@ export function CourseWizard({ onSubmit, isPending = false }: Props) {
   const onInterests = phase === "interests";
 
   return (
-    <div className="rounded-[20px] border border-white/12 bg-white/5 px-6 py-8 text-center sm:px-10">
-      <p className="text-[11px] font-bold tracking-[0.22em] text-white/55">
+    <div className="ai-card rounded-[20px] border border-white/12 px-6 py-8 text-center sm:px-10">
+      <p className="ai-accent text-[11px] font-bold tracking-[0.22em]">
         {onInterests ? "STEP 1 · 관심사 (복수 선택)" : "STEP 2 · 기간"}
       </p>
       <p className="mt-2.5 text-[14px] text-white/85">
