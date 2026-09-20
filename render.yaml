@@ -13,18 +13,15 @@ services:
     plan: free
     healthCheckPath: /health
     # preDeployCommand는 free 플랜에서 지원하지 않는다. 대신 컨테이너
-    # 시작 커맨드 자체에 마이그레이션·시드를 앞세운다. alembic upgrade는
-    # 이미 최신이면 없는 일이고, seed_* 스크립트는 기본값이 "없는 것만
-    # 추가"라 매 시작마다 실행해도(자유 티어는 유휴 시 슬립 후 재기동한다)
-    # 중복이 생기지 않는다. Dockerfile의 CMD(마이그레이션과 분리된
-    # uvicorn 단독 실행)를 여기서 덮어쓴다.
-    dockerCommand: >-
-      sh -c "uv run --no-sync alembic upgrade head &&
-      uv run --no-sync python -m scripts.seed_spots &&
-      uv run --no-sync python -m scripts.seed_themes &&
-      uv run --no-sync python -m scripts.seed_festivals &&
-      uv run --no-sync python -m scripts.seed_reviews &&
-      uv run --no-sync uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    # 시작 커맨드 자체에 마이그레이션·시드를 앞세운 start.sh를 가리킨다.
+    # (인라인 "sh -c '...&&...'" 문자열은 Render가 따옴표를 셸 인자
+    # 구분자로 해석하지 않고 통째로 한 커맨드 이름으로 봐서
+    # "File name too long"으로 죽었다.) alembic upgrade는 이미 최신이면
+    # 없는 일이고, seed_* 스크립트는 기본값이 "없는 것만 추가"라 매
+    # 시작마다 실행해도(자유 티어는 유휴 시 슬립 후 재기동한다) 중복이
+    # 생기지 않는다. Dockerfile의 CMD(마이그레이션과 분리된 uvicorn 단독
+    # 실행)를 여기서 덮어쓴다.
+    dockerCommand: ./start.sh
     envVars:
       # Render가 주는 connectionString은 postgresql:// 스킴이라 그대로면
       # asyncpg 드라이버와 안 맞는다. Settings.database_url의 field_validator
