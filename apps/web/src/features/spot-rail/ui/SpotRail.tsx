@@ -1,5 +1,5 @@
 import type { Spot } from "@/entities/spot";
-import { Rail, RailItem, SectionHeading } from "@/shared/ui";
+import { Rail, RailItem, Reveal, SectionHeading } from "@/shared/ui";
 
 import { SpotCard } from "./SpotCard";
 
@@ -17,9 +17,12 @@ export function SpotRail({
   emptyMessage = "아직 등록된 곳이 없습니다.",
 }: SpotRailProps) {
   return (
-    <section className="mx-auto flex min-h-[72svh] max-w-[1360px] flex-col justify-center py-14 sm:py-20">
-      <SectionHeading eyebrow={eyebrow} title={title} />
-      <div className="mt-5">
+    // 섹션 껍데기(높이·배경·폭)는 홈의 HomeSection이 맡는다.
+    <div>
+      <Reveal>
+        <SectionHeading eyebrow={eyebrow} title={title} />
+      </Reveal>
+      <Reveal className="mt-5">
         {spots.length === 0 ? (
           <p className="text-muted px-4 text-[12.5px] sm:px-12">
             {emptyMessage}
@@ -33,7 +36,7 @@ export function SpotRail({
             ))}
           </Rail>
         )}
-      </div>
-    </section>
+      </Reveal>
+    </div>
   );
 }

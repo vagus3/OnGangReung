@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import type { ReviewSummary } from "@/entities/review";
-import { SectionHeading } from "@/shared/ui";
+import { Reveal, SectionHeading } from "@/shared/ui";
 
 /** 별점을 별 문자와 숫자 둘 다로 알린다 — 색·기호만으로 전달하지 않는다. */
 function Stars({ rating }: { rating: number }) {
@@ -29,7 +29,8 @@ export function ReviewCarousel({ summary }: { summary: ReviewSummary }) {
   if (review === undefined) return null;
 
   return (
-    <section className="mx-auto max-w-[1360px] py-16 sm:py-24">
+    // 섹션 껍데기는 홈의 HomeSection이 맡는다.
+    <Reveal>
       <SectionHeading
         eyebrow={`REVIEWS · 평균 ${summary.average}점`}
         title="다녀온 사람들의 말"
@@ -64,6 +65,6 @@ export function ReviewCarousel({ summary }: { summary: ReviewSummary }) {
           ))}
         </ul>
       </div>
-    </section>
+    </Reveal>
   );
 }

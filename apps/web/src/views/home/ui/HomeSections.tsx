@@ -10,12 +10,30 @@ import { ReviewCarousel } from "@/features/review-carousel";
 import { SpotRail } from "@/features/spot-rail";
 import { QueryFeedback } from "@/shared/ui";
 
-const RAILS: ReadonlyArray<{ rail: HomeRail; eyebrow: string; title: string }> =
-  [
-    { rail: "beach", eyebrow: "BEACH", title: "파도 소리를 기준으로 골라봐요" },
-    { rail: "food", eyebrow: "FOOD", title: "뭐 먹으러 가볼래요?" },
-    { rail: "hot", eyebrow: "TRENDING", title: "요즘 뭐가 핫한지 둘러봐요" },
-  ];
+import { HomeSection } from "./HomeSection";
+
+// 캔버스는 섹션 배경을 sand ↔ 지면으로 번갈아 깔아 경계를 만든다.
+// 히어로 다음이 sand(AI 티저)이므로 해변부터 지면으로 이어진다.
+const RAILS: ReadonlyArray<{
+  rail: HomeRail;
+  eyebrow: string;
+  title: string;
+  tone: "paper" | "sand";
+}> = [
+  {
+    rail: "beach",
+    eyebrow: "BEACH",
+    title: "파도 소리를 기준으로 골라봐요",
+    tone: "paper",
+  },
+  { rail: "food", eyebrow: "FOOD", title: "뭐 먹으러 가볼래요?", tone: "sand" },
+  {
+    rail: "hot",
+    eyebrow: "TRENDING",
+    title: "요즘 뭐가 핫한지 둘러봐요",
+    tone: "paper",
+  },
+];
 
 export function HomeSections() {
   // Independent queries start together; one failed endpoint cannot hide the others.
@@ -35,27 +53,36 @@ export function HomeSections() {
   return (
     <>
       {spots.data ? (
-        RAILS.map(({ rail, eyebrow, title }) => (
-          <SpotRail
-            key={rail}
-            eyebrow={eyebrow}
-            title={title}
-            spots={spots.data.filter((spot) => spot.rail === rail)}
-          />
+        RAILS.map(({ rail, eyebrow, title, tone }) => (
+          <HomeSection key={rail} tone={tone}>
+            <SpotRail
+              eyebrow={eyebrow}
+              title={title}
+              spots={spots.data.filter((spot) => spot.rail === rail)}
+            />
+          </HomeSection>
         ))
       ) : (
-        <QueryFeedback label="관광지 정보" query={spots} />
+        <HomeSection>
+          <QueryFeedback label="관광지 정보" query={spots} />
+        </HomeSection>
       )}
-      {festivals.data ? (
-        <FestivalSection festivals={festivals.data} />
-      ) : (
-        <QueryFeedback label="축제 정보" query={festivals} />
-      )}
-      {reviews.data ? (
-        <ReviewCarousel summary={reviews.data} />
-      ) : (
-        <QueryFeedback label="후기" query={reviews} />
-      )}
+
+      <HomeSection tone="sand">
+        {festivals.data ? (
+          <FestivalSection festivals={festivals.data} />
+        ) : (
+          <QueryFeedback label="축제 정보" query={festivals} />
+        )}
+      </HomeSection>
+
+      <HomeSection>
+        {reviews.data ? (
+          <ReviewCarousel summary={reviews.data} />
+        ) : (
+          <QueryFeedback label="후기" query={reviews} />
+        )}
+      </HomeSection>
     </>
   );
 }

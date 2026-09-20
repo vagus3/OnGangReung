@@ -150,6 +150,19 @@ async function main() {
     steps.push(`click=${target}`);
   }
 
+  // 스크롤로 드러나는 요소(Reveal)가 있으면 아래까지 한 번 훑고 돌아온다.
+  // 그러지 않으면 화면 밖 섹션이 opacity:0인 채로 잡혀 개요에서 빠진다.
+  await page.evaluate(async () => {
+    const step = window.innerHeight * 0.8;
+    for (let y = 0; y < document.body.scrollHeight; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((r) => setTimeout(r, 120));
+    }
+    window.scrollTo(0, 0);
+    await new Promise((r) => setTimeout(r, 300));
+  });
+  await page.waitForTimeout(900);
+
   const name =
     [args.screen ?? "home", ...args.click].join("_").replace(/[^\w가-힣-]+/g, "-") || "home";
   await mkdir(args.outDir, { recursive: true });

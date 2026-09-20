@@ -1,12 +1,13 @@
 import type { Festival } from "@/entities/festival";
-import { SectionHeading } from "@/shared/ui";
+import { Reveal, SectionHeading } from "@/shared/ui";
 
 import { FestivalRow } from "./FestivalRow";
 
 export function FestivalSection({ festivals }: { festivals: Festival[] }) {
   return (
-    <section className="bg-sand py-16 sm:py-24">
-      <div className="mx-auto max-w-[1360px]">
+    // 섹션 껍데기는 홈의 HomeSection이 맡는다.
+    <div>
+      <Reveal>
         <SectionHeading
           eyebrow="FESTIVAL"
           title="지금 뭐가 열리고 있는지 볼까요?"
@@ -22,7 +23,7 @@ export function FestivalSection({ festivals }: { festivals: Festival[] }) {
             </div>
           )}
         </div>
-      </div>
-    </section>
+      </Reveal>
+    </div>
   );
 }
