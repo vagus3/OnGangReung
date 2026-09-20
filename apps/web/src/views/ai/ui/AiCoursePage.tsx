@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import {
@@ -19,8 +20,12 @@ export function AiCoursePage() {
 }
 
 function AiCourseWorkspace({ userId }: { userId?: number }) {
+  // 상단 검색창(SiteHeader의 AiSearch)이 문장을 여기로 넘길 때 쓴다.
+  // 값만 채우고 전송은 사용자가 직접 하게 둔다 — 관심사·기간을 아직
+  // 고르지 않았을 수 있어서다.
+  const searchParams = useSearchParams();
   const [courses, setCourses] = useState<Course[]>([]);
-  const [prompt, setPrompt] = useState("");
+  const [prompt, setPrompt] = useState(() => searchParams.get("prompt") ?? "");
   const queryClient = useQueryClient();
 
   const historyKey = aiCourseKeys.history(userId);

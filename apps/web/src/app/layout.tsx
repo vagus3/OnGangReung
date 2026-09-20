@@ -2,6 +2,7 @@ import { IBM_Plex_Sans_KR, Song_Myung } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+import { SiteFooter } from "@/widgets/site-footer";
 import { BottomTabBar, SiteHeader } from "@/widgets/site-nav";
 
 import "./globals.css";
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Providers>
           <SiteHeader />
           {children}
+          <SiteFooter />
           <BottomTabBar />
         </Providers>
       </body>
