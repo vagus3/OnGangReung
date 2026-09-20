@@ -21,53 +21,76 @@ export function HomeHero() {
   const season = SEASONS.find((s) => s.id === seasonId) ?? SEASONS[0];
 
   return (
-    <section className="border-line border-b px-4 py-16 sm:px-12 sm:py-24">
-      <p className="text-muted text-[10.5px] font-bold tracking-[0.2em]">
-        {season.eyebrow}
-      </p>
+    <section className="home-hero relative isolate min-h-[calc(100svh-4rem)] overflow-hidden text-white">
+      <div className="hero-sky" aria-hidden="true" />
+      <div className="hero-sun" aria-hidden="true" />
+      <div className="hero-cloud hero-cloud-one" aria-hidden="true" />
+      <div className="hero-cloud hero-cloud-two" aria-hidden="true" />
+      <div className="hero-mountain" aria-hidden="true" />
+      <div className="hero-sea" aria-hidden="true">
+        <i />
+        <i />
+        <i />
+      </div>
+      <div className="hero-shore" aria-hidden="true" />
 
-      <h1 className="font-display text-ink mt-4 max-w-[18ch] text-[32px] leading-tight sm:text-[44px]">
-        {season.titleLines.map((line) => (
-          <span key={line} className="block">
-            {line}
-          </span>
-        ))}
-      </h1>
+      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-4rem)] max-w-[1360px] flex-col justify-end px-4 py-10 sm:px-12 sm:py-14">
+        <div className="animate-fade-up max-w-[760px]">
+          <p className="text-[10.5px] font-bold tracking-[0.28em] text-white/75">
+            {season.eyebrow}
+          </p>
+          <h1 className="font-display mt-4 text-[clamp(42px,7vw,76px)] leading-[1.07] tracking-[-0.035em] text-white">
+            {season.titleLines.map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
+            ))}
+          </h1>
+          <p className="mt-5 max-w-[44ch] text-[13.5px] leading-[1.8] text-white/80 sm:text-[15px]">
+            {season.body}
+          </p>
+        </div>
 
-      <p className="text-muted mt-4 max-w-[44ch] text-[13.5px] leading-relaxed">
-        {season.body}
-      </p>
+        <div className="mt-8 flex flex-col justify-between gap-7 border-t border-white/25 pt-6 lg:flex-row lg:items-end">
+          <div>
+            <ul className="flex flex-wrap gap-2" aria-label="계절">
+              {SEASONS.map((item) => (
+                <li key={item.id}>
+                  <Chip
+                    selected={item.id === seasonId}
+                    onClick={() => setSeasonId(item.id)}
+                    className="border-white/35 bg-black/10 text-white backdrop-blur-md hover:bg-white/20"
+                  >
+                    {item.label}
+                  </Chip>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-      <ul className="mt-6 flex flex-wrap gap-2" aria-label="계절">
-        {SEASONS.map((item) => (
-          <li key={item.id}>
-            <Chip
-              selected={item.id === seasonId}
-              onClick={() => setSeasonId(item.id)}
-            >
-              {item.label}
-            </Chip>
-          </li>
-        ))}
-      </ul>
+          <div className="lg:text-right">
+            <p className="text-[10.5px] font-bold tracking-[0.18em] text-white/60">
+              지금 많이 찾는 곳
+            </p>
+            <ul className="mt-3 flex max-w-[620px] flex-wrap gap-2 lg:justify-end">
+              {POPULAR.map((keyword) => (
+                <li key={keyword}>
+                  <Link
+                    href={`/ai?prompt=${encodeURIComponent(keyword)}`}
+                    className="inline-flex h-9 items-center rounded-full border border-white/25 bg-black/10 px-4 text-[12px] text-white/85 backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-white hover:text-slate-900"
+                  >
+                    {keyword}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
 
-      <div className="mt-10">
-        <p className="text-muted text-[10.5px] font-bold tracking-[0.14em]">
-          이런 걸 많이 찾습니다
-        </p>
-        <ul className="mt-3 flex flex-wrap gap-2">
-          {POPULAR.map((keyword) => (
-            <li key={keyword}>
-              {/* 검색이 없으므로 AI 코스로 보낸다 — 디자인도 같은 동선이다 */}
-              <Link
-                href="/ai"
-                className="border-line text-muted hover:text-ink inline-flex h-9 items-center rounded-full border px-4 text-[12.5px]"
-              >
-                {keyword}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-7 hidden items-center gap-3 text-[9px] tracking-[0.24em] text-white/55 sm:flex">
+          <span>SCROLL</span>
+          <span className="h-px w-12 bg-white/45" />
+        </div>
       </div>
     </section>
   );

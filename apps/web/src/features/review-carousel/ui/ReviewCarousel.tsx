@@ -29,16 +29,16 @@ export function ReviewCarousel({ summary }: { summary: ReviewSummary }) {
   if (review === undefined) return null;
 
   return (
-    <section className="py-12">
+    <section className="mx-auto max-w-[1360px] py-16 sm:py-24">
       <SectionHeading
         eyebrow={`REVIEWS · 평균 ${summary.average}점`}
         title="다녀온 사람들의 말"
       />
 
       <div className="mt-5 px-4 sm:px-12">
-        <blockquote className="border-line max-w-[60ch] rounded-[20px] border p-6">
+        <blockquote className="border-line max-w-[760px] rounded-[24px] border bg-[var(--surface-50)] p-7 sm:p-10">
           <Stars rating={review.rating} />
-          <p className="text-ink mt-3 text-[13.5px] leading-[1.9]">
+          <p className="font-display text-ink mt-4 text-[clamp(18px,2.5vw,26px)] leading-[1.65]">
             {review.body}
           </p>
           <footer className="text-muted mt-4 text-[11.5px]">

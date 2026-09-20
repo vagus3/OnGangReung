@@ -59,6 +59,34 @@ export function ZoneGuide({
 
   return (
     <div>
+      <div className="guide-hero relative mx-4 mb-7 h-[360px] overflow-hidden rounded-[28px] border border-white/15 sm:mx-12 sm:h-[400px]">
+        <div className="guide-contours" aria-hidden="true" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-900/55 to-transparent" />
+        <div
+          className="absolute right-[8%] bottom-[-22%] h-[76%] w-[62%] rounded-[50%] bg-cyan-300/20 blur-sm"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute right-[2%] bottom-[-36%] h-[80%] w-[76%] rounded-[50%] border-[28px] border-white/10"
+          aria-hidden="true"
+        />
+        <div className="absolute inset-x-7 bottom-8 z-10 text-white sm:inset-x-10 sm:bottom-9">
+          <p className="text-[10.5px] tracking-[0.28em] text-white/60">
+            {zone.nameEn}
+          </p>
+          <h2 className="font-display mt-3 text-[clamp(34px,5vw,48px)]">
+            {zone.name}
+          </h2>
+          <p className="mt-3 max-w-[560px] text-[13.5px] leading-[1.75] text-white/75">
+            {zone.line}
+          </p>
+          <span className="mt-5 inline-flex rounded-full bg-white/90 px-4 py-2 text-[11.5px] font-bold text-slate-900">
+            {zone.pick === "rent"
+              ? "렌터카 추천 권역"
+              : "대중교통으로 여행 가능"}
+          </span>
+        </div>
+      </div>
       <ul
         className="scrollbar-none flex gap-2 overflow-x-auto px-4 sm:px-12"
         aria-label="권역 선택"
@@ -75,13 +103,6 @@ export function ZoneGuide({
         ))}
       </ul>
 
-      <div className="px-4 pt-8 sm:px-12">
-        <p className="text-muted text-[10.5px] font-bold tracking-[0.2em]">
-          {zone.nameEn}
-        </p>
-        <h2 className="font-display text-ink mt-2 text-[22px]">{zone.line}</h2>
-      </div>
-
       <div className="grid gap-10 px-4 py-8 sm:px-12 lg:grid-cols-[minmax(0,1fr)_200px]">
         <div className="min-w-0">
           {GUIDE_SECTION_LABELS.map((label, index) => (
@@ -94,7 +115,7 @@ export function ZoneGuide({
               <p className="text-muted text-[10.5px] font-bold tracking-[0.2em]">
                 {String(index + 1).padStart(2, "0")} — {label.toUpperCase()}
               </p>
-              <h3 className="font-display text-ink mt-2 mb-5 text-[20px]">
+              <h3 className="font-display text-ink mt-3 mb-7 text-[clamp(25px,3vw,36px)]">
                 {label}
               </h3>
               {bodies[index]}

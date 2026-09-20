@@ -3,13 +3,15 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "@/shared/ui";
 
 import { HomeHero } from "./HomeHero";
+import { HomeAiTeaser } from "./HomeAiTeaser";
 import { HomeNight } from "./HomeNight";
 import { HomeSections } from "./HomeSections";
 
 export function HomePage() {
   return (
-    <main className="mx-auto max-w-[1360px] pb-24 md:pb-12">
+    <main className="pb-24 md:pb-0">
       <HomeHero />
+      <HomeAiTeaser />
       <ErrorBoundary
         fallback={
           <p className="text-muted px-4 py-16 text-[12.5px] sm:px-12">

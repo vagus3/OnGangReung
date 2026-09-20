@@ -17,7 +17,7 @@ export function SpotRail({
   emptyMessage = "아직 등록된 곳이 없습니다.",
 }: SpotRailProps) {
   return (
-    <section className="py-10">
+    <section className="mx-auto flex min-h-[72svh] max-w-[1360px] flex-col justify-center py-14 sm:py-20">
       <SectionHeading eyebrow={eyebrow} title={title} />
       <div className="mt-5">
         {spots.length === 0 ? (

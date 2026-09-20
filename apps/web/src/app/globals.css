@@ -236,9 +236,266 @@ a:hover {
   animation: stagger-in 0.45s ease-out both;
 }
 
+@keyframes wave-sweep {
+  from {
+    transform: translateX(-12%) scaleX(1.08);
+  }
+  50% {
+    transform: translateX(7%) scaleX(0.96);
+  }
+  to {
+    transform: translateX(-12%) scaleX(1.08);
+  }
+}
+
+@keyframes cloud-drift {
+  from {
+    transform: translateX(-8vw);
+  }
+  to {
+    transform: translateX(9vw);
+  }
+}
+
+@keyframes orb-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(18px, -24px, 0) scale(1.06);
+  }
+}
+
+.home-hero {
+  background: oklch(42% 0.11 235);
+}
+.home-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background:
+    linear-gradient(90deg, oklch(13% 0.045 250 / 0.72), transparent 70%),
+    linear-gradient(0deg, oklch(12% 0.035 250 / 0.56), transparent 58%);
+  pointer-events: none;
+}
+.hero-sky {
+  position: absolute;
+  inset: 0 0 43%;
+  background: linear-gradient(
+    180deg,
+    oklch(72% 0.105 225),
+    oklch(82% 0.075 205) 62%,
+    oklch(86% 0.075 90)
+  );
+}
+.hero-sun {
+  position: absolute;
+  top: 16%;
+  right: 15%;
+  width: clamp(90px, 12vw, 180px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: oklch(88% 0.13 75 / 0.78);
+  box-shadow: 0 0 70px oklch(88% 0.14 70 / 0.68);
+}
+.hero-cloud {
+  position: absolute;
+  z-index: 1;
+  height: 10%;
+  width: 42%;
+  border-radius: 50%;
+  background: oklch(98% 0.01 90 / 0.38);
+  filter: blur(18px);
+  animation: cloud-drift 15s ease-in-out infinite alternate;
+}
+.hero-cloud-one {
+  top: 14%;
+  left: 7%;
+}
+.hero-cloud-two {
+  top: 28%;
+  right: -8%;
+  width: 34%;
+  animation-delay: -8s;
+}
+.hero-mountain {
+  position: absolute;
+  z-index: 1;
+  inset: 25% -5% 38% 35%;
+  background: oklch(30% 0.055 238 / 0.58);
+  clip-path: polygon(
+    0 100%,
+    13% 48%,
+    24% 70%,
+    37% 22%,
+    49% 64%,
+    63% 5%,
+    78% 65%,
+    89% 34%,
+    100% 100%
+  );
+}
+.hero-sea {
+  position: absolute;
+  z-index: 2;
+  inset: 49% 0 0;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    oklch(58% 0.115 224),
+    oklch(40% 0.11 237) 62%,
+    oklch(34% 0.09 241)
+  );
+}
+.hero-sea i {
+  position: absolute;
+  left: -12%;
+  width: 124%;
+  height: 3px;
+  border-radius: 50%;
+  background: oklch(96% 0.02 200 / 0.55);
+  animation: wave-sweep 8s ease-in-out infinite;
+}
+.hero-sea i:nth-child(1) {
+  top: 18%;
+}
+.hero-sea i:nth-child(2) {
+  top: 42%;
+  opacity: 0.65;
+  animation-delay: -3s;
+}
+.hero-sea i:nth-child(3) {
+  top: 72%;
+  opacity: 0.42;
+  animation-delay: -6s;
+}
+.hero-shore {
+  position: absolute;
+  z-index: 2;
+  right: -8%;
+  bottom: -11%;
+  width: 72%;
+  height: 45%;
+  border-radius: 52% 0 0 0;
+  background: linear-gradient(150deg, oklch(91% 0.035 86), oklch(70% 0.05 80));
+  transform: rotate(-4deg);
+  opacity: 0.76;
+}
+.ai-teaser {
+  background-image:
+    radial-gradient(
+      circle at 82% 18%,
+      oklch(57% 0.13 225 / 0.22),
+      transparent 38%
+    ),
+    linear-gradient(145deg, oklch(16% 0.04 258), oklch(23% 0.06 235));
+}
+.ai-orb {
+  position: absolute;
+  border-radius: 50%;
+  animation: orb-float 9s ease-in-out infinite;
+}
+.ai-orb-one {
+  width: 320px;
+  height: 320px;
+  right: 7%;
+  top: 9%;
+  background: oklch(65% 0.11 225 / 0.08);
+  border: 1px solid oklch(90% 0.06 220 / 0.1);
+}
+.ai-orb-two {
+  width: 180px;
+  height: 180px;
+  left: 5%;
+  bottom: 8%;
+  background: oklch(75% 0.13 60 / 0.08);
+  animation-delay: -4s;
+}
+.spot-card-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 25%,
+    rgb(255 255 255 / 0.34) 48%,
+    transparent 67%
+  );
+  transform: translateX(-125%);
+  transition: transform 0.85s ease;
+  pointer-events: none;
+}
+.group:hover .spot-card-media::after {
+  transform: translateX(125%);
+}
+.theme-card-sea {
+  background: oklch(26% 0.055 245);
+}
+.theme-card-earth {
+  background: oklch(33% 0.085 58);
+}
+.theme-card-forest {
+  background: oklch(25% 0.06 155);
+}
+.theme-card-orb {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  right: -70px;
+  top: -65px;
+  border-radius: 50%;
+  background: oklch(82% 0.1 220 / 0.15);
+  transition: transform 0.6s ease;
+}
+.theme-card:hover .theme-card-orb {
+  transform: scale(1.16) translate(-10px, 10px);
+}
+.theme-card-lines {
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background: repeating-radial-gradient(
+    circle at 85% 12%,
+    transparent 0 22px,
+    white 23px 24px
+  );
+}
+.guide-hero {
+  background: linear-gradient(
+    145deg,
+    oklch(32% 0.08 222),
+    oklch(20% 0.055 254)
+  );
+}
+.guide-contours {
+  position: absolute;
+  inset: -20%;
+  opacity: 0.18;
+  background: repeating-radial-gradient(
+    ellipse at 80% 70%,
+    transparent 0 38px,
+    white 39px 40px
+  );
+  transform: rotate(-8deg);
+}
+.ai-workspace {
+  background:
+    radial-gradient(
+      circle at 76% 15%,
+      oklch(54% 0.13 226 / 0.19),
+      transparent 32%
+    ),
+    linear-gradient(145deg, oklch(14% 0.036 258), oklch(22% 0.052 240));
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
-  .animate-stagger-in {
+  .animate-stagger-in,
+  .hero-cloud,
+  .hero-sea i,
+  .ai-orb {
     animation: none;
   }
 }

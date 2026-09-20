@@ -48,18 +48,19 @@ function AiCourseWorkspace({ userId }: { userId?: number }) {
   const historyItems = history.data ?? [];
 
   return (
-    <main className="mx-auto max-w-[1360px] pb-24 md:pb-12">
-      <div className="border-line border-b py-12">
+    <main className="ai-workspace min-h-[calc(100svh-4rem)] pb-24 text-white md:pb-12">
+      <div className="mx-auto max-w-[1360px] border-b border-white/15 py-14 sm:py-20">
         <SectionHeading
           eyebrow="AI COURSE"
           title="문장 하나로 일정을 짜볼까요?"
+          inverse
         />
-        <p className="text-muted mt-3 max-w-[52ch] px-4 text-[13.5px] leading-relaxed sm:px-12">
+        <p className="mt-3 max-w-[52ch] px-4 text-[13.5px] leading-relaxed text-white/60 sm:px-12">
           관심사와 기간을 고르거나, 하고 싶은 말을 그대로 적어주세요.
         </p>
       </div>
 
-      <div className="grid gap-8 px-4 py-8 sm:px-12 lg:grid-cols-[minmax(0,1fr)_258px]">
+      <div className="mx-auto grid max-w-[1360px] gap-8 px-4 py-8 sm:px-12 lg:grid-cols-[minmax(0,1fr)_258px] lg:py-12">
         <div className="min-w-0 space-y-8">
           {courses.length === 0 && (
             <>
@@ -76,13 +77,15 @@ function AiCourseWorkspace({ userId }: { userId?: number }) {
                           prompt: preset.prompt,
                         })
                       }
-                      className="border-line hover:border-sea/40 block w-full rounded-[20px] border p-5 text-left transition-colors"
+                      className="block w-full rounded-[20px] border border-white/15 bg-white/8 p-5 text-left transition hover:-translate-y-1 hover:border-white/35 hover:bg-white/12"
                     >
-                      <p className="text-muted text-[10.5px]">{preset.meta}</p>
-                      <p className="font-display text-ink mt-1.5 text-[17px]">
+                      <p className="text-[10.5px] text-white/45">
+                        {preset.meta}
+                      </p>
+                      <p className="font-display mt-1.5 text-[19px] text-white">
                         {preset.title}
                       </p>
-                      <p className="text-muted mt-2 text-[12px] leading-relaxed">
+                      <p className="mt-2 text-[12px] leading-relaxed text-white/55">
                         {preset.body}
                       </p>
                     </button>
@@ -90,7 +93,7 @@ function AiCourseWorkspace({ userId }: { userId?: number }) {
                 ))}
               </ul>
 
-              <Card>
+              <Card className="shadow-[0_30px_80px_rgb(0_0_0/0.24)]">
                 <CourseWizard
                   isPending={create.isPending}
                   onSubmit={(interests, duration) =>
@@ -122,7 +125,7 @@ function AiCourseWorkspace({ userId }: { userId?: number }) {
               if (prompt.trim() === "") return;
               create.mutate({ interests: [], duration: "1박2일", prompt });
             }}
-            className="border-line bg-paper sticky bottom-20 rounded-[20px] border p-3 md:bottom-4"
+            className={`border-line bg-paper rounded-[20px] border p-3 text-ink shadow-[0_20px_60px_rgb(0_0_0/0.25)] ${courses.length > 0 ? "sticky bottom-20 md:bottom-4" : "relative"}`}
           >
             <label htmlFor="ai-prompt" className="sr-only">
               하고 싶은 말
@@ -148,7 +151,7 @@ function AiCourseWorkspace({ userId }: { userId?: number }) {
         </div>
 
         <aside>
-          <h2 className="text-ink text-[13px] font-bold">지난 코스</h2>
+          <h2 className="text-[13px] font-bold text-white">지난 코스</h2>
           {userId !== undefined && (history.isPending || history.isError) ? (
             <QueryFeedback label="지난 코스" query={history} />
           ) : historyItems.length === 0 ? (

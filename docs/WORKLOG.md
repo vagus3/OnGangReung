@@ -70,3 +70,4 @@
 - 2026-09-21 00:24 — feat: Render 배포 설정과 관리형 Postgres URL 자동 보정 추가 (e5a3631)
 - 2026-09-21 00:46 — fix: Render free 플랜은 preDeployCommand 미지원 — dockerCommand로 대체 (1197b94)
 - 2026-09-21 00:50 — fix: Render dockerCommand를 스크립트 파일로 교체 (File name too long) (f0fdcfb)
+- 2026-09-21 01:05 — feat: 홈 야경 섹션에 별 반짝임 캔버스 추가 (170f4bb)

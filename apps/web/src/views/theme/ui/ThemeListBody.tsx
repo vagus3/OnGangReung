@@ -24,10 +24,10 @@ export function ThemeListBody() {
   }
 
   return (
-    <ul className="grid gap-4 px-4 py-8 sm:grid-cols-2 sm:px-12 lg:grid-cols-3">
-      {themes.map((theme) => (
+    <ul className="grid gap-5 px-4 py-10 sm:grid-cols-2 sm:px-12 lg:grid-cols-3 lg:py-16">
+      {themes.map((theme, index) => (
         <li key={theme.slug}>
-          <ThemeCard theme={theme} />
+          <ThemeCard theme={theme} index={index} />
         </li>
       ))}
     </ul>

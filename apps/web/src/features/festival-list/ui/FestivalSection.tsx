@@ -5,21 +5,23 @@ import { FestivalRow } from "./FestivalRow";
 
 export function FestivalSection({ festivals }: { festivals: Festival[] }) {
   return (
-    <section className="bg-sand py-12">
-      <SectionHeading
-        eyebrow="FESTIVAL"
-        title="지금 뭐가 열리고 있는지 볼까요?"
-      />
-      <div className="mt-5 px-4 sm:px-12">
-        {festivals.length === 0 ? (
-          <p className="text-muted text-[12.5px]">등록된 축제가 없습니다.</p>
-        ) : (
-          <div className="border-line border-t">
-            {festivals.map((festival) => (
-              <FestivalRow key={festival.slug} festival={festival} />
-            ))}
-          </div>
-        )}
+    <section className="bg-sand py-16 sm:py-24">
+      <div className="mx-auto max-w-[1360px]">
+        <SectionHeading
+          eyebrow="FESTIVAL"
+          title="지금 뭐가 열리고 있는지 볼까요?"
+        />
+        <div className="mt-5 px-4 sm:px-12">
+          {festivals.length === 0 ? (
+            <p className="text-muted text-[12.5px]">등록된 축제가 없습니다.</p>
+          ) : (
+            <div className="border-line border-t">
+              {festivals.map((festival) => (
+                <FestivalRow key={festival.slug} festival={festival} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

@@ -17,7 +17,9 @@ export function SiteHeader() {
     <header className="border-line bg-[var(--color-nav)] sticky top-0 z-50 border-b backdrop-blur">
       <div className="mx-auto flex h-16 max-w-[1360px] items-center gap-3 px-4 sm:px-12">
         <Link href="/" className="flex flex-shrink-0 items-baseline gap-2">
-          <span className="font-display text-ink text-lg">온강릉</span>
+          <span className="font-display text-ink text-[25px] leading-none">
+            온강릉
+          </span>
           <span className="text-muted hidden text-[10.5px] tracking-[0.2em] sm:inline">
             GANGNEUNG
           </span>

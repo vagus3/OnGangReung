@@ -12,47 +12,46 @@ const NIGHT_BG = "oklch(14% 0.035 258)";
 export function HomeNight() {
   return (
     <section
-      className="relative overflow-hidden py-16"
+      className="relative flex min-h-[76svh] items-center overflow-hidden py-16"
       style={{ background: NIGHT_BG }}
     >
       <StarField />
 
-      <div className="relative z-10 px-4 sm:px-12">
+      <div className="relative z-10 mx-auto w-full max-w-[1360px] px-4 sm:px-12">
         <p className="text-[10.5px] font-bold tracking-[0.2em] text-white/60">
           AFTER DARK
         </p>
-        <h2 className="font-display mt-2 text-[22px] text-white">
+        <h2 className="font-display mt-3 text-[clamp(30px,4vw,46px)] text-white">
           해가 지고 나서의 강릉
         </h2>
-      </div>
+        <ul className="mt-8 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+          {NIGHT_SPOTS.map((spot) => (
+            <li key={spot.name} className="rounded-[20px] bg-white/10 p-5">
+              <p className="text-[10.5px] text-white/60">{spot.tag}</p>
+              <p className="font-display mt-1.5 text-[17px] text-white">
+                {spot.name}
+              </p>
+              <p className="mt-2 text-[12px] leading-relaxed text-white/70">
+                {spot.line}
+              </p>
+            </li>
+          ))}
+        </ul>
 
-      <ul className="relative z-10 mt-6 grid gap-3 px-4 sm:px-12 md:grid-cols-2 lg:grid-cols-4">
-        {NIGHT_SPOTS.map((spot) => (
-          <li key={spot.name} className="rounded-[20px] bg-white/10 p-5">
-            <p className="text-[10.5px] text-white/60">{spot.tag}</p>
-            <p className="font-display mt-1.5 text-[17px] text-white">
-              {spot.name}
-            </p>
-            <p className="mt-2 text-[12px] leading-relaxed text-white/70">
-              {spot.line}
-            </p>
-          </li>
-        ))}
-      </ul>
-
-      <div className="relative z-10 mt-8 flex flex-wrap gap-2 px-4 sm:px-12">
-        <Link
-          href="/theme"
-          className="inline-flex h-11 items-center rounded-[14px] bg-white px-4 text-[12.5px] font-bold text-[oklch(14%_0.035_258)]"
-        >
-          테마로 둘러보기
-        </Link>
-        <Link
-          href="/ai"
-          className="inline-flex h-11 items-center rounded-[14px] border border-white/30 px-4 text-[12.5px] text-white"
-        >
-          AI로 코스 만들기
-        </Link>
+        <div className="mt-8 flex flex-wrap gap-2">
+          <Link
+            href="/theme"
+            className="inline-flex h-11 items-center rounded-[14px] bg-white px-4 text-[12.5px] font-bold text-[oklch(14%_0.035_258)]"
+          >
+            테마로 둘러보기
+          </Link>
+          <Link
+            href="/ai"
+            className="inline-flex h-11 items-center rounded-[14px] border border-white/30 px-4 text-[12.5px] text-white"
+          >
+            AI로 코스 만들기
+          </Link>
+        </div>
       </div>
     </section>
   );
